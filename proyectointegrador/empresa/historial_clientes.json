@@ -1,0 +1,20 @@
+[
+    {
+        "id_cliente": "cd44983b-ebe1-4a7a-aafa-66fa90baa6ff",
+        "nombre": "Marvin Osvaldo Solis Hernandez",
+        "correo": "elhh1985@gmail.com",
+        "prestamos": []
+    },
+    {
+        "id_cliente": "10ebfab9-5e46-42eb-85ee-6d517dd3f273",
+        "nombre": "Jolmar Luis Solis Pineda",
+        "correo": "jolmar@gmail.com",
+        "prestamos": []
+    },
+    {
+        "id_cliente": "0805cde8-519b-4ac0-a639-dde163ae8381",
+        "nombre": "Marvin Solis",
+        "correo": "marvinsolis@gmail.com",
+        "prestamos": []
+    }
+]

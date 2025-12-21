@@ -1,0 +1,71 @@
+{
+  "clientes": [
+    {
+      "id_cliente": "9e960031-1e4a-4eaa-96b9-c68182438367",
+      "nombre": "marvin chacon",
+      "correo": "marvinchacon@gmail.com",
+      "contraseña": "12345678",
+      "sueldo": 15000.0,
+      "prestamo": {
+        "id_prestamo": "dfe0e387-5c60-4f7f-8b06-a668117a1342",
+        "monto": 7500.0,
+        "tasa_interes": 10.0,
+        "plazo": 12,
+        "saldo_pendiente": 3375.0,
+        "cedula": "281-040307-1007W",
+        "direccion": "San Isidro",
+        "telefono": "58101169",
+        "historial": [
+          {
+            "fecha": "2025-11-11 16:26:32",
+            "tipo": "Pago de cuota",
+            "monto": 687.5,
+            "detalle": "Pago de cuota aprobado. Cuota #1"
+          },
+          {
+            "fecha": "2025-11-11 16:26:35",
+            "tipo": "Pago de cuota",
+            "monto": 687.5,
+            "detalle": "Pago de cuota aprobado. Cuota #2"
+          },
+          {
+            "fecha": "2025-11-11 16:26:38",
+            "tipo": "Pago de cuota",
+            "monto": 687.5,
+            "detalle": "Pago de cuota aprobado. Cuota #3"
+          },
+          {
+            "fecha": "2025-11-12 08:09:08",
+            "tipo": "Pago de cuota",
+            "monto": 687.5,
+            "detalle": "Pago de cuota aprobado. Cuota #4"
+          },
+          {
+            "fecha": "2025-11-12 08:11:31",
+            "tipo": "Pago de cuota",
+            "monto": 687.5,
+            "detalle": "Pago de cuota aprobado. Cuota #5"
+          },
+          {
+            "fecha": "2025-11-12 08:53:52",
+            "tipo": "Pago de cuota",
+            "monto": 687.5,
+            "detalle": "Pago de cuota aprobado. Cuota #6"
+          }
+        ],
+        "fecha_desembolso": "2025-11-11",
+        "ganancias": 375.0,
+        "cuotas_pagadas": 6
+      }
+    },
+    {
+      "id_cliente": "5bed5526-b104-42a9-a3f4-97ebc8c28183",
+      "nombre": "marvin osvaldo",
+      "correo": "marvinsolis@gmail.com",
+      "contraseña": "12345678",
+      "sueldo": 15000.0,
+      "prestamo": null
+    }
+  ],
+  "solicitudes": []
+}

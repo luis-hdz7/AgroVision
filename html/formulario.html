@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title> Formulario</title>
+    </head>
+    <body>
+        <ul> 
+            <li>Tipo de botones 1:</li>
+            <li>Tipo submit: a</li>
+            <li>Tipo reset: b</li>
+            <li>Tipo button: c</li>
+        </ul>
+
+        <ol>
+            <li>Tipo de botones 1:</li>
+            <li>Tipo submit: a</li>
+            <li>Tipo reset: b</li>
+            <li>Tipo button: c</li>
+            <li>
+                <ol>
+                    <li>Sub-lista;s</li>
+                    <li>Tipo submit: a</li>
+                    <li>Tipo reset: b</li>
+                    <li>Tipo button: c</li>
+                </ol>
+            </li>
+        </ol>
+
+        <h1> Formulario a contacto</h1>
+        <form>
+            <form action="/formulario" method="POST"></form>
+            <!--- <form action="/formulario" method="GET"></form>/> este metodo envie los valores que estan en los campos a traves de la url--->
+            <!--- <form action="/formulario" method="POST"></form>/> este metodo es para trabajar con mas campos--->
+            <label for ="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Nombre"/>
+            <!--- type="file", nos da elegir un archivo-->
+            <br>
+            <label for="apellido"> Apellido</label>
+            <input type="text" id="apellido" name="apellido" placeholder="apellido"/>
+            <br>
+            <label for="comentario">Comentario</label>
+            <textarea value="Este es un valor por defecto" placeholder="Ingresa tu comentario aqui">Valor por defecto</textarea>
+            <br>
+            <button type="button" value="enviar" >Tipo button</button>
+            <button type="reset" value="enviar">Tipo reset</button>
+            <button type="submit" value="enviar">Tipo submit</button>
+        </form>
+    </body>
+</html>

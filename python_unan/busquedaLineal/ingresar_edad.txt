@@ -1,0 +1,7 @@
+Edad = []  # lista vacía
+
+for i in range(10):
+    valor = int(input(f"Ingrese la edad #{i+1}: "))
+    Edad.append(valor)
+
+print("Las edades son:", Edad)

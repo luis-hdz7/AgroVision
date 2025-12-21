@@ -1,0 +1,66 @@
+body{
+    margin: 0;
+    background: black;
+    overflow: hidden;
+}
+
+#wrapper{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+#game{
+    height: 100vh;
+    max-height: 700px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    width: 600px;
+}
+
+.card {
+    width:100px;
+    height: 140px;
+    margin: 1rem;
+    position: relative;
+    transition: transform 0.5%;
+    transform-style:preserve-3d;
+}
+
+.card.activate{
+    transform: rotateY(180deg);
+}
+
+.card div{
+    width:100%;
+    height:100%;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position:absolute;
+    backface-visibility: hidden;
+    pointer-events: none;
+}
+
+.card .face{
+    background: purple;
+    transform: rotateY(180deg);
+    color: white;
+    font-size: 6rem;
+}
+
+.card .back{
+    border:2px solid purple;
+    background-image: url("img/back.png");
+    background-size: cover;
+}
+
+
+
+

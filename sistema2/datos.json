@@ -1,0 +1,105 @@
+{
+  "clientes": [
+    {
+      "id_cliente": "0a4ca6b4-b5e5-4c64-ae7e-20bc8a0be3d3",
+      "nombre": "Jolmar Chavarria",
+      "correo": "jolmarxd@gmail.com",
+      "contraseña": "12345678",
+      "sueldo": 30000.0,
+      "prestamo": {
+        "id_prestamo": "812b70d2-0a2e-44e2-a8d7-1750e8590ebb",
+        "monto": 50000.0,
+        "tasa_interes": 10.0,
+        "plazo": 12,
+        "saldo_pendiente": 50000.0,
+        "cedula": "281-040307-1007W",
+        "direccion": "San Isidro",
+        "telefono": "58101169",
+        "historial": [],
+        "fecha_desembolso": "2025-11-11",
+        "ganancias": 0.0,
+        "cuotas_pagadas": 0
+      }
+    },
+    {
+      "id_cliente": "db055338-3338-4efd-a212-1888c039fc62",
+      "nombre": "marvin",
+      "correo": "marvin1@gmail.com",
+      "contraseña": "12345678",
+      "sueldo": 15000.0,
+      "prestamo": {
+        "id_prestamo": "41a43b5f-5f72-4485-a8de-79e12ff8d94c",
+        "monto": 10000.0,
+        "tasa_interes": 10.0,
+        "plazo": 12,
+        "saldo_pendiente": 10000.0,
+        "cedula": "281-040307-1007W",
+        "direccion": "San Isidro",
+        "telefono": "58101169",
+        "historial": [],
+        "fecha_desembolso": "2025-11-11",
+        "ganancias": 0.0,
+        "cuotas_pagadas": 0
+      }
+    },
+    {
+      "id_cliente": "44b31492-6875-47ae-9f6c-ddad23c26791",
+      "nombre": "jousban",
+      "correo": "jousban@gmail.com",
+      "contraseña": "12345678",
+      "sueldo": 50000.0,
+      "prestamo": {
+        "id_prestamo": "ac7b46ae-8fd8-4d29-becc-4c89c769a6e3",
+        "monto": 20000.0,
+        "tasa_interes": 10.0,
+        "plazo": 12,
+        "saldo_pendiente": 20000.0,
+        "cedula": "281-040307-1007W",
+        "direccion": "San Isidro",
+        "telefono": "58101169",
+        "historial": [],
+        "fecha_desembolso": "2025-11-11",
+        "ganancias": 0.0,
+        "cuotas_pagadas": 0
+      }
+    }
+  ],
+  "solicitudes": [
+    {
+      "id_solicitud": "689d5e99-73e5-462a-ae42-fd5e28679ddf",
+      "id_cliente": "0a4ca6b4-b5e5-4c64-ae7e-20bc8a0be3d3",
+      "monto": 50000.0,
+      "tasa_interes": 10.0,
+      "plazo": 12,
+      "cedula": "281-040307-1007W",
+      "direccion": "San Isidro",
+      "telefono": "58101169",
+      "estado": "Rechazada",
+      "fecha": "2025-11-11 11:32:41"
+    },
+    {
+      "id_solicitud": "bb337f1e-34c4-4c17-8064-7bdc9688e99f",
+      "id_cliente": "db055338-3338-4efd-a212-1888c039fc62",
+      "monto": 10000.0,
+      "tasa_interes": 10.0,
+      "plazo": 12,
+      "cedula": "281-040307-1007W",
+      "direccion": "San Isidro",
+      "telefono": "58101169",
+      "estado": "Rechazada",
+      "fecha": "2025-11-11 12:48:13"
+    },
+    {
+      "id_solicitud": "41cf1727-4189-48d9-9214-886e95a38f86",
+      "id_cliente": "44b31492-6875-47ae-9f6c-ddad23c26791",
+      "monto": 20000.0,
+      "tasa_interes": 10.0,
+      "plazo": 12,
+      "cedula": "281-040307-1007W",
+      "direccion": "San Isidro",
+      "telefono": "58101169",
+      "estado": "Rechazada",
+      "fecha": "2025-11-11 13:57:02"
+    }
+  ]
+}

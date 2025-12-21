@@ -1,0 +1,42 @@
+import tkinter as tk
+
+raiz = tk.Tk() #Esto es para crear la ventana
+
+raiz.title("Ventana de prueba")
+#Es para el nombre de la ventana
+
+raiz.iconbitmap("logopy.ico")
+# se utiliza para establecer el ícono que aparecerá en la barra de 
+# título de la ventana y en la barra de tareas del sistema operativo.
+#Solo se puede ingresar mediante un archivo .ico
+
+#raiz.geometry("680x350")
+#esto es mas que todo para cuando corramos el programa, la ventana ya tenga
+#su geometria especifica
+
+raiz.config(bg="green")
+#esto es para cambiarle el color al bg (background)
+
+raiz.resizable(True, True) #es para controlar si el usuario puede cambiar el tamano de la ventana principal
+#raiz.resizable(True, False) siempre se usan los dos
+
+#video 2 - frame, es lo que esta dentro de la ventana
+
+miFrame = tk.Frame() 
+#Crea el contenedor en la memoria.
+#Esto crea un nuevo widget frame, Frame(), es una clase de tkinter que funciona como contenedor invisible.
+
+miFrame.pack(side="top", anchor = "n") #Muestra el contenedor en la ventana para que sea visible y pueda empezar a contener otros elementos de tu interfaz.
+#Es uno de los gestores de geometria de tkinter, los gestores de geometria
+#son metodos que le dicen a tkinter donde y cono deben colocarse los widgets en la
+#pantalla.
+
+#miFrame.pack(side = "left", "right", "top")
+#miFrame.pack(anchor = "n") esto es mas que todo para en donde este posicionado, usando puntos cardinales
+
+miFrame.config(bg="red")
+miFrame.config(width="650", height="350")
+
+
+
+raiz.mainloop() #es un bucle infinito

@@ -1,0 +1,52 @@
+{
+  "clientes": [
+    {
+      "id_cliente": "e1ed24c7-df57-40f1-9cfc-c6e72b108e69",
+      "nombre": "marvin chacon",
+      "correo": "marvinchacon@gmail.com",
+      "contraseña": "12345678",
+      "sueldo": 50000.0,
+      "prestamo": {
+        "id_prestamo": "dcd6047d-b31d-4f79-9720-c0a9369f942f",
+        "monto": 10000.0,
+        "tasa_interes": 10.0,
+        "plazo": 12,
+        "saldo_pendiente": 8166.68,
+        "cedula": "281-040307-1007W",
+        "direccion": "San Isidro",
+        "telefono": "58101169",
+        "historial": [
+          {
+            "fecha": "2025-11-11 15:04:33",
+            "tipo": "Pago de cuota",
+            "monto": 916.66,
+            "detalle": "Pago de cuota aprobado. Cuota #1"
+          },
+          {
+            "fecha": "2025-11-11 15:04:48",
+            "tipo": "Pago de cuota",
+            "monto": 916.66,
+            "detalle": "Pago de cuota aprobado. Cuota #2"
+          }
+        ],
+        "fecha_desembolso": "2025-11-11",
+        "ganancias": 166.66,
+        "cuotas_pagadas": 2
+      }
+    }
+  ],
+  "solicitudes": [
+    {
+      "id_solicitud": "e3b07827-3680-4276-aa17-7fd4b7682c25",
+      "id_cliente": "e1ed24c7-df57-40f1-9cfc-c6e72b108e69",
+      "monto": 10000.0,
+      "tasa_interes": 0.1,
+      "plazo": 12,
+      "cedula": "281-040307-1007W",
+      "direccion": "San Isidro",
+      "telefono": "58101169",
+      "estado": "Aprobada",
+      "fecha": "2025-11-11 14:52:44"
+    }
+  ]
+}

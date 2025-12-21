@@ -1,0 +1,24 @@
+error de sintaxis
+eston son los errores gramaticales del lenguaje, python los detecta
+antes de ejecutar el codigo. Si hay uno el programa simplemente lo arranca, 
+el interprete nos da una pista muy clara sobre donde esta el problema.
+
+error de logica.
+son los mas insidiosos y desafiantes de depurar, se ejecutan sin problemas 
+tecnicos; python no lanza ninguna excepcion.
+El probleam radica en que el problema no hace hace lo que usted esperaba quehiciera, la logica
+de su algoritmo es defectuosa, llevando a resultados incorrectos o un comportamiento inesperado.
+Detectar errores logicos requiere una comprension clara del flujo del programa (depurar)
+
+
+
+
+
+
+
+
+
+
+
+
+

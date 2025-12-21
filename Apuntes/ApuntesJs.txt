@@ -1,0 +1,66 @@
+Variables.
+Como puedo creat una variable en js?
+var.
+var helloworld = "Hola, Javascript"
+console.log(helloworld)
+//esto no es la manera adecuada para las variables, porque ocurren problemas de definicion
+
+
+let.
+//esta es adecuada para asignar valores a la memoria.
+solo son accesibles dentro de un bloque. //se parece a var, solo que se eleva en el fichero.
+const.
+//esta es adecuada para asignar valores a la memoria.
+si const lo usamos con datos en ligar de un valor, sean referencias como. 
+Arrays, ahi si pueden terminar variando. 
+
+datatypes.
+tipos de datos en Javascript:
+Datos primitivos. Spon los datos en los que se fundamentan nuestra interaccion con el lenguaje, son datos asicos y datos inmutables, que representan un solo valor.
+
+//String (cadena de texto)
+
+        console.log( pattern[0], pattern[1], pattern[2]);
+        console.log(
+            boxes [pattern[0]].innerText,
+            boxes[pattern[1]].innerText,
+            boxes[pattern[2].innerText]);
+    };
+    
+
+const resetGame = () => {
+    turnO = true;
+    enableBoxes(); 
+    msgContainer.classList.add("hide");
+}
+
+
+.card back{
+    
+}
+
+
+
+
+Node, este comando lo usamos para hacer funcionar el comando console.log
+
+Operadores de comparacion
+Ejemplos que dan true (verdadero):
+console.log(5 == '5');     // true → compara solo valor
+console.log(5 === 5);      // true → valor y tipo
+console.log(3 < 10);       // true
+console.log(8 > 1);        // true
+console.log(4 <= 4);       // true
+
+Ejemplos que dan false (falso):
+console.log(5 === '5');    // false → tipos diferentes
+console.log(10 != 10);     // false
+console.log(7 < 3);        // false
+console.log(4 > 9);        // false
+console.log(2 >= 5);       // false
+// ! esto es para negar el valor, o invertirlo.
+
+
+
+
+

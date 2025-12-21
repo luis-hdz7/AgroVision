@@ -1,0 +1,68 @@
+[
+  {
+    "id_cliente": "64f23597-1f10-447b-a6dc-2417d09e7142",
+    "nombre": "Jolmar Solis",
+    "correo": "jolmar@gmail.com",
+    "contrase\u00f1a": "jajaja21",
+    "prestamo": {
+      "monto": 1000.0,
+      "saldo_pendiente": 1000.0,
+      "historial": []
+    }
+  },
+  {
+    "id_cliente": "7dd41d22-e30a-4149-8220-4304cfaba0ff",
+    "nombre": "Marvin Solis",
+    "correo": "marvin@gmail.com",
+    "contrase\u00f1a": "pornografiaxd",
+    "prestamo": null
+  },
+  {
+    "id_cliente": "2795d09e-5f98-4bdd-9886-99758aba1691",
+    "nombre": "Jolman",
+    "correo": "jolmanxd@gmail.com",
+    "contrase\u00f1a": "12345678",
+    "prestamo": {
+      "monto": 1000.0,
+      "saldo_pendiente": 0,
+      "historial": [
+        {
+          "fecha": "2025-10-30 15:34:31",
+          "tipo": "Abono parcial",
+          "monto": 999.0,
+          "detalle": "Abono parcial al pr\u00e9stamo"
+        },
+        {
+          "fecha": "2025-10-30 15:35:45",
+          "tipo": "Abono total",
+          "monto": 1.0,
+          "detalle": "Pr\u00e9stamo saldado"
+        }
+      ]
+    }
+  },
+  {
+    "id_cliente": "63808f9a-1b4a-44e2-b202-0d5574b3aef8",
+    "nombre": "Kinder",
+    "correo": "kinder1@gmail.com",
+    "contrase\u00f1a": "kinderxd",
+    "prestamo": {
+      "monto": 10000.0,
+      "saldo_pendiente": 0,
+      "historial": [
+        {
+          "fecha": "2025-10-30 15:44:18",
+          "tipo": "Abono parcial",
+          "monto": 9999.0,
+          "detalle": "Abono parcial al pr\u00e9stamo"
+        },
+        {
+          "fecha": "2025-10-30 15:44:25",
+          "tipo": "Abono total",
+          "monto": 1.0,
+          "detalle": "Pr\u00e9stamo saldado"
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,32 @@
+[
+    {
+        "nombre": "Tatiana Trejos",
+        "telefono": "84087311",
+        "direccion": "En mi corazon",
+        "prestamos": [
+            {
+                "monto_inicial": 50.0,
+                "tiempo_dias": 20,
+                "monto_final": 100.0
+            }
+        ]
+    },
+    {
+        "nombre": "Carlos",
+        "telefono": "12345678",
+        "direccion": "Arrocera",
+        "prestamos": [
+            {
+                "monto_inicial": 1000.0,
+                "tiempo_dias": 60,
+                "monto_final": 10000.0
+            }
+        ]
+    },
+    {
+        "nombre": "Marvin Solis",
+        "telefono": "58101169",
+        "direccion": "Iglesia San Isidro",
+        "prestamos": []
+    }
+]

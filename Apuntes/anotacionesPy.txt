@@ -1,0 +1,57 @@
+#metodo cadena
+dir -> devuelve la lista de atributos validos del objeto pasado.
+
+isnumeric -> si es numerico devuelve true
+isalpha -> si es alfa numerico devuelve true
+
+count -> devuelve el numero de ocurrencuas de una subcadea en la cadena dada.
+len -> cuenta los caracteres de una cadena.
+
+split -> separa por el parametro dado.
+replace -> remplaza un valor por otro.
+
+lower -> convierte en minuscula
+upper -> convierte en mayuscula
+capitalize -> primera en mayuscula
+
+find -> metodo encuentra la primera aparicion del valor especificado, sino devuelve -1
+index -> metodo encuentra la primera aparicion del valor especificado, sino devuelve una excepcion
+//
+
+endswith ->verifica si una cadena comienza en
+startswith -> verifica si una cadena termina en
+
+#metodo de lista
+
+list -> crea una lista
+
+len -> cuenta la cantidad de elemento de una lista
+
+append -> agrega un elemento a la lista
+insert -> agrega un elemento a la lista en el indice especificado
+extend -> agrega varios elementos a la lista
+
+pop -> elimina un elemento de una lista, pide indice y devuelve valor
+remove -> remueve un elemento de una lista, pide valor
+clear -> elimina todos los elementos de una lista
+
+sort -> ordena una lista de forma ascendente a descendente
+reverse -> invierte los elementos de una lista
+
+#metodo de diccionario
+key() -> devuelve las claves
+get() -> devuelve el valor de una clave
+clear() -> elimina todos los elementos
+pop() -> elimina un elemento
+items() -> para iterar el dict
+
+break -> se usa para salir inmediatamente de un bucle (ya sea for o while)
+
+#entrada de datos
+
+
+#Para que no se abra un archivo con doble ventana, lo ponemos asi "tkinter.pyw"
+
+
+
+

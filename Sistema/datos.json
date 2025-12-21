@@ -1,0 +1,55 @@
+[
+  {
+    "id_cliente": "dc3e6650-179b-4d64-81c8-9db50fead677",
+    "nombre": "Jolmar Luis Solis Pineda",
+    "correo": "jolmar12@gmail.com",
+    "contraseña": "12345678",
+    "prestamos": [
+      {
+        "id_prestamo": "833d383e-1e7f-4edc-987e-a9436f7c7398",
+        "monto": 12000.0,
+        "tasa_interes": 10.0,
+        "plazo": 12,
+        "saldo_pendiente": 0.0,
+        "cedula": "281-040307-1007W",
+        "fecha_nacimiento": "2007-03-04",
+        "direccion": "San Isidro",
+        "telefono": "58101169",
+        "sueldo": 10000.0,
+        "estado_solicitud": "Pendiente",
+        "historial": [],
+        "fecha_desembolso": "2025-11-11",
+        "ganancias": 0.0,
+        "cuotas_pagadas": 0
+      }
+    ]
+  },
+  {
+    "id_cliente": "55a55923-2985-4a5c-b890-6629bd17bdc6",
+    "nombre": "Marvin Chacon",
+    "correo": "marvinchacon@gmail.com",
+    "contraseña": "12345678",
+    "prestamos": []
+  },
+  {
+    "id_cliente": "4417a187-545b-477a-ad2e-557b5d303fe2",
+    "nombre": "Edilberto Lacayo",
+    "correo": "edilbertoxd@gmail.com",
+    "contraseña": "12345678",
+    "prestamos": []
+  },
+  {
+    "id_cliente": "f4b0c4f3-eae2-4ff1-a495-a2d021b90463",
+    "nombre": "Juan",
+    "correo": "juanxd@gmail.com",
+    "contraseña": "12345678",
+    "prestamos": []
+  },
+  {
+    "id_cliente": "0da72071-2274-4a8e-b9ee-1c0b9985dae8",
+    "nombre": "Carlos",
+    "correo": "carlosxd@gmail.com",
+    "contraseña": "12345678",
+    "prestamos": []
+  }
+]

@@ -1,0 +1,33 @@
+[
+  {
+    "id_cliente": "5eb263f5-6b7c-4b04-b2d6-24bf72fd83bd",
+    "nombre": "Jolmar Luis Solis Pineda",
+    "correo": "jolmar@gmail.com",
+    "contraseña": "12345678",
+    "prestamo": {
+      "id_prestamo": "6f6c6673-dd78-4dec-ba1d-55620c19ba0e",
+      "monto": 100.0,
+      "tasa_interes": 10.0,
+      "plazo": 12,
+      "saldo_pendiente": 82.41682255399803,
+      "cedula": "2810609851007W",
+      "fecha_nacimiento": "1985-09-06",
+      "direccion": "Iglesia San Isidro",
+      "telefono": "098765432",
+      "historial": [
+        {
+          "fecha": "2025-10-24 18:20:16",
+          "tipo": "Pago de cuota",
+          "monto": 8.79158872300099,
+          "detalle": "Pago mensual del préstamo"
+        },
+        {
+          "fecha": "2025-10-24 18:20:30",
+          "tipo": "Pago de cuota",
+          "monto": 8.79158872300099,
+          "detalle": "Pago mensual del préstamo"
+        }
+      ]
+    }
+  }
+]
