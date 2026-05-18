@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Lista de Invitados</title>
+    <link rel="stylesheet" href="lista.css">
+</head>
+<body>
+    <div id="invitados">
+        <h1 id="invitados"> Lista de Invitados</h1>
+        <input type="text" id="nombre">
+        <button onclick="mostrarLista()"> Mostrar lista de invitados </button>
+        <button onclick="agregarInvitado()">Agregar</button>
+        <button onclick="eliminarInvitado()">Eliminar</button>
+    </div>
+    <list id="lista">
+        <script>
+            function cargarInvitados(){}
+                function agregarInvitado(){
+                    const usuario = document.getElementById('nombre').value;
+                    const lista = document.getElementById('lista');
+                    const nuevoInvitado = document.createElement('li');
+                    nuevoInvitado.innerText = usuario; // innerText, es para agregar texto
+                    lista.appendChild(nuevoInvitado); //appendCHild es para agregar un hijo en la lista
+                    console.log("Invitado agregado correctamente.");
+                    if (usuario == "" || usuario == null || usuario.length == 0 || /^\s+$/.test(usuario)/*expresion regular para espacios en blanco*/){
+                        alert("Por favor ingrese su nombre.");
+                    } else{
+                        alert("Bienvenido " + usuario + " a la fiesta.")
+                    }
+                }
+    
+                function mostrarLista(){
+                    //mostrar lista de invitados.
+                    const lista = document.getElementById('lista');
+                    const invitados = lista.getElementsByTagName('li');
+                    let mensaje = "Lista de invitados:\n";
+                    for(let i = 0; i <invitados.length; i++){
+                        mensaje += "- " + invitados[i].innerText + "\n";
+                        
+                    }
+                    if(invitados == null || invitados == 0 || invitados == "" || invitados == undefined){
+                        mensaje = "No hay invitados en la lista.";
+                    } else{
+                        mensaje += "Total de invitados: " + invitados.length;
+                    }
+                    alert(mensaje);
+                }
+    
+                function eliminarInvitado(){
+                    //selecciona el invitado a eliminar
+                    const usuario = document.getElementById('nombre').value;
+                    const lista = document.getElementById('lista');
+                    const invitados = lista.getElementsByTagName('li');
+                    let encontrado = false;
+
+                    for (let i = 0; i < invitados.length; i++){
+                        if(invitados[i].innerText === usuario){
+                            lista.removeChild(invitados[i]);
+                            encontrado = true;
+                            alert("Invitado " + usuario + " eliminado de la lista.");
+                            break;
+                        }
+                    }
+                    
+                    //mostrar ventana de seleccionar invitado a eliminar 
+                }
+        </script>
+    </list>
+</body>
+</html>

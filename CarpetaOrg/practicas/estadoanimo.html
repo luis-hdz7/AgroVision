@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mi Primer Experimento</title>
+    <style>
+        /* CSS: Solo para que se vea un poco limpio */
+        body { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            font-family: sans-serif;
+            transition: background 0.5s; /* Para que el color cambie suave */
+        }
+        button { padding: 10px 20px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h1 id="mensaje">Hoy estoy tranquilo</h1>
+    <button onclick="cambiarAnimo()">¡Presióname!</button>
+
+    <script>
+        // JAVASCRIPT: Aquí ocurre la magia
+        function cambiarAnimo() {
+            // 1. Buscamos el elemento por su ID
+            const titulo = document.getElementById('mensaje');
+            
+            // 2. Cambiamos el texto
+            titulo.innerText = "¡Hoy estoy con todo! 🚀";
+            
+            // 3. Cambiamos el estilo del cuerpo (body)
+            document.body.style.backgroundColor = "#fbbf24";
+            document.body.style.color = "white";
+            
+            // 4. Mandamos un mensaje a la consola (F12)
+            console.log("¡El ánimo ha cambiado con éxito!");
+        }
+    </script>
+
+</body>
+</html>

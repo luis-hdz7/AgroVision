@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Invitados Pro</title>
+    <style>
+        /* CSS Unificado */
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #eef2f3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        #contenedor-principal {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box; /* Para que el padding no desborde el ancho */
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #3498db;
+        }
+
+        .botones-grupo {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s, background 0.3s;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* Colores de botones */
+        .btn-agregar { background-color: #27ae60; }
+        .btn-eliminar { background-color: #e74c3c; }
+        .btn-mostrar { background-color: #3498db; }
+
+        button:hover {
+            filter: brightness(1.1);
+        }
+
+        ul#lista {
+            list-style: none;
+            padding: 0;
+            margin-top: 2rem;
+            text-align: left;
+        }
+
+        ul#lista li {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            border-left: 5px solid #3498db;
+            display: flex;
+            justify-content: space-between;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="contenedor-principal">
+        <h1>Invitados</h1>
+        
+        <input type="text" id="nombre" placeholder="Nombre del invitado...">
+        
+        <div class="botones-grupo">
+            <button class="btn-agregar" onclick="agregarInvitado()">Agregar a la lista</button>
+            <button class="btn-eliminar" onclick="eliminarInvitado()">Eliminar por nombre</button>
+            <button class="btn-mostrar" onclick="mostrarLista()">Mostrar Lista</button>
+        </div>
+
+        <ul id="lista">
+            </ul>
+    </div>
+
+    <script>
+        // Funciones de Lógica
+        function agregarInvitado() {
+            const input = document.getElementById('nombre');
+            const nombre = input.value.trim();
+            const listaUl = document.getElementById('lista');
+
+            // Validación: No vacío y no solo espacios
+            if (nombre === "" || nombre.length === 0) {
+                alert("⚠️ Por favor, escribe un nombre válido.");
+                return;
+            }
+
+            // Crear el elemento de la lista
+            const nuevoLi = document.createElement('li');
+            nuevoLi.innerText = nombre;
+            
+            // Agregar a la lista
+            listaUl.appendChild(nuevoLi);
+
+            // Feedback y limpieza
+            console.log("Invitado agregado:", nombre);
+            input.value = "";
+            input.focus();
+        }
+
+        function eliminarInvitado() {
+            const nombreABuscar = document.getElementById('nombre').value.trim().toLowerCase();
+            const listaUl = document.getElementById('lista');
+            const items = listaUl.getElementsByTagName('li');
+            let encontrado = false;
+
+            if (nombreABuscar === "") {
+                alert("Escribe el nombre que deseas eliminar.");
+                return;
+            }
+
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].innerText.toLowerCase() === nombreABuscar) {
+                    listaUl.removeChild(items[i]);
+                    encontrado = true;
+                    alert("✅ Invitado eliminado correctamente.");
+                    break;
+                }
+            }
+
+            if (!encontrado) {
+                alert("❌ No se encontró a '" + nombreABuscar + "' en la lista.");
+            }
+            
+            document.getElementById('nombre').value = "";
+        }
+
+        function mostrarLista() {
+            const items = document.querySelectorAll('#lista li');
+            
+            if (items.length === 0) {
+                alert("La lista está vacía actualmente.");
+                return;
+            }
+
+            let mensaje = "📋 LISTA ACTUAL:\n";
+            items.forEach((item, index) => {
+                mensaje += (index + 1) + ". " + item.innerText + "\n";
+            });
+            
+            mensaje += "\nTotal: " + items.length + " personas.";
+            alert(mensaje);
+        }
+    </script>
+
+</body>
+</html>

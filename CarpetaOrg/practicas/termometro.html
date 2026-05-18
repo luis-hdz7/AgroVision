@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Termometro</title>
+</head>
+<body>
+    <h1 id="temperatura">Caluladora de Temperatura!</h1>
+    <input type="number" id="porcentaje"> 
+    <button onclick="calcularTemperatura()">Presioname!</button>
+    <script>
+        function calcularTemperatura(){
+            const porcentaje = document.getElementById('porcentaje').value
+            const titulo = document.getElementById('temperatura')
+            const temperatura = (porcentaje * 40) / 100
+            titulo.innerText = "La temperatura es: " + temperatura + "°C"
+            if (temperatura < 15){
+                document.body.style.backgroundColor = "blue";
+            } else if(temperatura >= 15 && temperatura <= 25){
+                document.body.style.backgroundColor = "orange";
+            
+            } else {
+                document.body.style.backgroundColor = "red";
+            }
+            console.log("Temperatura calculada correctamente");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Hotel El Convento
+        </title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+    <div class="fondo">
+            <div class="login-box" id="login-box">
+                <form action="?" id="loginForm">
+                    <h2 id="header">Login</h2>
+                    <input type="text" id="user" placeholder="Ingresa tu usuario">
+                    <input type="password" id="password" placeholder="password">
+                    <button type="submit">Entrar</button>
+                </form>
+            </div>
+            <script>
+                //funcion de inicio de sesion y mandarlo a la pagina principal
+                const loginForm = document.getElementById('loginForm');
+                loginForm.addEventListener('submit', function(event) {
+                    event.preventDefault(); // Evita el envío del formulario
+
+                    const user = document.getElementById('user').value;
+                    const password = document.getElementById('password').value;
+
+                    // Validar credenciales (aquí puedes agregar tu lógica de validación)
+                    if (user === 'admin' && password === '1234') {
+                        alert('Inicio de sesión exitoso');
+                        window.location.href = '../salon-gemini.html'; // Redirigir a la página principal
+                    } else {
+                        alert('Usuario o contraseña incorrectos');
+                    }
+                });
+
+                if(window.history.replaceState){
+                    window.history.replaceState(null, null, window.location.href);
+                }
+            </script>
+    </div>
+    </body>
+    <!-- <script src="../validacion.js"></script> -->
+</html>
+
+
+
+
+
+

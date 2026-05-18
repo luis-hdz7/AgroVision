@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planner de Salón de Eventos Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hall-container {
+            background-image: radial-gradient(#cbd5e1 2px, transparent 2px);
+            background-size: 30px 30px;
+        }
+        .seat { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .seat:hover { transform: scale(1.2); z-index: 50; }
+        .table-active { border: 2px solid #fbbf24 !important; box-shadow: 0 0 20px rgba(251, 191, 36, 0.6); }
+        .element-item:hover { background-color: #f0fdf4; border-color: #bbf7d0; }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen p-4 md:p-8 font-sans">
+
+    <div class="max-w-6xl mx-auto">
+        <header class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <h1 class="text-3xl font-bold bg-gradient-to-r from-amber-400 to-yellow-200 bg-clip-text text-transparent">Gestor de Salón</h1>
+                <p class="text-slate-400">Diseña tu evento: arrastra mesas y mobiliario.</p>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="openElementsModal()" class="bg-green-500/10 hover:bg-green-600 text-green-500 hover:text-white border border-green-500/50 px-4 py-2 rounded-lg transition-all text-sm font-semibold">
+                    Añadir Mobiliario
+                </button>
+                <button onclick="resetLayout()" class="bg-amber-500/10 hover:bg-amber-600 text-amber-500 hover:text-white border border-amber-500/50 px-4 py-2 rounded-lg transition-all text-sm font-semibold">
+                    Reiniciar Salón
+                </button>
+                <button onclick="logout()" class="bg-red-500/10 hover:bg-red-600 text-red-500 hover:text-white border border-red-500/50 px-4 py-2 rounded-lg transition-all text-sm font-semibold">
+                    Cerrar sesión
+                </button>
+            </div>
+        </header>
+
+        <div id="hall" class="hall-container relative w-full h-[650px] bg-slate-50 rounded-3xl border-4 border-slate-800 overflow-hidden shadow-2xl">
+            </div>
+    </div>
+
+    <div id="modal" class="fixed inset-0 bg-slate-950/80 hidden items-center justify-center z-[100] backdrop-blur-sm p-4">
+        <div class="bg-white text-slate-800 p-6 rounded-3xl w-full max-w-sm shadow-2xl transform transition-all">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modal-title" class="text-xl font-bold">Asignar</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600">✕</button>
+            </div>
+            
+            <div id="modal-content" class="space-y-2 max-h-72 overflow-y-auto pr-2 mb-6 text-sm">
+                </div>
+
+            <div class="flex gap-2" id="modal-footer">
+                <button id="btn-remove" onclick="removeGuest()" class="hidden flex-1 bg-slate-100 text-slate-500 py-3 rounded-xl font-bold hover:bg-red-50 hover:text-red-600 transition-colors">Quitar</button>
+                <button onclick="closeModal()" class="flex-1 bg-slate-800 text-white py-3 rounded-xl font-bold hover:bg-slate-700 transition-colors">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURACIÓN Y DATOS ---
+        const CLAVE_LOCALSTORAGE = 'mesas_evento_v2';
+
+        const CATALOGO_MOBILIARIO = [
+            { nombre: "Pista de Baile", image: "https://img.icons8.com/fluency/96/000000/dance-floor.png" },
+            { nombre: "Set DJ", image: "https://img.icons8.com/fluency/96/000000/dj.png" },
+            { nombre: "Barra de Bebidas", image: "https://img.icons8.com/fluency/96/000000/bar.png" },
+            { nombre: "Mesa de Regalos", image: "https://img.icons8.com/fluency/96/000000/gift.png" },
+            { nombre: "Escenario", image: "https://img.icons8.com/fluency/96/000000/stage.png" }
+        ];
+
+        const ALL_GUESTS = Array.from({length: 15}, (_, i) => ({
+            id: i + 1,
+            name: `Invitado ${i + 1}`,
+            img: `https://i.pravatar.cc/150?u=${i + 1}`
+        }));
+
+        let state = { tables: [] };
+        let selectedContext = { tableId: null, seatIndex: null };
+        let activeDrag = null;
+
+        // --- INICIALIZACIÓN ---
+        function init() {
+            const saved = localStorage.getItem(CLAVE_LOCALSTORAGE);
+            if (saved) {
+                state = JSON.parse(saved);
+            } else {
+                // Estado inicial por defecto
+                state.tables = [
+                    { id: 'r1', type: 'round', x: 100, y: 100, seats: Array(10).fill(null) },
+                    { id: 's1', type: 'square', x: 400, y: 100, seats: Array(10).fill(null) }
+                ];
+                save();
+            }
+            render();
+        }
+
+        function save() {
+            localStorage.setItem(CLAVE_LOCALSTORAGE, JSON.stringify(state));
+        }
+
+        // --- RENDERIZADO PRINCIPAL ---
+        function render() {
+            const hall = document.getElementById('hall');
+            hall.innerHTML = '';
+
+            state.tables.forEach(table => {
+                const itemDiv = document.createElement('div');
+                itemDiv.style.left = `${table.x}px`;
+                itemDiv.style.top = `${table.y}px`;
+                itemDiv.style.position = 'absolute';
+                itemDiv.style.cursor = 'grab';
+
+                if (table.type === 'element') {
+                    // Renderizado de Mobiliario
+                    itemDiv.className = "flex flex-col items-center group";
+                    itemDiv.innerHTML = `
+                        <div class="relative">
+                            <img src="${table.image}" class="w-20 h-20 object-contain pointer-events-none">
+                            <button onclick="deleteObject('${table.id}')" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 text-xs opacity-0 group-hover:opacity-100 transition-opacity">✕</button>
+                        </div>
+                        <span class="text-[11px] font-black text-slate-700 bg-white/50 px-2 rounded-full mt-1">${table.name}</span>
+                    `;
+                } else {
+                    // Renderizado de Mesas
+                    itemDiv.className = `select-none flex items-center justify-center font-bold text-[10px] uppercase shadow-xl border-4 border-slate-700/20
+                        ${table.type === 'round' ? 'rounded-full bg-amber-800' : 'rounded-2xl bg-slate-800'} text-white/50`;
+                    itemDiv.style.width = '140px';
+                    itemDiv.style.height = '140px';
+                    itemDiv.innerText = table.type === 'round' ? 'Circular' : 'Cuadrada';
+
+                    table.seats.forEach((guestId, index) => {
+                        itemDiv.appendChild(createSeat(table, index, guestId));
+                    });
+                }
+
+                itemDiv.onmousedown = (e) => {
+                    if(e.target.tagName === 'BUTTON') return;
+                    startDrag(e, table, itemDiv);
+                };
+                hall.appendChild(itemDiv);
+            });
+        }
+
+        function createSeat(table, index, guestId) {
+            const seat = document.createElement('div');
+            const guest = ALL_GUESTS.find(g => g.id === guestId);
+            seat.className = `seat absolute w-10 h-10 rounded-full border-2 border-white shadow-md flex items-center justify-center cursor-pointer overflow-hidden
+                ${guest ? 'bg-white' : 'bg-slate-300 hover:bg-amber-400'}`;
+            
+            if (table.type === 'round') {
+                const angle = (index * 36) * (Math.PI / 180);
+                const x = 70 + 85 * Math.cos(angle) - 20;
+                const y = 70 + 85 * Math.sin(angle) - 20;
+                seat.style.left = `${x}px`; seat.style.top = `${y}px`;
+            } else {
+                const pos = [{t:-45, l:10}, {t:-45, l:50}, {t:-45, l:90}, {t:145, l:10}, {t:145, l:50}, {t:145, l:90}, {t:20, l:-45}, {t:80, l:-45}, {t:20, l:145}, {t:80, l:145}];
+                seat.style.top = `${pos[index].t}px`; seat.style.left = `${pos[index].l}px`;
+            }
+
+            seat.innerHTML = guest ? `<img src="${guest.img}" title="${guest.name}" class="w-full h-full object-cover">` : `<span class="text-[10px] text-slate-600 font-black">${index + 1}</span>`;
+            seat.onmousedown = (e) => e.stopPropagation();
+            seat.onclick = () => openGuestModal(table.id, index);
+            return seat;
+        }
+
+        // --- DRAG AND DROP ---
+        function startDrag(e, tableObj, el) {
+            activeDrag = { table: tableObj, element: el, offsetX: e.clientX - el.offsetLeft, offsetY: e.clientY - el.offsetTop };
+            el.classList.add('table-active');
+            el.style.zIndex = 1000;
+        }
+
+        document.onmousemove = (e) => {
+            if (!activeDrag) return;
+            const hall = document.getElementById('hall');
+            let newX = e.clientX - activeDrag.offsetX;
+            let newY = e.clientY - activeDrag.offsetY;
+
+            newX = Math.max(0, Math.min(newX, hall.offsetWidth - activeDrag.element.offsetWidth));
+            newY = Math.max(0, Math.min(newY, hall.offsetHeight - activeDrag.element.offsetHeight));
+
+            activeDrag.element.style.left = `${newX}px`;
+            activeDrag.element.style.top = `${newY}px`;
+            activeDrag.table.x = newX;
+            activeDrag.table.y = newY;
+        };
+
+        document.onmouseup = () => {
+            if (activeDrag) {
+                activeDrag.element.classList.remove('table-active');
+                activeDrag.element.style.zIndex = 1;
+                activeDrag = null;
+                save();
+            }
+        };
+
+        // --- MODALES Y LÓGICA ---
+        function openGuestModal(tableId, seatIndex) {
+            selectedContext = { tableId, seatIndex };
+            document.getElementById('modal-title').innerText = "Asignar Invitado";
+            document.getElementById('btn-remove').classList.remove('hidden');
+            
+            const assignedIds = state.tables.flatMap(t => t.seats).filter(id => id !== null);
+            const currentGuestId = state.tables.find(t => t.id === tableId).seats[seatIndex];
+            
+            const list = document.getElementById('modal-content');
+            list.innerHTML = ALL_GUESTS.filter(g => !assignedIds.includes(g.id) || g.id === currentGuestId).map(g => `
+                <div onclick="assignGuest(${g.id})" class="flex items-center gap-3 p-2 hover:bg-amber-50 cursor-pointer rounded-xl border border-transparent hover:border-amber-200 transition-all">
+                    <img src="${g.img}" class="w-10 h-10 rounded-full border">
+                    <span class="font-bold text-slate-700">${g.name}</span>
+                    ${g.id === currentGuestId ? '<span class="ml-auto text-[10px] bg-amber-100 text-amber-700 px-2 py-1 rounded">Sentado aquí</span>' : ''}
+                </div>
+            `).join('') || '<p class="text-center text-slate-400">No hay invitados disponibles.</p>';
+
+            document.getElementById('modal').classList.replace('hidden', 'flex');
+        }
+
+        function openElementsModal() {
+            document.getElementById('modal-title').innerText = "Catálogo de Mobiliario";
+            document.getElementById('btn-remove').classList.add('hidden');
+            
+            const list = document.getElementById('modal-content');
+            list.innerHTML = CATALOGO_MOBILIARIO.map((item, index) => `
+                <div onclick="addObjectToHall(${index})" class="element-item flex items-center gap-4 p-3 cursor-pointer rounded-2xl border border-slate-100 transition-all">
+                    <img src="${item.image}" class="w-12 h-12 object-contain">
+                    <span class="font-bold text-slate-700">${item.nombre}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('modal').classList.replace('hidden', 'flex');
+        }
+
+        function logout() {
+            if(confirm('¿Deseas cerrar sesión?')) {
+                window.location.href = './login/index.html';
+            }
+        }
+
+        function addObjectToHall(index) {
+            const item = CATALOGO_MOBILIARIO[index];
+            state.tables.push({
+                id: 'e' + Date.now(),
+                type: 'element',
+                x: 50, y: 50,
+                image: item.image,
+                name: item.nombre,
+                seats: []
+            });
+            save(); render(); closeModal();
+        }
+
+        function assignGuest(guestId) {
+            const table = state.tables.find(t => t.id === selectedContext.tableId);
+            table.seats[selectedContext.seatIndex] = guestId;
+            save(); render(); closeModal();
+        }
+
+        function removeGuest() {
+            const table = state.tables.find(t => t.id === selectedContext.tableId);
+            table.seats[selectedContext.seatIndex] = null;
+            save(); render(); closeModal();
+        }
+
+        function deleteObject(id) {
+            state.tables = state.tables.filter(t => t.id !== id);
+            save(); render();
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.replace('flex', 'hidden');
+        }
+
+        function resetLayout() {
+            if(confirm('¿Deseas borrar todo el diseño y reiniciar?')) {
+                localStorage.removeItem(CLAVE_LOCALSTORAGE);
+                location.reload();
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
