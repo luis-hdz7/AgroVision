@@ -1,97 +1,171 @@
-//Trabajo a realizar
-/*Frontend 1	UI / Pantalla	MappingPage, paneles, controles, resumen final, responsive.	Consume summary y estado visual. Coordina con Frontend 2 para ubicar el render dentro de la pantalla.
-Frontend 2	Render 2D	SVG del terreno, rover, trayectoria, plantas, obstáculos y playback.	Consume datos normalizados de Backend 3. Coordina con Backend 2 por coordenadas.
-Backend 1	Datos simulados	Mock JSON, timeline, datos de batería, plantas y obstáculos.	Entrega dataset a Backend 2 y Backend 3.
-Backend 2	Mapping Engine	Normalización de coordenadas, progreso, eventos y lógica de render.	Recibe mock de Backend 1 y entrega payload procesado a Backend 3.
-Backend 3	API / Integración	Routes, controller, schemas, endpoints y documentación Postman.	Entrega contrato API a Frontend 1 y Frontend 2.*/
+/**
+ * =========================================
+ * Mapping Module Types
+ * =========================================
+ * Interfaces y tipos principales para:
+ * - coordenadas
+ * - simulación
+ * - rover
+ * - eventos
+ * - renderizado
+ * - payloads API
+ * =========================================
+ */
 
-/*Día 1 — Base del módulo
-Objetivo: definir datos, contrato API y estructura visual. Al final del día debe existir una base estable para trabajar sin pisarse.
+// =========================
+// Base Coordinates
+// =========================
 
-Bloque	Dev	Módulo a trabajar	Tarea	Entregable
-1 · 2h30	Frontend 1	MappingPage	Diseñar layout base de pantalla.	Estructura visual sin lógica.
-1 · 2h30	Frontend 2	TerrainCanvas	Definir SVG/canvas base del terreno.	Plano vacío con grid.
-1 · 2h30	Backend 1	simulation-data	Crear dataset simulado.	roverSimulation.mock.json.
-1 · 2h30	Backend 2	mapping-engine	Definir estructura de coordenadas 2D.	Tipos/base lógica.
-1 · 2h30	Backend 3	terrain.routes	Definir contrato API.	Endpoints documentados.
-2 · 2h30	Frontend 1	MappingStatsPanel	Crear panel lateral/resumen.	Cards: batería, plantas, obstáculos.
-2 · 2h30	Frontend 2	MapLegend	Crear leyenda visual.	Colores e iconos definidos.
-2 · 2h30	Backend 1	seed simulation	Completar datos simulados.	Trayectoria, plantas, obstáculos.
-2 · 2h30	Backend 2	coordinateMapper	Crear función de normalización.	Coordenadas listas para render.
-2 · 2h30	Backend 3	API response format	Estandarizar respuesta JSON.	Contrato listo para frontend.
-
-Entregable del Día 1
-• Pantalla base creada.
-• Plano 2D vacío creado.
-• Dataset simulado listo.
-• Contrato API definido.
-• Estructura de coordenadas acordada.
-*/
-
-
-//*Crear las interfaces y tipos necesarios para el módulo de Mapping, incluyendo datos de simulación, coordenadas, eventos y payloads para la API.*/
+/**
+ * Coordenada base utilizada
+ * en el sistema de mapping.
+ */
 export interface Coordinate {
-    x: number
-    y: number
+  readonly x: number
+  readonly y: number
 }
-//esta se usara para normalizacion
+
+// =========================
+// Terrain
+// =========================
+
+/**
+ * Dimensiones reales del terreno.
+ */
 export interface TerrainDimensions {
-    width: number
-    height: number
+  readonly width: number
+  readonly height: number
 }
-export interface RoverPosition extends Coordinate {
-    timestamp: number
+
+// =========================
+// Canvas
+// =========================
+
+/**
+ * Configuración del canvas/SVG.
+ */
+export interface CanvasConfig {
+  readonly width: number
+  readonly height: number
 }
-export interface Plant extends Coordinate {
-    id: string
-    detected: boolean
+
+// =========================
+// Rover
+// =========================
+
+/**
+ * Posición del rover
+ * dentro de la trayectoria.
+ */
+export interface RoverPosition
+  extends Coordinate {
+  readonly timestamp: number
 }
-export interface Obstacle extends Coordinate {
-    id: string
-    size: number
-}
+
+/**
+ * Estados posibles del rover.
+ */
+export type RoverStatus =
+  | "IDLE"
+  | "MOVING"
+  | "SCANNING"
+
+/**
+ * Estado actual del rover.
+ */
 export interface RoverState {
-    battery: number
-    status: "IDLE" | "MOVING" | "SCANNING"
+  readonly battery: number
+  readonly status: RoverStatus
 }
+
+// =========================
+// Terrain Objects
+// =========================
+
+/**
+ * Planta detectada en el terreno.
+ */
+export interface Plant
+  extends Coordinate {
+  readonly id: string
+  readonly detected: boolean
+}
+
+/**
+ * Obstáculo detectado.
+ */
+export interface Obstacle
+  extends Coordinate {
+  readonly id: string
+  readonly size: number
+}
+
+// =========================
+// Statistics
+// =========================
+
+/**
+ * Estadísticas generales
+ * de la simulación.
+ */
 export interface SimulationStats {
-    plantsDetected: number
-    obstaclesDetected: number
-    distanceTraveled: number
+  readonly plantsDetected: number
+  readonly obstaclesDetected: number
+  readonly distanceTraveled: number
 }
+
+// =========================
+// Events
+// =========================
+
+/**
+ * Base común para eventos.
+ */
+export interface BaseEvent {
+  readonly timestamp: number
+}
+
+/**
+ * Eventos posibles
+ * durante la simulación.
+ */
 export type SimulationEvent =
-  | {
+  | (BaseEvent & {
       type: "MOVE"
       position: RoverPosition
-    }
-  | {
+    })
+
+  | (BaseEvent & {
       type: "PLANT_DETECTED"
       plantId: string
-      timestamp: number
-    }
-  | {
+    })
+
+  | (BaseEvent & {
       type: "OBSTACLE_DETECTED"
       obstacleId: string
-      timestamp: number
-    }
+    })
+
+// =========================
+// Simulation Data
+// =========================
+
+/**
+ * Estructura principal
+ * de la simulación.
+ */
 export interface SimulationData {
-    terrain: TerrainDimensions
-    rover: {
-        trajectory: RoverPosition[]
-        state: RoverState
-    }
-    plants: Plant[]
-    obstacles: Obstacle[]
-    stats: SimulationStats
-    events: SimulationEvent[]
-}
-export interface NormalizedCoordinate {
-    x: number
-    y: number
-}
-export interface CanvasConfig {
-    width: number
-    height: number
-}
+  readonly terrain: TerrainDimensions
 
+  readonly rover: {
+    trajectory: RoverPosition[]
+    state: RoverState
+  }
 
+  readonly plants: Plant[]
+
+  readonly obstacles: Obstacle[]
+
+  readonly stats: SimulationStats
+
+  readonly events: SimulationEvent[]
+}
