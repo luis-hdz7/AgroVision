@@ -1,18 +1,22 @@
 {
-    "rover": {
-        "x": 10,
-        "y": 20,
-        "batery": 90,
-        "status": "moving"
+    "terrain":{
+        "width": 100,
+        "heigh": 100
     },
-    "trayectoria": [
-        {"x": 10, "y": 20},
-        {"x": 11, "y": 21},
-        {"x": 12, "y": 22}
-    ],
+    "rover": {
+        "trayectoria": [
+            {"x": 10, "y": 20, "timestamp": 123456},
+            {"x": 11, "y": 21, "timestamp": 123456},
+            {"x": 12, "y": 22, "timestamp": 123456}
+        ]
+    },
+    "estado": {
+        "batery": 90,
+        "status": "MOVING"
+    },
     "plants": [
         {
-            "id":1,
+            "id":"planta-1",
             "x": 15,
             "y": 20,
             "salud": "good"
@@ -20,15 +24,22 @@
     ],
     "obstaculos": [
         {
+            "id": "obstaculo-1",
             "x": 18,
             "y": 40,
-            "type": "roca"
+            "size": 5
         }
     ],
+    "stast": {
+        "plantaDetectada": 1,
+        "obstaculoDetectado": 1,
+        "distanciaRecorrida": 4
+    },
     "events": [
         {
             "mensaje": "Planta detectada",
-            "timestamp": 123456
+            "timestamp": 123456,
+            "plantid": "planta-1"
         }
     ]
 }
