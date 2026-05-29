@@ -5,7 +5,7 @@ import roverSimulationMock from '../../data/roverSimulationMock.json';
 //nueva clase xd
 export class SimulationService {
     //obteniendo el json
-    get Simulation(): SimulationData {
+    getSimulation(): SimulationData {
         return roverSimulationMock as unknown as SimulationData;
     }
 }
