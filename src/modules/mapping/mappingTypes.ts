@@ -40,13 +40,20 @@ export interface RoverPosition extends Coordinate {
 }
 
 export type RoverStatus =
-  | "IDLE"
-  | "MOVING"
-  | "SCANNING"
+  | "idle"
+  | "moving"
+  | "scanning"
+  | "charging"
+  | "error"
 
 export interface RoverState {
   readonly battery: number
   readonly state: RoverStatus
+}
+
+export interface Rover {
+  readonly position: Coordinate
+  readonly trajectory: RoverPosition[]
 }
 
 // =========================
@@ -79,6 +86,16 @@ export interface SimulationStats {
 }
 
 // =========================
+// Inspection Progress
+// =========================
+
+export interface InspectionProgress {
+  readonly percentage: number
+  readonly inspectedArea: number
+  readonly totalArea: number
+}
+
+// =========================
 // Events
 // =========================
 
@@ -96,9 +113,7 @@ export interface SimulationEvent {
 export interface SimulationData {
   readonly terrain: TerrainDimensions
 
-  readonly rover: {
-    trajectory: RoverPosition[]
-  }
+  readonly rover: Rover
 
   readonly status: RoverState
 
@@ -107,6 +122,8 @@ export interface SimulationData {
   readonly obstacles: Obstacle[]
 
   readonly stats: SimulationStats
+
+  readonly inspectionProgress: InspectionProgress
 
   readonly events: SimulationEvent[]
 }

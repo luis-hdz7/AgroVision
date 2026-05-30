@@ -6,3 +6,6 @@ generated
 .prisma
 
 coverage
+
+mapperTest.ts
+mockSimulationData.ts
