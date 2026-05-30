@@ -1,0 +1,1 @@
+{"version":3,"file":"enrutador.js","sourceRoot":"","sources":["../../routes/enrutador.ts"],"names":[],"mappings":"AAAA,8BAA8B;AAE9B,OAAO,EAAE,MAAM,EAAE,MAAM,SAAS,CAAC;AACjC,OAAO,EAAE,oBAAoB,EAAE,MAAM,yDAAyD,CAAC;AAE/F,MAAM,aAAa,GAAG,MAAM,EAAE,CAAC;AAE/B,aAAa,CAAC,GAAG,CAAC,aAAa,EAAE,oBAAoB,CAAC,CAAC;AAEvD,eAAe,aAAa,CAAC"}
