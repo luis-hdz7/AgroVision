@@ -99,12 +99,19 @@ export interface InspectionProgress {
 // =========================
 
 export interface SimulationEvent {
-  readonly message: string
-  readonly timestamp: number
-  readonly plantId?: string
-  readonly obstacleId?: string
-}
+  readonly type:
+    | "plant_detected"
+    | "obstacle_detected";
 
+  readonly message: string;
+  readonly timestamp: number;
+
+  readonly plantId?: string;
+  readonly obstacleId?: string;
+
+  readonly x?: number;
+  readonly y?: number;
+}
 // =========================
 // Simulation Data
 // =========================

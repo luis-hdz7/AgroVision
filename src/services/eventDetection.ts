@@ -49,11 +49,12 @@ export function detectEvents(
         detectedPlants.add(plant.id);
 
         events.push({
+          type: "plant_detected",
           message: "Plant detected",
           timestamp: point.timestamp,
           plantId: plant.id,
-          x: point.x,
-          y: point.y
+          x: plant.x,
+          y: plant.y
         });
       }
     });
@@ -75,11 +76,12 @@ export function detectEvents(
         detectedObstacles.add(obstacle.id);
 
         events.push({
+          type: "obstacle_detected",
           message: "Obstacle detected",
           timestamp: point.timestamp,
           obstacleId: obstacle.id,
-          x: point.x,
-          y: point.y
+          x: obstacle.x,
+          y: obstacle.y
         });
       }
     });
