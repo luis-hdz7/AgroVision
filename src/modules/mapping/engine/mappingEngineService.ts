@@ -1,9 +1,17 @@
 import inspectionProgress from "./inspectionProgress";
-import { SimulationData } from "../mappingTypes";
+
+import {
+  RawSimulationData,
+  SimulationData
+} from "../mappingTypes";
 
 class MappingEngineService {
-  processSimulationData(data: SimulationData) {
-    const trajectory = data.rover.trajectory;
+  processSimulationData(
+    data: RawSimulationData
+  ): SimulationData {
+
+    const trajectory =
+      data.rover.trajectory;
 
     const lastPoint =
       trajectory[trajectory.length - 1];
@@ -15,7 +23,7 @@ class MappingEngineService {
       );
 
     return {
-      ...data,
+      terrain: data.terrain,
 
       rover: {
         position: {
@@ -25,16 +33,26 @@ class MappingEngineService {
         trajectory
       },
 
+      status: data.status,
+
+      plants: data.plants,
+
+      obstacles: data.obstacles,
+
       stats: {
         ...data.stats,
-        plantsDetected: data.plants.length,
-        obstaclesDetected: data.obstacles.length
+        plantsDetected:
+          data.plants.length,
+
+        obstaclesDetected:
+          data.obstacles.length
       },
 
-      inspectionProgress: progress
+      inspectionProgress: progress,
+
+      events: data.events
     };
   }
 }
 
 export default new MappingEngineService();
-
