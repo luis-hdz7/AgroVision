@@ -167,3 +167,21 @@ export interface RawSimulationData {
 
   readonly events: SimulationEvent[]
 }
+
+export interface RawSimulationData {
+  readonly terrain: TerrainDimensions
+
+  readonly rover: {
+    readonly trajectory: RoverPosition[]
+  }
+
+  readonly status: RoverState
+
+  readonly plants: Plant[]
+
+  readonly obstacles: Obstacle[]
+
+  readonly stats: SimulationStats
+
+  readonly events: SimulationEvent[]
+}

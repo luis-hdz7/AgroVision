@@ -26,10 +26,16 @@ class MappingEngineService {
       terrain: data.terrain,
 
       rover: {
-        position: {
-          x: lastPoint.x,
-          y: lastPoint.y
-        },
+        position: lastPoint
+          ? {
+              x: lastPoint.x,
+              y: lastPoint.y
+            }
+          : {
+              x: 0,
+              y: 0
+            },
+
         trajectory
       },
 
@@ -41,6 +47,7 @@ class MappingEngineService {
 
       stats: {
         ...data.stats,
+
         plantsDetected:
           data.plants.length,
 
