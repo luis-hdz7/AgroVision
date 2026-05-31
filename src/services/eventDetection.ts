@@ -30,7 +30,7 @@ export function detectEvents(
 
   const detectedPlants = new Set<string>();
   const detectedObstacles = new Set<string>();
-//ordenando el timelap para playback
+//ordenando el timelap para playback //
   const sortedTrayectory = [...trajectory].sort((a, b) => a.timestamp - b.timestamp);
 
 
