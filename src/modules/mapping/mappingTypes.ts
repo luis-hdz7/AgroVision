@@ -106,6 +106,8 @@ export interface SimulationEvent {
   readonly message: string;
   readonly timestamp: number;
 
+  readonly step: number;
+
   readonly plantId?: string;
   readonly obstacleId?: string;
 
@@ -154,4 +156,18 @@ export interface RawSimulationData {
   readonly stats: SimulationStats
 
   readonly events: SimulationEvent[]
+}
+
+
+// =========================
+// Crear tipos para playback
+// =========================
+
+export interface PlaybackStep {
+  step: number;
+  rover: {
+    x: number;
+    y: number;
+  };
+  events: SimulationEvent[];
 }

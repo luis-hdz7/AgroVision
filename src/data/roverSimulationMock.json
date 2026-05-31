@@ -5,9 +5,9 @@
   },
   "rover": {
     "trajectory": [
-      {"x": 10, "y": 20, "timestamp": 123456},
-      {"x": 11, "y": 21, "timestamp": 123456},
-      {"x": 12, "y": 22, "timestamp": 123456}
+      { "x": 10, "y": 20, "timestamp": 1717150000000 },
+      { "x": 11, "y": 21, "timestamp": 1717150002000 },
+      { "x": 12, "y": 22, "timestamp": 1717150004000 }
     ]
   },
   "status": {
@@ -35,11 +35,5 @@
     "obstaclesDetected": 1,
     "distanceTraveled": 4
   },
-  "events": [
-    {
-      "message": "Plant detected",
-      "timestamp": 123456,
-      "plantId": "plant-1"
-    }
-  ]
+  "events": []
 }

@@ -30,7 +30,7 @@ export function detectEvents(
   const detectedPlants = new Set<string>();
   const detectedObstacles = new Set<string>();
 
-  trajectory.forEach((point) => {
+  trajectory.forEach((point, index) => {
 
     plants.forEach((plant) => {
 
@@ -45,13 +45,13 @@ export function detectEvents(
         distance <= DETECTION_RADIUS &&
         !detectedPlants.has(plant.id)
       ) {
-
         detectedPlants.add(plant.id);
 
         events.push({
           type: "plant_detected",
           message: "Plant detected",
           timestamp: point.timestamp,
+          step: index + 1,
           plantId: plant.id,
           x: plant.x,
           y: plant.y
@@ -72,13 +72,13 @@ export function detectEvents(
         distance <= DETECTION_RADIUS &&
         !detectedObstacles.has(obstacle.id)
       ) {
-
         detectedObstacles.add(obstacle.id);
 
         events.push({
           type: "obstacle_detected",
           message: "Obstacle detected",
           timestamp: point.timestamp,
+          step: index + 1,
           obstacleId: obstacle.id,
           x: obstacle.x,
           y: obstacle.y
@@ -88,5 +88,5 @@ export function detectEvents(
 
   });
 
-  return events;
+  return events.sort((a, b) => a.timestamp - b.timestamp);
 }

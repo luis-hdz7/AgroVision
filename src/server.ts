@@ -1,7 +1,7 @@
 import app from "./app";
-import mappingRouter from "./modules/mapping/mappingRoutes";
+import mappingRoutes from "./modules/mapping/mappingRoutes";
 
-app.use("/api/mapping", mappingRouter);
+app.use("/api/mapping",mappingRoutes);
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
