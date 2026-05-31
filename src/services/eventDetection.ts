@@ -34,7 +34,7 @@ export function detectEvents(
   const sortedTrayectory = [...trajectory].sort((a, b) => a.timestamp - b.timestamp);
 
 
-  trajectory.forEach((point, index) => {
+  sortedTrayectory.forEach((point, index) => {
 
     plants.forEach((plant) => {
 
