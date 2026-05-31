@@ -3,14 +3,38 @@ import { SimulationData } from "../mappingTypes";
 
 class MappingEngineService {
   processSimulationData(data: SimulationData) {
+    const trajectory = data.rover.trajectory;
+
+    const lastPoint =
+      trajectory[trajectory.length - 1];
+
+    const progress =
+      inspectionProgress.calculate(
+        trajectory.length,
+        data.terrain
+      );
+
     return {
       ...data,
-      inspectionProgress: inspectionProgress.calculate(
-        data.rover.trajectory.length,
-        data.terrain
-      )
+
+      rover: {
+        position: {
+          x: lastPoint.x,
+          y: lastPoint.y
+        },
+        trajectory
+      },
+
+      stats: {
+        ...data.stats,
+        plantsDetected: data.plants.length,
+        obstaclesDetected: data.obstacles.length
+      },
+
+      inspectionProgress: progress
     };
   }
 }
 
 export default new MappingEngineService();
+

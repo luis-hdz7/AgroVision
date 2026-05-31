@@ -12,7 +12,7 @@
   },
   "status": {
     "battery": 90,
-    "state": "MOVING"
+    "state": "moving"
   },
   "plants": [
     {
