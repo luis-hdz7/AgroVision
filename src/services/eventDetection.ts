@@ -1,3 +1,4 @@
+import tr from "zod/v4/locales/tr.js";
 import type {
   Plant,
   Obstacle,
@@ -29,8 +30,11 @@ export function detectEvents(
 
   const detectedPlants = new Set<string>();
   const detectedObstacles = new Set<string>();
+//ordenando el timelap para playback
+  const sortedTrayectory = [...trajectory].sort((a, b) => a.timestamp - b.timestamp);
 
-  trajectory.forEach((point) => {
+
+  sortedTrayectory.forEach((point) => {
 
     plants.forEach((plant) => {
 
@@ -51,9 +55,7 @@ export function detectEvents(
         events.push({
           message: "Plant detected",
           timestamp: point.timestamp,
-          plantId: plant.id,
-          x: point.x,
-          y: point.y
+          plantId: plant.id
         });
       }
     });
@@ -77,14 +79,12 @@ export function detectEvents(
         events.push({
           message: "Obstacle detected",
           timestamp: point.timestamp,
-          obstacleId: obstacle.id,
-          x: point.x,
-          y: point.y
+          obstacleId: obstacle.id
         });
       }
     });
 
   });
 
-  return events;
+  return events.sort((a, b) => a.timestamp - b.timestamp);
 }

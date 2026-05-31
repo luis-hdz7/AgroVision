@@ -5,9 +5,9 @@
   },
   "rover": {
     "trajectory": [
-      {"x": 10, "y": 20, "timestamp": 123456},
-      {"x": 11, "y": 21, "timestamp": 123456},
-      {"x": 12, "y": 22, "timestamp": 123456}
+      { "x": 10, "y": 20, "timestamp": 1717150000000 },
+      { "x": 11, "y": 21, "timestamp": 1717150002000 },
+      { "x": 13, "y": 23, "timestamp": 1717150004000 }
     ]
   },
   "status": {
@@ -15,31 +15,15 @@
     "state": "moving"
   },
   "plants": [
-    {
-      "id": "plant-1",
-      "x": 15,
-      "y": 20,
-      "health": "good"
-    }
+    { "id": "plant-1", "x": 11, "y": 21, "health": "good" }
   ],
   "obstacles": [
-    {
-      "id": "obstacle-1",
-      "x": 18,
-      "y": 40,
-      "size": 5
-    }
+    { "id": "obstacle-1", "x": 14, "y": 24, "size": 5 }
   ],
   "stats": {
-    "plantsDetected": 1,
-    "obstaclesDetected": 1,
-    "distanceTraveled": 4
+    "plantsDetected": 0,
+    "obstaclesDetected": 0,
+    "distanceTraveled": 0
   },
-  "events": [
-    {
-      "message": "Plant detected",
-      "timestamp": 123456,
-      "plantId": "plant-1"
-    }
-  ]
+  "events": []
 }
