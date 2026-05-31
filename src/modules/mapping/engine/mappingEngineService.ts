@@ -1,8 +1,13 @@
 import inspectionProgress from "./inspectionProgress";
+import { detectEvents } from "../../../services/eventDetection";
+import {
+  validateBattery,
+  validateStats,
+} from "../../../services/validation";
 
 import {
   RawSimulationData,
-  SimulationData
+  SimulationData,
 } from "../mappingTypes";
 
 class MappingEngineService {
@@ -22,6 +27,39 @@ class MappingEngineService {
         data.terrain
       );
 
+    const detectedEvents =
+      detectEvents(
+        trajectory,
+        data.plants,
+        data.obstacles
+      );
+
+    const batteryValid =
+      validateBattery(
+        data.status.battery
+      );
+
+    const statsValid =
+      validateStats(
+        data.plants,
+        data.obstacles,
+        data.stats.plantsDetected,
+        data.stats.obstaclesDetected
+      );
+
+    if (!batteryValid) {
+      console.warn(
+        "[MappingEngine] Invalid battery value:",
+        data.status.battery
+      );
+    }
+
+    if (!statsValid) {
+      console.warn(
+        "[MappingEngine] Invalid simulation stats"
+      );
+    }
+
     return {
       terrain: data.terrain,
 
@@ -29,14 +67,14 @@ class MappingEngineService {
         position: lastPoint
           ? {
               x: lastPoint.x,
-              y: lastPoint.y
+              y: lastPoint.y,
             }
           : {
               x: 0,
-              y: 0
+              y: 0,
             },
 
-        trajectory
+        trajectory,
       },
 
       status: data.status,
@@ -52,12 +90,12 @@ class MappingEngineService {
           data.plants.length,
 
         obstaclesDetected:
-          data.obstacles.length
+          data.obstacles.length,
       },
 
       inspectionProgress: progress,
 
-      events: data.events
+      events: detectedEvents,
     };
   }
 }
