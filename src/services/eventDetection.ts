@@ -17,7 +17,7 @@ function calculateDistance(
   );
 }
 
-const DETECTION_RADIUS = 5;
+const DETECTION_RADIUS = 15;
 
 export function detectEvents(
   trajectory: RoverPosition[],
