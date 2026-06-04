@@ -191,7 +191,6 @@ El proyecto puede integrar distintas tecnologías según el módulo.
 - GitHub
 - GitKraken
 - VS Code
-- npm
 ```
 
 ---
