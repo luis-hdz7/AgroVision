@@ -1,5 +1,5 @@
-import { RawSimulationData } from "./mappingTypes";
-import roverSimulationMock from "../../data/roverSimulationMock.json";
+import { RawSimulationData } from './mappingTypes';
+import roverSimulationMock from '../../data/roverSimulationMock.json';
 
 export class SimulationService {
   getSimulation(): RawSimulationData {

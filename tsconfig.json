@@ -11,6 +11,23 @@
     "strict": true,
 
     "esModuleInterop": true,
+    //necesario porque mappingService.ts importa roverSimulationMock.json
+    "resolveJsonModule": true,
     "skipLibCheck": true
-  }
+  },
+
+  //evita que tsc compile archivos fuera del backend
+  "include" : ["src/**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "prisma.config.ts",
+    "prisma",
+    //evita conflictos si Prisma genera cliente dentro de src/generated
+    "src/generated"
+  ]
 }
+
+/** error correjido: de parte de build donde TypeScript intentaba compilar prisma.config.ts fuera de src.
+ * También permite importar el mock JSON desde mappingService.ts, que actualmente importa roverSimulationMock.json.
+*/

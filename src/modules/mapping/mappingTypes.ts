@@ -22,14 +22,6 @@ export interface TerrainDimensions {
   readonly height: number
 }
 
-// =========================
-// Canvas
-// =========================
-
-export interface CanvasConfig {
-  readonly width: number
-  readonly height: number
-}
 
 // =========================
 // Rover
@@ -39,20 +31,21 @@ export interface RoverPosition extends Coordinate {
   readonly timestamp: number
 }
 
-type RoverStatus =
+export type RawRoverStatus =
   | "idle"
   | "moving"
   | "scanning"
   | "charging"
-  | "error";
+  | "error"
+  | "IDLE"
+  | "MOVING"
+  | "SCANNING"
+  | "CHARGING"
+  | "ERROR" ;
+
 export interface RoverState {
   readonly battery: number
-  readonly state: RoverStatus
-}
-
-export interface Rover {
-  readonly position: Coordinate
-  readonly trajectory: RoverPosition[]
+  readonly state: RawRoverStatus
 }
 
 // =========================
@@ -78,21 +71,78 @@ export interface Obstacle extends Coordinate {
 // Statistics
 // =========================
 
-export interface SimulationStats {
-  readonly plantsDetected: number
-  readonly obstaclesDetected: number
-  readonly distanceTraveled: number
+export interface RawSimulationStats {
+  readonly plantsDetected?: number
+  readonly obstaclesDetected?: number
+  readonly distanceTraveled?: number
 }
 
 // =========================
-// Inspection Progress
+// Raw Simulation Data
 // =========================
+export interface RawSimulationData {
+  readonly terrain: TerrainDimensions;
+
+  readonly rover: {
+    readonly trajectory: RoverPosition[];
+
+/**
+  * Ruta planificada opcional para la reproducción del frontend.
+  * Si no se especifica, el frontend puede usar la trayectoria como única ruta.
+*/
+    readonly plannedPath?: Coordinate[];
+  };
+  readonly status: RoverState;
+  readonly plants: Plant[];
+  readonly obstacles: Obstacle[];
+  readonly stats?: RawSimulationStats;
+
+/**
+  * Los eventos manuales son opcionales, ya que el backend puede generar eventos de detección
+  * a partir de la proximidad de la trayectoria mediante eventDetection.ts.
+*/
+  readonly events?: SimulationEvent[];
+}
+
+
+// =========================
+// Frontend-compatible output
+// =========================
+
+export type RenderRoverStatus = 'IDLE' | 'MOVING' | 'SCANNING' | 'ERROR';
+
+export interface RenderRover {
+  readonly position: Coordinate;
+  readonly angle: number;
+  readonly battery: number;
+  readonly status: RenderRoverStatus;
+}
+
+export interface RenderPlant extends Coordinate {
+  readonly id: string;
+  readonly detected: boolean;
+  readonly health?: PlantHealth;
+
+}
+
+export interface RenderObstacle extends Coordinate {
+  readonly id: string;
+  readonly size: number;
+}
+
+export interface RenderStats {
+  readonly plantsDetected: number;
+  readonly obstaclesDetected: number;
+  readonly distanceTraveled: number;
+  readonly inspectedPercentage: number;
+}
 
 export interface InspectionProgress {
-  readonly percentage: number
-  readonly inspectedArea: number
-  readonly totalArea: number
+  readonly percentage: number;
+  readonly inspectedArea: number;
+  readonly totalArea: number;
 }
+
 
 // =========================
 // Events
@@ -105,7 +155,6 @@ export interface SimulationEvent {
 
   readonly message: string;
   readonly timestamp: number;
-
   readonly step: number;
 
   readonly plantId?: string;
@@ -114,60 +163,65 @@ export interface SimulationEvent {
   readonly x?: number;
   readonly y?: number;
 }
+
 // =========================
-// Simulation Data
+// Render Simulation Data
 // =========================
+export interface MappingSimulationData {
+  readonly terrain: TerrainDimensions;
+  readonly rover: RenderRover;
 
-export interface SimulationData {
-  readonly terrain: TerrainDimensions
+  readonly trajectory: Coordinate[];
+  readonly plannedPath: Coordinate[];
 
-  readonly rover: Rover
+  readonly plants: RenderPlant[];
+  readonly obstacles: RenderObstacle[];
 
-  readonly status: RoverState
+  readonly stats: RenderStats;
 
-  readonly plants: Plant[]
-
-  readonly obstacles: Obstacle[]
-
-  readonly stats: SimulationStats
-
-  readonly inspectionProgress: InspectionProgress
-
-  readonly events: SimulationEvent[]
+  readonly events: SimulationEvent[];
 }
 
 // =========================
-// Raw Simulation Data
+// Playback Frame Data
 // =========================
+export interface PlaybackFrame {
+  readonly step: number;
+  readonly rover: Coordinate;
+  readonly angle: number;
+  readonly events: SimulationEvent[];
+}
 
-export interface RawSimulationData {
-  readonly terrain: TerrainDimensions
+export interface MappingPlaybackData {
+  readonly frames: PlaybackFrame[];
+}
 
-  readonly rover: {
-    readonly trajectory: RoverPosition[]
-  }
-
-  readonly status: RoverState
-
-  readonly plants: Plant[]
-
-  readonly obstacles: Obstacle[]
-
-  readonly stats: SimulationStats
-
-  readonly events: SimulationEvent[]
+export interface MappingSummaryData {
+  readonly plantsDetected: number;
+  readonly obstaclesDetected: number;
+  readonly distanceTraveled: number;
+  readonly inspectedPercentage: number;
+  readonly finalRoverPosition: Coordinate;
+  readonly finalRoverStatus: RenderRoverStatus;
+  readonly battery: number;
+  readonly totalEvents: number;
 }
 
 
+
+
+
+
 // =========================
-// Crear tipos para playback
+// Inspection Progress
 // =========================
 
-export interface PlaybackStep {
-  step: number;
-  rover: {
-    x: number;
-    y: number;
-  };
-  events: SimulationEvent[];
-}
+// export interface InspectionProgress {
+//   readonly percentage: number
+//   readonly inspectedArea: number
+//   readonly totalArea: number
+// }
+
+// =========================
+// Summary Data
+// =========================

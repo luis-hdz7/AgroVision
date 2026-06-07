@@ -5,25 +5,43 @@
   },
   "rover": {
     "trajectory": [
-      { "x": 10, "y": 20, "timestamp": 1717150000000 },
-      { "x": 11, "y": 21, "timestamp": 1717150002000 },
-      { "x": 12, "y": 22, "timestamp": 1717150004000 }
+      { "x": 10, "y": 78, "timestamp": 1717150000000 },
+      { "x": 18, "y": 70, "timestamp": 1717150002000 },
+      { "x": 27, "y": 61, "timestamp": 1717150004000 },
+      { "x": 39, "y": 54, "timestamp": 1717150006000 },
+      { "x": 52, "y": 47, "timestamp": 1717150008000 },
+      { "x": 64, "y": 39, "timestamp": 1717150010000 },
+      { "x": 76, "y": 29, "timestamp": 1717150012000 },
+      { "x": 88, "y": 20, "timestamp": 1717150014000 }
     ]
   },
   "status": {
-    "battery": 90,
+    "battery": 87,
     "state": "moving"
   },
   "plants": [
-    { "id": "plant-1", "x": 11, "y": 21, "health": "good" }
+    { "id": "plant-1", "x": 48, "y": 66, "health": "good" },
+    { "id": "plant-2", "x": 40, "y": 55, "health": "good" },
+    { "id": "plant-3", "x": 80, "y": 46, "health": "good" },
+    { "id": "plant-4", "x": 31, "y": 62, "health": "warning" },
+    { "id": "plant-5", "x": 53, "y": 49, "health": "good" },
+    { "id": "plant-6", "x": 65, "y": 44, "health": "critical" },
+    { "id": "plant-7", "x": 36, "y": 75, "health": "good" },
+    { "id": "plant-8", "x": 59, "y": 62, "health": "warning" },
+    { "id": "plant-9", "x": 69, "y": 55, "health": "good" }
   ],
   "obstacles": [
-    { "id": "obstacle-1", "x": 14, "y": 24, "size": 5 }
+    { "id": "obs-1", "x": 53, "y": 71, "size": 3 },
+    { "id": "obs-2", "x": 76, "y": 59, "size": 4 },
+    { "id": "obs-3", "x": 22, "y": 68, "size": 3 },
+    { "id": "obs-4", "x": 43, "y": 48, "size": 1.5 },
+    { "id": "obs-5", "x": 85, "y": 17, "size": 2 },
+    { "id": "obs-6", "x": 82, "y": 21, "size": 2.5 }
   ],
   "stats": {
-    "plantsDetected": 0,
-    "obstaclesDetected": 0,
-    "distanceTraveled": 0
+    "plantsDetected": 9,
+    "obstaclesDetected": 6,
+    "distanceTraveled": 70
   },
   "events": []
 }
