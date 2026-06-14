@@ -1,0 +1,1537 @@
+:root {
+  --bg-main: #02060d;
+  --bg-panel: rgba(12, 18, 29, 0.78);
+  --border-soft: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 83, 62, 0.34);
+
+  --text-main: #f7fbff;
+  --text-muted: #95a3b5;
+  --text-soft: #c8d3df;
+
+  --accent-red: #ff533e;
+  --accent-green: #74ff4f;
+  --accent-cyan: #5ee7ff;
+  --accent-yellow: #f0c84b;
+  --danger: #ff5b4a;
+
+  --map-bg: #ffffff;
+  --map-ink: #0f172a;
+  --map-muted: #475569;
+  --map-cyan: #0097b8;
+  --map-green: #2fb344;
+  --map-yellow: #d39b16;
+  --map-red: #d94b3d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-width: 0;
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-main);
+  overflow-x: hidden;
+}
+
+#root {
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: initial !important;
+}
+
+/* =========================
+   Page
+   ========================= */
+
+.mappingDemoPage {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: var(--text-main);
+  font-family: "Space Grotesk", Inter, system-ui, sans-serif;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(116, 255, 79, 0.1), transparent 26%),
+    radial-gradient(circle at 72% 34%, rgba(255, 83, 62, 0.13), transparent 28%),
+    linear-gradient(135deg, #03070f 0%, #07111a 45%, #04070d 100%);
+}
+
+.mappingDemoPage::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.024) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.024) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(circle at center, black, transparent 72%);
+}
+
+/* =========================
+   Topbar
+   ========================= */
+
+.mappingTopbar {
+  position: sticky;
+  top: 12px;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: 250px minmax(260px, 1fr) 210px;
+  gap: 18px;
+  align-items: center;
+  width: min(1520px, calc(100vw - 48px));
+  min-height: 68px;
+  margin: 14px auto 0;
+  padding: 12px 18px;
+  border: 1px solid var(--border-soft);
+  border-radius: 22px;
+  background: rgba(2, 6, 13, 0.86);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.32);
+}
+
+.brandCluster {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.brandCluster strong {
+  display: block;
+  color: var(--text-main);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.brandCluster span:not(.brandMark) {
+  display: block;
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.brandMark {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  color: #06100c;
+  background: linear-gradient(135deg, #7cff4f, #48f6a6);
+  font-size: 12px;
+  font-weight: 900;
+  box-shadow: 0 0 38px rgba(116, 255, 79, 0.18);
+}
+
+.topbarSearch {
+  min-width: 0;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  color: #7f8b9a;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid var(--border-soft);
+  border-radius: 16px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.roleBadge {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  column-gap: 10px;
+  align-items: center;
+  min-width: 0;
+  padding: 9px 12px;
+  background: rgba(255, 83, 62, 0.08);
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+}
+
+.roleBadge span {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  color: var(--accent-red);
+  font-weight: 900;
+  border-radius: 999px;
+  background: rgba(255, 83, 62, 0.16);
+  border: 1px solid rgba(255, 83, 62, 0.42);
+}
+
+.roleBadge strong {
+  color: var(--text-main);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.roleBadge small {
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* =========================
+   Main layout
+   ========================= */
+
+.mappingShell {
+  position: relative;
+  z-index: 1;
+  width: min(1520px, calc(100vw - 48px));
+  max-width: calc(100vw - 48px);
+  margin: 0 auto;
+  padding: 34px 0 52px;
+}
+
+.heroPanel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(420px, 520px);
+  gap: 22px;
+  align-items: end;
+  width: 100%;
+  margin-bottom: 22px;
+}
+
+.heroActions {
+  display: grid;
+  gap: 12px;
+  justify-self: end;
+  width: min(100%, 520px);
+  min-width: 0;
+}
+
+.eyebrow,
+.panelKicker {
+  margin: 0 0 8px;
+  color: var(--accent-red);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.heroPanel h1 {
+  margin: 0;
+  color: var(--text-main);
+  font-size: clamp(42px, 4.5vw, 72px);
+  line-height: 0.95;
+  letter-spacing: -0.06em;
+}
+
+.heroPanel p {
+  max-width: 800px;
+  margin: 14px 0 0;
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.mappingLayout {
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 350px);
+  gap: 24px;
+  align-items: start;
+  width: 100%;
+  min-width: 0;
+}
+
+.panelGlass {
+  margin-top: 20px;
+  min-width: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025)),
+    var(--bg-panel);
+  border: 1px solid var(--border-soft);
+  border-radius: 26px;
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(18px);
+}
+
+.mapPanel {
+  width: 100%;
+  min-width: 0;
+  padding: 22px;
+  overflow: hidden;
+}
+
+.sidePanel {
+  display: grid;
+  gap: 16px;
+  width: 100%;
+  min-width: 0;
+  max-width: 350px;
+}
+
+.panelTitle,
+.sidePanelHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  min-width: 0;
+  margin-bottom: 16px;
+}
+
+.panelTitle h2,
+.sidePanelHeader h2,
+.legendPanel h2,
+.finalSummaryCard h2 {
+  margin: 0;
+  color: var(--text-main);
+  font-size: 22px;
+  letter-spacing: -0.03em;
+}
+
+.panelActions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-soft);
+  font-size: 13px;
+  padding: 9px 12px;
+  border: 1px solid rgba(255, 83, 62, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 83, 62, 0.08);
+  white-space: nowrap;
+}
+
+.liveDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--accent-red);
+  box-shadow: 0 0 16px rgba(255, 83, 62, 0.85);
+}
+
+/* =========================
+   Step rail
+   ========================= */
+
+.stepRail {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid var(--border-soft);
+  border-radius: 18px;
+}
+
+.stepChip {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 46px;
+  padding: 0 12px;
+  color: var(--text-muted);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.stepChip span {
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+}
+
+.stepChip strong {
+  font-size: 13px;
+  line-height: 1.15;
+}
+
+.stepChip--done span {
+  background: var(--accent-green);
+  border-color: var(--accent-green);
+  box-shadow: 0 0 16px rgba(116, 255, 79, 0.6);
+}
+
+.stepChip--active {
+  color: var(--text-main);
+  background: rgba(255, 83, 62, 0.12);
+  border: 1px solid rgba(255, 83, 62, 0.26);
+}
+
+.stepChip--active span {
+  background: var(--accent-red);
+  border-color: var(--accent-red);
+  box-shadow: 0 0 18px rgba(255, 83, 62, 0.65);
+}
+
+/* =========================
+   Simulation controls
+   ========================= */
+
+.simulationControls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  align-items: center;
+  width: fit-content;
+  min-width: 0;
+  margin-left: auto;
+  padding: 10px;
+  border-radius: 18px;
+}
+
+.simulationButton {
+  min-width: 128px;
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease;
+}
+
+.simulationButton:hover {
+  transform: translateY(-1px);
+}
+
+.simulationButton.primary {
+  background: rgba(116, 255, 79, 0.14);
+  border: 1px solid rgba(116, 255, 79, 0.28);
+  color: var(--accent-green);
+}
+
+.simulationButton.secondary {
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-soft);
+}
+
+/* =========================
+   Telemetry / metrics
+   ========================= */
+
+.statusPanel,
+.legendPanel,
+.finalSummaryCard {
+  width: 100%;
+  min-width: 0;
+  padding: 20px;
+}
+
+.statusPanel--wide {
+  margin-top: 18px;
+}
+
+.statusPill {
+  padding: 8px 11px;
+  color: var(--accent-green);
+  font-size: 12px;
+  font-weight: 900;
+  border-radius: 999px;
+  background: rgba(116, 255, 79, 0.08);
+  border: 1px solid rgba(116, 255, 79, 0.22);
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.metricsGrid--wide {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.metricCard {
+  min-height: 132px;
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.085);
+}
+
+.metricCard span {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.metricCard strong {
+  display: block;
+  margin-top: 8px;
+  color: var(--text-main);
+  font-size: 34px;
+  line-height: 1;
+}
+
+.metricCard small {
+  display: block;
+  margin-top: 8px;
+  color: var(--text-muted);
+}
+
+.meterTrack {
+  height: 6px;
+  margin-top: 15px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.meterFill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent-red), var(--accent-green));
+}
+
+/* =========================
+   Map legend
+   ========================= */
+
+.legendHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.legendHeader span {
+  padding: 6px 9px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 800;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.legendList {
+  display: grid;
+  gap: 12px;
+}
+
+.legendItem {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 10px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+.legendItem strong {
+  display: block;
+  color: var(--text-main);
+  font-size: 14px;
+}
+
+.legendItem small {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.legendSymbol {
+  position: relative;
+  width: 13px;
+  height: 13px;
+  margin-top: 3px;
+  border-radius: 999px;
+}
+
+.legendSymbol--cloud {
+  background: #5976ff;
+  box-shadow: 0 0 12px rgba(89, 118, 255, 0.8);
+}
+
+.legendSymbol--path {
+  width: 18px;
+  height: 4px;
+  margin-top: 7px;
+  border-radius: 999px;
+  background: var(--accent-cyan);
+}
+
+.legendSymbol--plant {
+  background: var(--accent-green);
+  box-shadow: 0 0 12px rgba(116, 255, 79, 0.8);
+}
+
+.legendSymbol--obstacle {
+  border-radius: 3px;
+  background: var(--danger);
+  transform: rotate(45deg);
+}
+
+.legendSymbol--scan {
+  background: var(--accent-yellow);
+}
+
+.legendSymbol--rover {
+  background: var(--accent-cyan);
+}
+
+.legendSymbol--measure {
+  width: 18px;
+  height: 2px;
+  margin-top: 8px;
+  border-radius: 999px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.75) 0 4px,
+    transparent 4px 7px
+  );
+}
+
+/* =========================
+   Final summary
+   ========================= */
+
+.finalSummaryCard h2 {
+  margin-bottom: 16px;
+}
+
+.summaryList {
+  display: grid;
+  gap: 10px;
+}
+
+.summaryList > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.065);
+}
+
+.summaryList span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.summaryList strong {
+  color: var(--text-main);
+  font-size: 18px;
+}
+
+/* =========================
+   Technical map
+   ========================= */
+
+.terrainCanvasWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  height: clamp(690px, 72vh, 820px);
+  min-height: 680px;
+  padding: 14px;
+  overflow: hidden;
+  border-radius: 24px;
+  background: #07111a;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 18px 50px rgba(0, 0, 0, 0.26);
+}
+
+.terrainMetaBar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 14px;
+  color: var(--map-muted);
+  font-size: 12px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+}
+
+.terrainMetaBar strong {
+  color: var(--map-ink);
+}
+
+.terrainCanvas {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  display: block;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--map-bg);
+  border: 1px solid #e2e8f0;
+}
+
+.technicalMapBase {
+  fill: var(--map-bg);
+}
+
+/* =========================
+   SVG layers
+   ========================= */
+
+.gridFrame {
+  fill: #ffffff;
+  stroke: #cbd5e1;
+  stroke-width: 0.34;
+}
+
+.minorGrid line {
+  stroke: rgba(15, 23, 42, 0.055);
+  stroke-width: 0.12;
+}
+
+.majorGrid line {
+  stroke: rgba(15, 23, 42, 0.11);
+  stroke-width: 0.18;
+}
+
+.rowGuides line {
+  stroke: rgba(47, 179, 68, 0.18);
+  stroke-width: 0.34;
+  stroke-dasharray: 1.3 1.7;
+}
+
+.axisLine {
+  stroke: rgba(15, 23, 42, 0.56);
+  stroke-width: 0.28;
+}
+
+.axisLabel,
+.originLabel {
+  fill: var(--map-muted);
+  font-size: 1.55px;
+  font-weight: 800;
+}
+
+.originPoint {
+  fill: var(--map-cyan);
+}
+
+.groundCloud circle {
+  fill: rgba(0, 151, 184, 0.5);
+}
+
+.cloudPoint.detected {
+  fill: rgba(47, 179, 68, 0.88);
+}
+
+.cloudPoint.pending {
+  fill: rgba(211, 155, 22, 0.86);
+}
+
+.obstaclePointCloud circle {
+  fill: rgba(217, 75, 61, 0.62);
+}
+
+.sensorSweep {
+  animation: sweepBlink 1.45s ease-in-out infinite;
+}
+
+.sensorSector {
+  fill: rgba(0, 151, 184, 0.075);
+  stroke: rgba(0, 151, 184, 0.22);
+  stroke-width: 0.18;
+  animation: sectorPulse 1.8s ease-in-out infinite;
+}
+
+.sensorRay {
+  stroke: rgba(0, 151, 184, 0.3);
+  stroke-width: 0.18;
+  stroke-dasharray: 1 1.2;
+  animation: rayFlow 1.2s linear infinite;
+}
+
+.sensorRay--hit {
+  stroke: rgba(211, 155, 22, 0.82);
+  stroke-width: 0.28;
+  stroke-dasharray: none;
+}
+
+.scanPoint {
+  fill: rgba(0, 151, 184, 0.5);
+}
+
+.scanPoint--hit {
+  fill: var(--map-yellow);
+}
+
+.pathTrail {
+  stroke: var(--map-cyan);
+  stroke-width: 1.28;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.plannedPath {
+  stroke: rgba(0, 151, 184, 0.64);
+  stroke-width: 0.78;
+  stroke-dasharray: 2.2 1.9;
+}
+
+.trajectorySample {
+  fill: #ffffff;
+  stroke: var(--map-cyan);
+  stroke-width: 0.22;
+}
+
+.startMarker circle {
+  fill: rgba(47, 179, 68, 0.14);
+  stroke: var(--map-green);
+  stroke-width: 0.3;
+}
+
+.currentMarker circle {
+  fill: rgba(0, 151, 184, 0.14);
+  stroke: var(--map-cyan);
+  stroke-width: 0.34;
+}
+
+.startMarker text,
+.currentMarker text {
+  fill: var(--map-ink);
+  font-size: 1.5px;
+  font-weight: 900;
+}
+
+.roverPoseLabel {
+  fill: var(--map-ink);
+  font-size: 1.6px;
+  font-weight: 900;
+}
+
+.plantCode {
+  fill: var(--map-ink);
+  font-size: 1.45px;
+  font-weight: 900;
+}
+
+.obstacleCode {
+  fill: var(--map-red);
+  font-size: 1.45px;
+  font-weight: 900;
+}
+
+.measurementText {
+  fill: var(--map-muted);
+  font-size: 1.26px;
+  font-weight: 800;
+  paint-order: stroke;
+  stroke: rgba(255, 255, 255, 0.86);
+  stroke-width: 0.42;
+}
+
+.measurementText--safe {
+  fill: var(--map-muted);
+}
+
+.measurementText--warning {
+  fill: var(--map-yellow);
+}
+
+.measurementText--danger {
+  fill: var(--map-red);
+}
+
+
+.mapHudTitle {
+  fill: var(--map-ink);
+  font-size: 2px;
+  font-weight: 900;
+}
+
+.mapHudSubtitle {
+  fill: var(--map-muted);
+  font-size: 1.35px;
+  font-weight: 700;
+}
+
+.mapHudValue {
+  fill: var(--map-cyan);
+  font-size: 1.8px;
+  font-weight: 900;
+}
+
+.roverPositionHalo {
+  fill: rgba(0, 151, 184, 0.11);
+  stroke: rgba(0, 151, 184, 0.3);
+  stroke-width: 0.24;
+}
+
+.roverHeading {
+  fill: var(--map-cyan);
+  stroke: #ffffff;
+  stroke-width: 0.22;
+}
+
+.roverBody {
+  fill: #ffffff;
+  stroke: var(--map-ink);
+  stroke-width: 0.42;
+}
+
+.roverCore {
+  fill: var(--map-ink);
+}
+
+.plantCanopy {
+  fill: rgba(47, 179, 68, 0.08);
+  stroke: rgba(47, 179, 68, 0.28);
+  stroke-width: 0.22;
+}
+
+.plantRing {
+  fill: rgba(47, 179, 68, 0.08);
+  stroke: var(--map-green);
+  stroke-width: 0.36;
+}
+
+.plantShape {
+  fill: none;
+  stroke: var(--map-green);
+  stroke-width: 0.38;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.plantCenter {
+  fill: var(--map-green);
+}
+
+.plantMarker.pending .plantRing,
+.plantMarker.pending .plantShape {
+  stroke: var(--map-yellow);
+}
+
+.plantMarker.pending .plantCenter {
+  fill: var(--map-yellow);
+}
+
+.obstacleRange {
+  fill: rgba(217, 75, 61, 0.08);
+  stroke: rgba(217, 75, 61, 0.34);
+  stroke-width: 0.24;
+  stroke-dasharray: 1.1 1.4;
+}
+
+.obstacleShape {
+  fill: rgba(217, 75, 61, 0.88);
+  stroke: #ffffff;
+  stroke-width: 0.22;
+}
+
+.obstacleCross {
+  stroke: #ffffff;
+  stroke-width: 0.28;
+  stroke-linecap: round;
+}
+
+.measurementLine {
+  stroke: rgba(15, 23, 42, 0.32);
+  stroke-width: 0.17;
+  stroke-dasharray: 1 1.4;
+}
+
+/* Línea normal: lectura técnica neutra */
+.measurementLine--safe {
+  stroke: rgba(15, 23, 42, 0.32);
+}
+
+/* Línea de advertencia: relación planta-obstáculo */
+.measurementLine--warning {
+  stroke: rgba(211, 155, 22, 0.58);
+}
+
+/* Línea de peligro: rover-obstáculo */
+.measurementLine--danger {
+  stroke: rgba(217, 75, 61, 0.62);
+}
+
+.detectionRadius {
+  fill: none;
+  stroke: rgba(0, 151, 184, 0.22);
+  stroke-width: 0.22;
+  stroke-dasharray: 1.2 1.5;
+  animation: detectionPulse 2.4s ease-in-out infinite;
+}
+
+.scaleBar line {
+  stroke: rgba(15, 23, 42, 0.62);
+  stroke-width: 0.25;
+}
+
+.scaleBar text {
+  fill: var(--map-muted);
+  font-size: 1.4px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+/* =========================
+   Loading
+   ========================= */
+
+.mappingLoadingCard {
+  position: relative;
+  z-index: 2;
+  width: min(420px, calc(100vw - 48px));
+  min-height: 120px;
+  margin: 140px auto 0;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main);
+}
+
+/* =========================
+   Final day integration patch
+   ========================= */
+
+/* Hero derecho: agrupa progreso + controles sin ocupar demasiado alto. */
+.heroActions {
+  display: grid;
+  gap: 12px;
+  justify-self: end;
+  width: min(100%, 520px);
+  min-width: 0;
+}
+
+/* Botonera compacta, no ocupa todo el ancho innecesariamente. */
+.simulationControls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  align-items: center;
+  width: fit-content;
+  min-width: 0;
+  margin-left: auto;
+  padding: 10px;
+  border-radius: 18px;
+}
+
+/* Botones más consistentes para demo. */
+.simulationButton {
+  min-width: 128px;
+}
+
+/* Estado pequeño del playback dentro de los controles. */
+.playbackStatus {
+  display: grid;
+  gap: 2px;
+  min-width: 92px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.playbackStatus span {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.playbackStatus strong {
+  color: var(--accent-cyan);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+/* Telemetría ahora vive debajo del render. */
+.statusPanel--wide {
+  margin-top: 18px;
+}
+
+/* En desktop, las métricas se expanden horizontalmente. */
+.metricsGrid--wide {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+/* Iconos dentro de las cards y resumen. */
+.metricCard span,
+.summaryList span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+
+/* =========================
+   Metric card enrichment
+   ========================= */
+
+.metricMeta {
+  margin: 10px 0 0;
+  color: var(--text-soft);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+/* =========================
+   Technical Data Log
+   ========================= */
+
+.technicalLogPanel {
+  margin-top: 18px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.technicalLogSummary {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  padding: 20px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.technicalLogSummary::-webkit-details-marker {
+  display: none;
+}
+
+.technicalLogSummary h2 {
+  margin: 0;
+  color: var(--text-main);
+  font-size: 22px;
+  letter-spacing: -0.03em;
+}
+
+.technicalLogSummary > span {
+  flex: 0 0 auto;
+  padding: 8px 11px;
+  color: var(--accent-cyan);
+  font-size: 12px;
+  font-weight: 900;
+  border-radius: 999px;
+  background: rgba(94, 231, 255, 0.08);
+  border: 1px solid rgba(94, 231, 255, 0.22);
+}
+
+.technicalLogBody {
+  display: grid;
+  gap: 16px;
+  padding: 0 20px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.075);
+}
+
+.technicalLogStats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  padding-top: 16px;
+}
+
+.technicalLogStats article {
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.technicalLogStats span {
+  display: block;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.technicalLogStats strong {
+  display: block;
+  margin-top: 7px;
+  color: var(--text-main);
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.technicalLogSection {
+  display: grid;
+  gap: 10px;
+}
+
+.technicalLogHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: end;
+}
+
+.technicalLogHeader h3 {
+  margin: 0;
+  color: var(--text-main);
+  font-size: 16px;
+}
+
+.technicalLogHeader span {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.technicalTableWrapper {
+  max-height: 260px;
+  overflow: auto;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+}
+
+.technicalTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+  font-size: 12px;
+}
+
+.technicalTable th,
+.technicalTable td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.065);
+}
+
+.technicalTable th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  color: var(--text-soft);
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: rgba(8, 13, 22, 0.96);
+}
+
+.technicalTable td {
+  color: var(--text-muted);
+}
+
+.technicalTable td strong {
+  display: block;
+  color: var(--text-main);
+  font-size: 13px;
+}
+
+.technicalTable td small {
+  display: block;
+  margin-top: 3px;
+  color: var(--text-muted);
+}
+
+.logType {
+  display: inline-flex;
+  padding: 5px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.logType--plant {
+  color: var(--accent-green);
+  background: rgba(116, 255, 79, 0.08);
+  border: 1px solid rgba(116, 255, 79, 0.22);
+}
+
+.logType--obstacle {
+  color: var(--danger);
+  background: rgba(255, 91, 74, 0.08);
+  border: 1px solid rgba(255, 91, 74, 0.22);
+}
+
+.emptyLogCell,
+.emptyLogMessage {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.measurementLogList {
+  display: grid;
+  gap: 10px;
+}
+
+.measurementLogItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.measurementLogItem strong {
+  display: block;
+  color: var(--text-main);
+  font-size: 13px;
+}
+
+.measurementLogItem span {
+  display: block;
+  margin-top: 3px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.measurementLogItem p {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.measurementLogItem--safe p {
+  color: var(--accent-cyan);
+}
+
+.measurementLogItem--warning p {
+  color: var(--accent-yellow);
+}
+
+.measurementLogItem--danger p {
+  color: var(--danger);
+}
+
+/* =========================
+   Technical Log Responsive
+   ========================= */
+
+@media (max-width: 1180px) {
+  .technicalLogStats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 780px) {
+  .technicalLogSummary {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .technicalLogStats {
+    grid-template-columns: 1fr;
+  }
+
+  .technicalTable {
+    min-width: 680px;
+  }
+}
+
+/* =========================
+   Animations
+   ========================= */
+
+@keyframes detectionPulse {
+  0%,
+  100% {
+    opacity: 0.42;
+  }
+
+  50% {
+    opacity: 0.95;
+  }
+}
+
+@keyframes sweepBlink {
+  0%,
+  100% {
+    opacity: 0.72;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes sectorPulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+
+  50% {
+    opacity: 0.95;
+  }
+}
+
+@keyframes rayFlow {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: -4;
+  }
+}
+
+/* =========================
+   Responsive
+   ========================= */
+
+@media (max-width: 1180px) {
+  .mappingTopbar,
+  .mappingShell {
+    width: min(100% - 40px, 1520px);
+    max-width: calc(100vw - 40px);
+  }
+
+  .mappingTopbar,
+  .heroPanel,
+  .mappingLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .topbarSearch {
+    display: none;
+  }
+
+  .heroActions {
+    justify-self: stretch;
+    width: 100%;
+  }
+
+  .stepRail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sidePanel {
+    max-width: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .metricsGrid--wide {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .simulationControls {
+    width: 100%;
+    justify-content: flex-start;
+    margin-left: 0;
+  }
+
+  .terrainCanvasWrapper {
+    height: clamp(520px, 60vh, 680px);
+    min-height: 520px;
+  }
+
+  .simulationControls {
+    width: 100%;
+    justify-content: flex-start;
+    margin-left: 0;
+  }
+
+  .metricsGrid--wide {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 780px) {
+  .mappingTopbar,
+  .mappingShell {
+    width: min(100% - 28px, 1520px);
+    max-width: calc(100vw - 28px);
+  }
+
+  .heroPanel h1 {
+    font-size: 40px;
+  }
+
+  .stepRail,
+  .metricsGrid,
+  .metricsGrid--wide,
+  .sidePanel {
+    grid-template-columns: 1fr;
+  }
+
+  .panelTitle,
+  .sidePanelHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .simulationControls {
+    flex-direction: column;
+  }
+
+  .simulationButton,
+  .playbackStatus {
+    width: 100%;
+    text-align: center;
+  }
+
+  .mapPanel {
+    padding: 16px;
+  }
+
+  .terrainCanvasWrapper {
+    height: 460px;
+    min-height: 460px;
+    padding: 10px;
+  }
+
+  .metricsGrid--wide {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================
+   Animations
+   ========================= */
+
+.summaryList {
+  animation: cardReveal 1s cubic-bezier(0.47, 0.01, 0.01, 1.00);
+
+}
+   
+@keyframes cardReveal {
+  from {
+    opacity: 0;
+    transform: translateX(79px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
