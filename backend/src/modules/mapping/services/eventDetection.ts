@@ -1,3 +1,4 @@
+import tr from "zod/v4/locales/tr.js";
 import type {
   Obstacle,
   Plant,
