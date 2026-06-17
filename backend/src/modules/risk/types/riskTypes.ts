@@ -58,4 +58,4 @@ export interface CropHealthAnalysis {
 
 
 //*Ediciones de este archivo
-// @luis-hdz7 el 14/6/2026
+// @luis-hdz7 el 14/6/2026 (creacion y primera modificacion)
