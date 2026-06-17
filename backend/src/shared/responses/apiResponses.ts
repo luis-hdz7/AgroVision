@@ -9,16 +9,20 @@ export interface ApiResponse<T> {
 }
 
 // respuestas exitosas
-export const ok = <T>(data: T, message = "Data loaded succesfully"): ApiResponse<T> => ({
-    success: true,
-    data,
-    message,
-    timestamp: new Date().toISOString(),
-})
+export const ok = <T>(data: T, message = "Data loaded successfully"): ApiResponse<T> => {
+    return {
+        success: true,
+        data,
+        message,
+        timestamp: new Date().toISOString()
+    };
+};
 //manejar errores de forma estandarizada
-export const fail = (error: string): ApiResponse<null> => ({
-    success: false,
-    data: null,
-    error,
-    timestamp: new Date().toISOString(),
-})
+export const fail = (error: string): ApiResponse<null> => {
+    return {
+        success: false,
+        data: null,
+        error,
+        timestamp: new Date().toISOString()
+    };
+};

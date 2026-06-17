@@ -5,5 +5,7 @@ export interface FarmOverview {
     readonly name: string;
     readonly totalAreaSquareMeters: number;
     readonly location: string;
+    readonly ownerId: string;
+    readonly createdAt: string;
 }
 
