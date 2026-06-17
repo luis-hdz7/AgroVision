@@ -1,4 +1,4 @@
-//Esta carpeta contiene los tipos de datos relacionados con los reportes generados por el sistema.
+// Esta carpeta contiene los tipos de datos relacionados con los reportes generados por el sistema.
 export interface ReportEvidence {
   id: string;
   type: 'image' | 'video' | 'sensor' | 'note' | 'document';
@@ -7,7 +7,8 @@ export interface ReportEvidence {
   url?: string;
   capturedAt?: string;
 }
-//El FieldReport representa un reporte detallado sobre el estado de un campo especifico
+
+// El FieldReport representa un reporte detallado sobre el estado de un campo específico.
 export interface FieldReport {
   fieldId: string;
   fieldName: string;
@@ -21,7 +22,7 @@ export interface FieldReport {
   evidence?: ReportEvidence[];
 }
 
-//Representa el resumen de un reporte.
+// Representa el resumen de un reporte.
 export interface ReportSummary {
   fieldId: string;
   fieldName: string;
