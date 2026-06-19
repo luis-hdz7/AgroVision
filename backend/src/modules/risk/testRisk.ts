@@ -1,12 +1,13 @@
 import { calculateRisk } from "./engine/riskEngine";
+import { buildRiskSummary }from "./services/riskSummaryService";
 function printResult(title:string,result:ReturnType<typeof calculateRisk>){
-    console.log(`\n========== ${title} ==========`);
-    console.dir(
-        result,
-        {
-            depth:null
-        }
-    );
+    const summary=buildRiskSummary(result);
+    console.log(
+        `\n========== ${title} ==========`);
+    console.log("\nANALYSIS");
+    console.dir(result,{depth:null});
+    console.log("\nSUMMARY");
+    console.dir(summary,{depth:null});
 }
 
 // =======================
@@ -20,8 +21,8 @@ calculateRisk({
     temperatureCelsius:24,
     cropHealthScore:90
 });
-
 printResult("TEST LOW",low);
+
 // =======================
 // TEST 2 — MEDIUM
 // =======================
@@ -64,11 +65,16 @@ printResult("TEST WATCH",watch);
 // VALIDACIONES
 // =======================
 console.log("\n========== VALIDACION ==========");
-console.assert(low.riskLevel==="LOW","ERROR → LOW");
-console.assert(medium.riskLevel==="MEDIUM","ERROR → MEDIUM");
-console.assert(high.riskLevel==="HIGH","ERROR → HIGH");
+console.assert(low.healthScore>=70,"ERROR → LOW RANGE");
+console.assert(medium.healthScore>=40 &&medium.healthScore<70,"ERROR → MEDIUM RANGE");
+console.assert(high.healthScore<40,"ERROR → HIGH RANGE");
+const lowSummary=buildRiskSummary(low);
+const mediumSummary=buildRiskSummary(medium);
+const highSummary=buildRiskSummary(high);
+console.assert(lowSummary.mainProblem===null,"ERROR → LOW summary");
+console.assert(mediumSummary.riskLevel==="MEDIUM","ERROR → MEDIUM summary");
+console.assert(highSummary.criticalFactors.length>0,"ERROR → HIGH critical factors");
 console.log("Validaciones completadas");
-
 // =======================
 // RESUMEN
 // =======================
