@@ -8,13 +8,14 @@ export interface ReportEvidence {
   capturedAt?: string;
 }
 
+
 // El FieldReport representa un reporte detallado sobre el estado de un campo específico.
 export interface FieldReport {
   fieldId: string;
   fieldName: string;
   cropName: string;
   healthScore: number;
-  riskLevel: 'low' | 'medium' | 'high' | 'critical';
+  riskLevel: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
   activeAlerts: string[];
   recommendations: string[];
   actionsTaken: string[];
@@ -28,7 +29,7 @@ export interface ReportSummary {
   fieldName: string;
   cropName: string;
   healthScore: number;
-  riskLevel: 'low' | 'medium' | 'high' | 'critical';
+  riskLevel: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
   activeAlerts: number;
   recommendations: number;
   createdAt: string;
