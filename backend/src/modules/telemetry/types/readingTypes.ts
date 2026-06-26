@@ -8,6 +8,6 @@ export interface TelemetryReading {
     readonly metric: string;
     readonly value: number;
     readonly unit: string;
-    readonly quality: "GOOD" | "INTERFERENCE" | "SENSOR_ERROR"
+    readonly quality: "VALID" | "ESTIMATED" | "MISSING"
     readonly timestamp: string;
 }
