@@ -10,7 +10,7 @@ export class FarmController {
         try {
             const overview:FarmOverview = await this.farmService.getFarmOverview();
             res.status(200).json(ok(overview, "Farm overview loaded successfully"));
-            
+
         } catch (error) {
             res.status(500).json(fail("Failed to load farm overview"));
         }
