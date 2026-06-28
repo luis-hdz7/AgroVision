@@ -1,5 +1,5 @@
 import express, { Application, Request, Response } from "express";
-import { ok, fail } from "./shared/responses/apiResponses";
+import { ok } from "./shared/responses/apiResponses";
 // Importaciones de rutas existentes
 import farmRoutes from "./modules/farms/routs/farmRoutes"
 import fieldRoutes from "./modules/fields/routes/fieldRoutes";
