@@ -1,6 +1,6 @@
 import { CropProfile } from "../types/cropProfileTypes";
 
-export const cropProfileMock: CropProfile[] = [
+export const cropProfilesMock: CropProfile[] = [
     {
         cropType: "RED_BEAN",
         displayName: "Frijol Rojo",
