@@ -1,4 +1,3 @@
-import { snapshot } from "node:test";
 import { vegetationIndexMock } from "../data/vegetationIndexMock";
 import { VegetationIndexSnapshot } from "../vegetationTypes";
 
