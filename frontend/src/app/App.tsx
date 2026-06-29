@@ -40,8 +40,10 @@ function App() {
     };
   }, []);
 
-  // Navega sin recargar la página.
-  // Esto mantiene el comportamiento SPA básico.
+
+/**  Navega sin recargar la página.
+**   Esto mantiene el comportamiento SPA básico.
+*/
   function handleNavigate(path: AppRoutePath) {
     if (path === activePath) return;
 
@@ -49,7 +51,7 @@ function App() {
     setActivePath(path);
   }
 
-  // Obtiene el texto que se mostrará en la Topbar.
+  // Obtiene el texto que se mostrará en la Topbar. (la label)
   const activeRoute = ROUTES.find((route) => route.path === activePath);
 
   return (
