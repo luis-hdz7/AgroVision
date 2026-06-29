@@ -1,7 +1,7 @@
 // origen del dato satelital o terrestre
-export type vegetationSource = "SENTINEL" | "LANDSAT" | "DRONE" | "MANUAL_SENSOR";
-// interpretacion agronomica automatizada NDVI
-export type vegetationVigorLevel = "BAJO_VIGOR" | "ESTRES_MODERADO" | "SALUDABLE" | "VIGOR_EXCEPCIONAL";
+export type vegetationSource = "SATELLITE" | "SIMULATION" | "ROVER_CAMERA" | "UPLOAD";
+
+
 
 
 //indices
@@ -11,8 +11,8 @@ export interface VegetationIndices {
     readonly gndvi: number;
 }
 
-export interface VegetationInterpretation {
-    readonly vigorLevel: vegetationVigorLevel;
+export interface VegetationInterpretation { // interpretacion agronomica automatizada NDVI
+    readonly vigorLevel: "BAJO_VIGOR" | "ESTRES_MODERADO" | "SALUDABLE" | "VIGOR_EXCEPCIONAL";
     readonly anomalyDetected: boolean;
     readonly explanation: string;
 }
