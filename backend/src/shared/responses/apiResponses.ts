@@ -1,28 +1,30 @@
 
 //interfaz del contrato
 export interface ApiResponse<T> {
-    success: boolean;
-    data: T | null;
-    message?: string;
-    error?: string;
-    timestamp: string;
+    readonly success: boolean;
+    readonly data: T | null;
+    readonly message: string;
+    readonly error: string | null;
+    readonly timestamp: number;
 }
 
 // respuestas exitosas
-export const ok = <T>(data: T, message = "Data loaded successfully"): ApiResponse<T> => {
+export function ok<T>(data: T, message = "Data loaded successfully"): ApiResponse<T> {
     return {
         success: true,
         data,
         message,
-        timestamp: new Date().toISOString()
+        error: null,
+        timestamp: Date.now(),
     };
 };
 //manejar errores de forma estandarizada
-export const fail = (error: string): ApiResponse<null> => {
+export function fail<T>(error: string): ApiResponse<T>  {
     return {
         success: false,
         data: null,
+        message: "An error ocurred",
         error,
-        timestamp: new Date().toISOString()
-    };
+        timestamp: Date.now()
+    }
 };
