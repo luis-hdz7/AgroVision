@@ -7,7 +7,13 @@ export class FarmService {
             //simulando datos de una finca
             id: "finca-01",
             name: "Finca de los zopotes",
-            location: "Chinandega, Nicaragua",
+            location: {
+                country: "Nicaragua",
+                region: "Chinandega",
+                city: "Chinandega",
+                latitude: 12.4567,
+                longitude: -87.1292
+            },
             totalAreaSquareMeters: 450000, //45 hectareas
             fieldsCount: 12,
             activeCropCycles: 8,

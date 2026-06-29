@@ -4,8 +4,8 @@ export interface CropCycle {
     readonly fieldId: string;
     readonly cropName: string;
     readonly healthScore: number;
-    readonly growthStage: "PLANTING" | "GROWING" | "HARVESTING" | "FINISHED";
+    readonly growthStage: "VEGETATIVE" | "FLOWERING" | "RIPENING" | "HARVESTED";
     readonly plantedAt: string
-    readonly expectedHarvestAt: string;
+    readonly expectedHarvestAt?: string | null;
 }
 
