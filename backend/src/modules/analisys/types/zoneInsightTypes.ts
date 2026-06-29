@@ -8,6 +8,7 @@ export interface EvidenceItem {
 
 export interface ZoneInsight {
     readonly id: string;
+    readonly zoneId: string;
     readonly fieldId: string;
     readonly cropType: CropType
     readonly finalRiksLevel: "LOW" | "MEDIUM" | "HIGH";
