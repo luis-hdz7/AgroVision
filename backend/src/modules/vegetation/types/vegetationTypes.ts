@@ -1,7 +1,22 @@
 // origen del dato satelital o terrestre
 export type vegetationSource = "SENTINEL" | "LANDSAT" | "DRONE" | "MANUAL_SENSOR";
 // interpretacion agronomica automatizada NDVI
-export type VegetationInterpretation = "BAJO_VIGOR" | "ESTRES_MODERADO" | "SALUDABLE" | "VIGOR_EXCEPCIONAL";
+export type vegetationVigorLevel = "BAJO_VIGOR" | "ESTRES_MODERADO" | "SALUDABLE" | "VIGOR_EXCEPCIONAL";
+
+
+//indices
+export interface VegetationIndices {
+    readonly ndvi: number;
+    readonly ndwi: number;
+    readonly gndvi: number;
+}
+
+export interface VegetationInterpretation {
+    readonly vigorLevel: vegetationVigorLevel;
+    readonly anomalyDetected: boolean;
+    readonly explanation: string;
+}
+
 
 //item de evidencia
 export interface EvidenceItem {
@@ -14,9 +29,9 @@ export interface EvidenceItem {
 export interface VegetationIndexSnapshot {
     readonly id: string;
     readonly fieldId: string;
-    readonly captureDate: string;
-    readonly ndviMean: number; //valor del indice entre -1.0 y 1.0
-    readonly vegetativeCoveragePercentage: number; //de 0 a 100
+    readonly zoneId: string; // "zone-01", "zone-02", etc.
+    readonly source: vegetationSource;
+    readonly indices: VegetationIndices;
     readonly interpretation: VegetationInterpretation;
-    readonly evidence: readonly EvidenceItem[];
+    readonly capturedAt: string;
 }
