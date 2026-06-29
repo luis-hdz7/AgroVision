@@ -1,26 +1,26 @@
-import express from "express";
-import cors from "cors";
+import express, { Application, Request, Response } from "express";
+import { ok } from "./shared/responses/apiResponses";
+// Importaciones de rutas existentes
 import farmRoutes from "./modules/farms/routs/farmRoutes"
-import fieldRoutes from "./modules/fields/routes/fieldRoutes"
+import fieldRoutes from "./modules/fields/routes/fieldRoutes";
+// Nueva importación del módulo de cultivos
+import cropRoutes from "./modules/crops/routes/cropRoutes";
 
-const app = express();
+const app: Application = express();
 
-//middleware base
-app.use(cors());
+// Middlewares globales
 app.use(express.json());
 
-//rutas modulares
+// Endpoint base de verificación de salud del sistema
+app.get("/api/health", (req: Request, res: Response) => {
+  res.status(200).json(ok({ status: "UP" }, "Backend service is healthy"));
+});
 
-app.use("/api/farm", farmRoutes);
+// Registro de rutas operativas de AgroVision
+app.use("/api/farms", farmRoutes);
 app.use("/api/fields", fieldRoutes);
 
-
-//ruta de prueba
-app.get("/api/health", (req, res) => {
-    res.json({
-        status: "ok",
-        timestamp: new Date().toISOString()
-    });
-});
+// Vinculación oficial del nuevo endpoint prescriptivo
+app.use("/api/crops", cropRoutes);
 
 export default app;
