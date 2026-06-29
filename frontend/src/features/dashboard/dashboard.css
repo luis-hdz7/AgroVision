@@ -1,0 +1,325 @@
+
+ /** =========================================
+ * AgroVision Dashboard Base Style
+ * =========================================
+ *
+ * Diseño base conceptual:
+ * - oscuro profesional;
+ * - verde agrícola/neón;
+ * - tarjetas tipo glass/dark card;
+ * - inspiración dashboard premium;
+ * - sin tocar lógica ni JSX.
+ * =========================================
+ */
+
+.dashboardPage {
+  width: 100%;
+  max-width: 100%;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.dashboardHero {
+  position: relative;
+
+  min-height: 360px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2rem;
+
+  padding: clamp(1.4rem, 4vw, 3rem);
+  overflow: hidden;
+
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 34px;
+  background:
+    linear-gradient(110deg, rgba(5, 8, 6, 0.88) 0%, rgba(8, 13, 10, 0.74) 42%, rgba(183, 255, 23, 0.1) 100%),
+    radial-gradient(circle at 70% 42%, rgba(183, 255, 23, 0.24), transparent 32%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025));
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+}
+
+.dashboardHero::before {
+  content: "";
+
+  position: absolute;
+  right: 7%;
+  top: 12%;
+
+  width: min(500px, 48vw);
+  height: min(250px, 28vw);
+
+  border-radius: 46% 54% 46% 54%;
+  background:
+    linear-gradient(135deg, rgba(183, 255, 23, 0.24), rgba(145, 231, 255, 0.08)),
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.18) 0 1px,
+      transparent 1px 18px
+    );
+
+  opacity: 0.8;
+  transform: rotate(-14deg) skewX(-8deg);
+}
+
+.dashboardHero::after {
+  content: "";
+
+  position: absolute;
+  right: 14%;
+  top: 9%;
+
+  width: min(340px, 34vw);
+  height: min(210px, 24vw);
+
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(183, 255, 23, 0.34), transparent 58%);
+  filter: blur(30px);
+}
+
+.dashboardHero > div {
+  position: relative;
+  z-index: 1;
+}
+
+.dashboardHero__eyebrow {
+  width: max-content;
+  margin: 0 0 0.8rem;
+  padding: 0.45rem 0.75rem;
+
+  color: #b7ff17;
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  border: 1px solid rgba(183, 255, 23, 0.26);
+  border-radius: 999px;
+  background: rgba(183, 255, 23, 0.08);
+}
+
+.dashboardHero h1 {
+  max-width: 760px;
+  margin: 0;
+
+  color: #f4f7ef;
+  font-size: clamp(3.2rem, 7vw, 7rem);
+  line-height: 0.86;
+  font-weight: 950;
+  letter-spacing: -0.085em;
+  text-transform: uppercase;
+}
+
+.dashboardHero span {
+  display: block;
+  max-width: 680px;
+  margin-top: 1rem;
+
+  color: #c8d0c4;
+  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+  line-height: 1.65;
+}
+
+.dashboardHero__status {
+  flex: 0 0 280px;
+
+  padding: 1.1rem;
+  border: 1px solid rgba(183, 255, 23, 0.24);
+  border-radius: 24px;
+  background: rgba(183, 255, 23, 0.08);
+}
+
+.dashboardHero__status strong {
+  display: block;
+  color: #b7ff17;
+  font-size: 0.95rem;
+}
+
+.dashboardHero__status span {
+  margin-top: 0.35rem;
+  color: #c8d0c4;
+  font-size: 0.86rem;
+}
+
+.dashboardCards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.dashboardCard {
+  position: relative;
+
+  min-height: 290px;
+  display: grid;
+  align-content: space-between;
+  gap: 1.2rem;
+
+  padding: 1.25rem;
+  overflow: hidden;
+
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.035)),
+    rgba(18, 24, 20, 0.82);
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.28);
+}
+
+.dashboardCard::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    radial-gradient(circle at 78% 18%, rgba(183, 255, 23, 0.22), transparent 28%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.045), transparent 45%);
+
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.dashboardCard::after {
+  content: "↗";
+
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+
+  display: grid;
+  place-items: center;
+
+  width: 36px;
+  height: 36px;
+
+  color: #f4f7ef;
+  font-size: 1rem;
+  font-weight: 900;
+
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.dashboardCard header,
+.dashboardCard > span,
+.dashboardCard ul {
+  position: relative;
+  z-index: 1;
+}
+
+.dashboardCard header {
+  display: grid;
+  gap: 0.6rem;
+  padding-right: 2.6rem;
+}
+
+.dashboardCard p {
+  width: max-content;
+  margin: 0;
+  padding: 0.36rem 0.58rem;
+
+  color: #081006;
+  font-size: 0.68rem;
+  font-weight: 950;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+
+  border-radius: 999px;
+  background: #b7ff17;
+}
+
+.dashboardCard h2 {
+  margin: 0;
+
+  color: #f4f7ef;
+  font-size: clamp(1.35rem, 2vw, 1.95rem);
+  line-height: 0.98;
+  font-weight: 900;
+  letter-spacing: -0.055em;
+}
+
+.dashboardCard > span {
+  color: #889186;
+  line-height: 1.58;
+}
+
+.dashboardCard ul {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dashboardCard li {
+  width: max-content;
+  max-width: 100%;
+
+  padding: 0.35rem 0.55rem;
+
+  color: #c8d0c4;
+  font-size: 0.76rem;
+  font-weight: 750;
+
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.dashboardCard:nth-child(2)::before {
+  background:
+    radial-gradient(circle at 78% 18%, rgba(145, 231, 255, 0.19), transparent 28%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.045), transparent 45%);
+}
+
+.dashboardCard:nth-child(3)::before {
+  background:
+    radial-gradient(circle at 78% 18%, rgba(255, 184, 77, 0.2), transparent 28%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.045), transparent 45%);
+}
+
+.dashboardCard:nth-child(4)::before {
+  background:
+    radial-gradient(circle at 78% 18%, rgba(255, 95, 95, 0.16), transparent 28%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.045), transparent 45%);
+}
+
+@media (max-width: 1180px) {
+  .dashboardCards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboardHero {
+    align-items: flex-start;
+    flex-direction: column;
+    min-height: 330px;
+  }
+
+  .dashboardHero__status {
+    flex: initial;
+    width: min(100%, 420px);
+  }
+}
+
+@media (max-width: 720px) {
+  .dashboardHero {
+    min-height: 420px;
+    border-radius: 24px;
+  }
+
+  .dashboardHero::before,
+  .dashboardHero::after {
+    opacity: 0.34;
+  }
+
+  .dashboardCards {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboardCard {
+    min-height: 240px;
+  }
+}
