@@ -158,7 +158,8 @@ export function getRouteFromPathname(pathname: string): AppRoutePath {
     return DEFAULT_ROUTE;
 }
 
-// Busca definición completa de ruta.
+
+// Busca definición completa de ruta, si algo falla retorna dashboard
 function getRouteDefinition(path: AppRoutePath): RouteDefinition {
     return ROUTES.find((route) => route.path === path) ?? ROUTES[0];
 }    
