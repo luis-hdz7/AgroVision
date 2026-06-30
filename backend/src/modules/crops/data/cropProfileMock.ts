@@ -42,6 +42,66 @@ export const cropProfilesMock: CropProfile[] = [
         },
     },
     {
+        cropType: "QUEQUISQUE",
+        displayName: "quequisque (malanga)",
+        scientificName: "Colocasia esculenta",
+        analysisFocus: ["Saturación de agua en cormo", "Desarrollo del área foliar inicial"],
+        mainRisks: ["Pudrición del cormo por exceso de humedad", "Gusano del cuerno en hojas"],
+        riskRules: {
+            waterStressSensitive: false, // Soporta más humedad, pero no estancada
+            fungalRiskSensitive: true,
+            heatStressSensitive: false,
+            nutrientStressSensitive: true,
+        },
+        preferredMetrics: ["Soil Moisture", "NDVI", "Humidity"],
+        recommendationTemplates: {
+            waterStress: "Monitoreo de humedad estancada en Quequisque. Verificar drenajes de las parcelas para evitar pudrición.",
+            fungalRisk: "Humedad del suelo superior al 80% sostenida. Aplicar control preventivo para hongos en el cormo.",
+            lowVigor: "Vigor foliar bajo detectado en Quequisque. Monitorear ataque de plagas desfoliadoras o falta de fertilizante.",
+            inspection: "Fase de desarrollo del cormo activa. Inspeccionar manualmente la base de la planta y la compactación."
+        }
+    },
+    {
+        cropType: "ORANGE",
+        displayName: "Naranjo Dulce",
+        scientificName: "Citrus sinensis",
+        analysisFocus: ["Estrés hídrico en fase de floración", "Detección de anomalías por HLB"],
+        mainRisks: ["Caída de flor por sequía", "Vulnerabilidad a vectores de plagas (Gomosis)"],
+        riskRules: {
+            waterStressSensitive: true,
+            fungalRiskSensitive: true,
+            heatStressSensitive: true,
+            nutrientStressSensitive: true,
+        },
+        preferredMetrics: ["NDVI", "Temperature", "Soil Moisture"],
+        recommendationTemplates: {
+            waterStress: "Estrés hídrico detectado en periodo crítico de floración del Naranjo. Activar riego controlado inmediato.",
+            fungalRisk: "Humedad y temperatura alta combinada. Monitorear presencia de gomosis en la base del tronco.",
+            lowVigor: "Pérdida drástica de vigor foliar en cítrico (NDVI bajo). Programar muestreo de campo preventivo para HLB.",
+            inspection: "Inicio de brotación detectado. Realizar inspección visual nocturna de plagas en hojas nuevas."
+        }
+    },
+    {
+        cropType: "SORGHUM",
+        displayName: "Sorgo Blanco",
+        scientificName: "Sorghum bicolor",
+        analysisFocus: ["Resistencia a estrés térmico", "Vigor vegetativo post-corte"],
+        mainRisks: ["Estrés por calor extremo", "Ataque de pulgón amarillo en etapas tempranas"],
+        riskRules: {
+            waterStressSensitive: false, // Es bastante tolerante a la sequía
+            fungalRiskSensitive: false,
+            heatStressSensitive: true,
+            nutrientStressSensitive: true,
+        },
+        preferredMetrics: ["Temperature", "NDVI", "Soil Moisture"],
+        recommendationTemplates: {
+            waterStress: "Humedad crítica detectada en Sorgo. Aunque es tolerante, se recomienda riego de auxilio para evitar detención del crecimiento.",
+            fungalRisk: "Condiciones de humedad inusuales para Sorgo. Monitorear preventivamente zonas bajas con acumulación de agua.",
+            lowVigor: "Alerta de bajo vigor en Sorgo. Verificar inmediatamente presencia de pulgón amarillo o deficiencia severa de nitrógeno.",
+            inspection: "Fase de panojamiento iniciada. Realizar inspección visual en el envés de las hojas para descartar plagas."
+        }
+    },
+    {
         cropType: "GENERAL",
         displayName: "Cultivo General",
         scientificName: null,
