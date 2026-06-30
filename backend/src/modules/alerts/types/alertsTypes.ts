@@ -5,7 +5,7 @@
 */
 
 import { RiskLevel } from "../../risk/types/riskTypes";
-import { EvidenceItem } from "../../analysis/services/evidenceFusionService";
+import { EvidenceItem } from "../../analysis/types/zoneInsightTypes";
 
 /*
     * Tipos de alerta soportados por AgroVision.
@@ -26,6 +26,11 @@ export type AlertStatus =
     | "RESOLVED"
     | "IGNORED";
 
+export type AlertSeverity =
+    | "LOW"
+    | "MEDIUM"
+    | "HIGH";
+
 /*
     * Contrato prescriptivo de alerta.
     * Toda alerta debe responder:
@@ -39,7 +44,7 @@ export interface AgriculturalAlert {
     fieldId: string;
     zoneId?: string | null;
     type: AlertType;
-    severity: RiskLevel;
+    severity: AlertSeverity;
     title: string;
     message: string;
     evidence: EvidenceItem[];

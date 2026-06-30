@@ -132,6 +132,7 @@ export class EvidenceFusionService {
     private static evaluateNdvi(ndvi: number): EvidenceStatus {
         if (ndvi < 0.30) return "CRITICAL";
         if (ndvi < 0.50) return "WARNING";
+        if (ndvi < 0.70) return "WATCH";
         return "NORMAL";
     }
 }

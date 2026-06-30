@@ -11,11 +11,11 @@ export interface ZoneInsight {
     readonly zoneId: string;
     readonly fieldId: string;
     readonly cropType: CropType
-    readonly finalRiskLevel: "LOW" | "MEDIUM" | "HIGH";
+    readonly finalRiskLevel: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
     readonly healthScore: number; //de 1 a 100
     readonly evidence: readonly EvidenceItem[];
     readonly mainCause: string;
     readonly summary: string;
-    readonly recommendedAction: string;
+    readonly recommmendedAction: string;
     readonly generatedAt: string;
 }

@@ -1,5 +1,5 @@
-import { zoneInsightMock } from "../../../analisys/data/zoneInsightMock";
-import { ZoneInsight } from "../../../analisys/types/zoneInsightTypes";
+import { zoneInsightMock } from "../../../analysis/data/zoneInsightMock";
+import { ZoneInsight } from "../../../analysis/types/zoneInsightTypes";
 
 export class ZoneInsightService {
     /**

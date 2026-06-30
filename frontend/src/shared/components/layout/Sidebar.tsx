@@ -24,36 +24,40 @@ interface SidebarProps {
     readonly onNavigate: (path : AppRoutePath) => void;
 }
 
-export function Sidebar({ onNavigate}: SidebarProps) {
+export function Sidebar({ activePath, onNavigate}: SidebarProps) {
     return (
-        <aside className="agroSidebar" aria-label="Navegación lateral">
-            <header className="agroSidebar__brand">
-                <div className="agroSidebar__logo" aria-hidden="true">AV-I</div>
-                <div>
-                    <strong>AgroVision Intelligence</strong>
+        <aside className="sidebar">
+            <div className="sidebar__brand">
+                <div className="sidebar__logo">AV</div>
 
+                <div>
+                    <strong>AgroVision</strong>
+                    <span>Intelligence</span>
                 </div>
-            </header>
-            <nav className="agroSidebar__nav" aria-label="secciones principales">
+            </div>
+
+            <nav className="sidebar__nav" aria-label="Navegación principal">
                 {ROUTES.map((route) => {
-                    const isActive = route.path === route.path;
+                    const isActive = route.path === activePath;
+
                     return (
-                        <button 
+                        <button
                             key={route.path}
                             type="button"
                             className={isActive ? "sidebar__link is-active" : "sidebar__link"}
                             aria-current={isActive ? "page" : undefined}
                             onClick={() => onNavigate(route.path)}
-                        >
-                            <span className="sidebar__icon">{getRouteIcon(route.path)} </span>
-                            <span>{route.label}</span> 
+                            >
+                                <span className="sidebar__icon">{getRouteIcon(route.path)}</span>
+                                <span>{route.label}</span>
                         </button>
                     );
                 })}
             </nav>
+
             <div className="sidebar__footer">
-                <small>Frontend /UI base</small>
-                <strong>Díia 2 + Día 3</strong>
+                <small>AgroVision Intelligence</small>
+                <strong>Prescriptive MVP</strong>
             </div>
         </aside>
 

@@ -19,12 +19,28 @@
 // rutas base de la app
 export const API_ENDPOINTS = {
   dashboardSummary: '/api/dashboard/summary',
+  //vista  general de la finca
   farmOverview: '/api/farm/overview',
+  //parcelas o lotes productivos
   fields: '/api/fields',
+  //ciclos de cultivos
   crops: '/api/crops',
+  //perfiles estratégicos de cultivos nacionales 
+  cropProfiles: '/api/crops/profiles',
+  //capa satelital simulada / indices de vegetacion 
+  vegetationIndices: '/api/vegetation/indices',
+  // análisis prescriptivo por zona 
+  zoneAnalysis: '/api/analysis/zone',
+  //riesgo por campo o parcela 
+  fieldRisk: '/api/risk/field',
+  //alertas con evidencia demostrable
   alerts: '/api/alerts',
+  // recoimendaciones con evidencia e impacto 
   recommendations: '/api/recommendations',
+  // analisis visual vía backend 
+  visionAnalyze: '/api/vision/analyze',
 } as const;
+
 
 /**ApiEnpointKey representa los nombres validos dentro de API_ENDPOINTS */
 // ejemplo: "dashboardSummary" o "farmOverview"

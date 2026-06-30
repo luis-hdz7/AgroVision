@@ -11,46 +11,48 @@
  * - sin tocar lógica ni JSX.
  * =========================================
  */
+/* =========================================
+   Dashboard Prescriptivo
+   ========================================= */
 
 .dashboardPage {
   width: 100%;
   max-width: 100%;
   display: grid;
-  gap: 1.25rem;
+  gap: 24px;
 }
 
 .dashboardHero {
   position: relative;
+  min-height: 420px;
 
-  min-height: 360px;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  gap: 2rem;
+  gap: 32px;
 
-  padding: clamp(1.4rem, 4vw, 3rem);
+  padding: clamp(28px, 5vw, 64px);
   overflow: hidden;
 
   border: 1px solid rgba(255, 255, 255, 0.11);
-  border-radius: 34px;
+  border-radius: 36px;
   background:
-    linear-gradient(110deg, rgba(5, 8, 6, 0.88) 0%, rgba(8, 13, 10, 0.74) 42%, rgba(183, 255, 23, 0.1) 100%),
-    radial-gradient(circle at 70% 42%, rgba(183, 255, 23, 0.24), transparent 32%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025));
-  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+    linear-gradient(110deg, rgba(5, 8, 6, 0.92) 0%, rgba(8, 13, 10, 0.78) 44%, rgba(183, 255, 23, 0.11) 100%),
+    radial-gradient(circle at 74% 38%, rgba(183, 255, 23, 0.28), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.025));
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.44);
 }
 
 .dashboardHero::before {
   content: "";
-
   position: absolute;
-  right: 7%;
-  top: 12%;
+  right: 8%;
+  top: 10%;
 
-  width: min(500px, 48vw);
-  height: min(250px, 28vw);
+  width: min(560px, 45vw);
+  height: min(280px, 24vw);
 
-  border-radius: 46% 54% 46% 54%;
+  border-radius: 48% 52% 48% 52%;
   background:
     linear-gradient(135deg, rgba(183, 255, 23, 0.24), rgba(145, 231, 255, 0.08)),
     repeating-linear-gradient(
@@ -59,167 +61,178 @@
       transparent 1px 18px
     );
 
-  opacity: 0.8;
+  opacity: 0.82;
   transform: rotate(-14deg) skewX(-8deg);
 }
 
 .dashboardHero::after {
   content: "";
-
   position: absolute;
   right: 14%;
-  top: 9%;
+  top: 8%;
 
   width: min(340px, 34vw);
   height: min(210px, 24vw);
 
   border-radius: 999px;
-  background: radial-gradient(circle, rgba(183, 255, 23, 0.34), transparent 58%);
-  filter: blur(30px);
+  background: radial-gradient(circle, rgba(183, 255, 23, 0.36), transparent 60%);
+  filter: blur(32px);
 }
 
-.dashboardHero > div {
+.dashboardHero__content,
+.dashboardHero__status {
   position: relative;
   z-index: 1;
 }
 
 .dashboardHero__eyebrow {
   width: max-content;
-  margin: 0 0 0.8rem;
-  padding: 0.45rem 0.75rem;
+  margin: 0 0 14px;
+  padding: 8px 12px;
 
   color: #b7ff17;
   font-size: 0.72rem;
   font-weight: 950;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 
-  border: 1px solid rgba(183, 255, 23, 0.26);
+  border: 1px solid rgba(183, 255, 23, 0.28);
   border-radius: 999px;
   background: rgba(183, 255, 23, 0.08);
 }
 
 .dashboardHero h1 {
-  max-width: 760px;
+  max-width: 880px;
   margin: 0;
 
   color: #f4f7ef;
-  font-size: clamp(3.2rem, 7vw, 7rem);
+  font-size: clamp(3rem, 7vw, 7.6rem);
   line-height: 0.86;
   font-weight: 950;
-  letter-spacing: -0.085em;
+  letter-spacing: -0.088em;
   text-transform: uppercase;
 }
 
-.dashboardHero span {
+.dashboardHero__content > span {
   display: block;
-  max-width: 680px;
-  margin-top: 1rem;
+  max-width: 720px;
+  margin-top: 18px;
 
   color: #c8d0c4;
-  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+  font-size: clamp(0.98rem, 1.4vw, 1.12rem);
   line-height: 1.65;
 }
 
 .dashboardHero__status {
-  flex: 0 0 280px;
+  flex: 0 0 320px;
 
-  padding: 1.1rem;
-  border: 1px solid rgba(183, 255, 23, 0.24);
-  border-radius: 24px;
+  padding: 20px;
+  border: 1px solid rgba(183, 255, 23, 0.26);
+  border-radius: 26px;
   background: rgba(183, 255, 23, 0.08);
+  backdrop-filter: blur(16px);
+}
+
+.dashboardHero__status span,
+.dashboardHero__status small {
+  display: block;
+  color: #c8d0c4;
 }
 
 .dashboardHero__status strong {
   display: block;
+  margin: 8px 0;
+
   color: #b7ff17;
-  font-size: 0.95rem;
+  font-size: 1.7rem;
+  line-height: 0.95;
+  font-weight: 950;
+  letter-spacing: -0.06em;
 }
 
-.dashboardHero__status span {
-  margin-top: 0.35rem;
-  color: #c8d0c4;
-  font-size: 0.86rem;
-}
+/* =========================================
+   Metrics
+   ========================================= */
 
-.dashboardCards {
+.dashboardMetricGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1rem;
+  gap: 16px;
 }
 
-.dashboardCard {
-  position: relative;
-
-  min-height: 290px;
+.dashboardMetricCard {
+  min-height: 150px;
   display: grid;
   align-content: space-between;
-  gap: 1.2rem;
+  gap: 12px;
 
-  padding: 1.25rem;
-  overflow: hidden;
-
-  border: 1px solid rgba(255, 255, 255, 0.11);
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.105);
   border-radius: 26px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.035)),
+    radial-gradient(circle at 80% 18%, rgba(183, 255, 23, 0.14), transparent 32%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.035)),
     rgba(18, 24, 20, 0.82);
-  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.28);
 }
 
-.dashboardCard::before {
-  content: "";
-
-  position: absolute;
-  inset: 0;
-
-  background:
-    radial-gradient(circle at 78% 18%, rgba(183, 255, 23, 0.22), transparent 28%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.045), transparent 45%);
-
-  opacity: 0.9;
-  pointer-events: none;
+.dashboardMetricCard span {
+  color: #c8d0c4;
+  font-size: 0.82rem;
+  font-weight: 800;
 }
 
-.dashboardCard::after {
-  content: "↗";
-
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-
-  display: grid;
-  place-items: center;
-
-  width: 36px;
-  height: 36px;
-
+.dashboardMetricCard strong {
   color: #f4f7ef;
-  font-size: 1rem;
-  font-weight: 900;
-
-  border: 1px solid rgba(255, 255, 255, 0.13);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 0.9;
+  font-weight: 950;
+  letter-spacing: -0.07em;
 }
 
-.dashboardCard header,
-.dashboardCard > span,
-.dashboardCard ul {
-  position: relative;
-  z-index: 1;
+.dashboardMetricCard small {
+  color: #8d988d;
+  line-height: 1.45;
 }
 
-.dashboardCard header {
+/* =========================================
+   Main grid
+   ========================================= */
+
+.dashboardMainGrid {
   display: grid;
-  gap: 0.6rem;
-  padding-right: 2.6rem;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.75fr);
+  gap: 16px;
+  align-items: stretch;
 }
 
-.dashboardCard p {
+.dashboardPanel {
+  min-width: 0;
+  display: grid;
+  gap: 16px;
+  align-content: start;
+
+  padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.105);
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.03)),
+    rgba(18, 24, 20, 0.82);
+  box-shadow: 0 18px 54px rgba(0, 0, 0, 0.26);
+}
+
+.dashboardPanel--wide {
+  grid-row: span 2;
+}
+
+.dashboardPanel header {
+  display: grid;
+  gap: 8px;
+}
+
+.dashboardPanel header p {
   width: max-content;
   margin: 0;
-  padding: 0.36rem 0.58rem;
+  padding: 6px 10px;
 
   color: #081006;
   font-size: 0.68rem;
@@ -231,95 +244,176 @@
   background: #b7ff17;
 }
 
-.dashboardCard h2 {
+.dashboardPanel h2 {
   margin: 0;
-
   color: #f4f7ef;
-  font-size: clamp(1.35rem, 2vw, 1.95rem);
-  line-height: 0.98;
-  font-weight: 900;
-  letter-spacing: -0.055em;
+  font-size: clamp(1.45rem, 2vw, 2.25rem);
+  line-height: 0.95;
+  font-weight: 950;
+  letter-spacing: -0.06em;
 }
 
-.dashboardCard > span {
-  color: #889186;
-  line-height: 1.58;
+.dashboardPanel strong {
+  color: #f4f7ef;
+  font-size: 1rem;
+  line-height: 1.45;
 }
 
-.dashboardCard ul {
-  display: grid;
-  gap: 0.45rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.dashboardCard li {
-  width: max-content;
-  max-width: 100%;
-
-  padding: 0.35rem 0.55rem;
-
+.dashboardPanel span,
+.dashboardPanel footer p {
   color: #c8d0c4;
-  font-size: 0.76rem;
-  font-weight: 750;
+  line-height: 1.55;
+}
 
+.dashboardPanel footer {
+  display: grid;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dashboardPanel footer small {
+  color: #b7ff17;
+  font-weight: 900;
+}
+
+.dashboardPanel__summary {
+  margin: 0;
+  color: #f4f7ef;
+  font-size: clamp(1.1rem, 2vw, 1.65rem);
+  line-height: 1.35;
+  letter-spacing: -0.035em;
+}
+
+/* =========================================
+   Evidence
+   ========================================= */
+
+.dashboardEvidenceGrid,
+.dashboardEvidenceList {
+  display: grid;
+  gap: 10px;
+}
+
+.dashboardEvidenceGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.evidenceBadge {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+
+  padding: 14px;
   border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 999px;
+  border-radius: 18px;
   background: rgba(255, 255, 255, 0.045);
 }
 
-.dashboardCard:nth-child(2)::before {
-  background:
-    radial-gradient(circle at 78% 18%, rgba(145, 231, 255, 0.19), transparent 28%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.045), transparent 45%);
+.evidenceBadge strong {
+  color: #b7ff17;
+  font-size: 0.76rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
 }
 
-.dashboardCard:nth-child(3)::before {
-  background:
-    radial-gradient(circle at 78% 18%, rgba(255, 184, 77, 0.2), transparent 28%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.045), transparent 45%);
+.evidenceBadge span {
+  color: #f4f7ef;
+  font-size: 0.9rem;
+  font-weight: 850;
 }
 
-.dashboardCard:nth-child(4)::before {
-  background:
-    radial-gradient(circle at 78% 18%, rgba(255, 95, 95, 0.16), transparent 28%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.045), transparent 45%);
+.evidenceBadge small {
+  color: #8d988d;
+  line-height: 1.45;
 }
+
+.evidenceBadge--critical {
+  border-color: rgba(255, 94, 94, 0.3);
+}
+
+.evidenceBadge--warning {
+  border-color: rgba(255, 184, 77, 0.3);
+}
+
+.evidenceBadge--watch {
+  border-color: rgba(183, 255, 23, 0.22);
+}
+
+/* =========================================
+   Risk pill
+   ========================================= */
+
+.riskPill {
+  width: max-content;
+  padding: 8px 12px;
+
+  color: #081006;
+  font-size: 0.76rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+
+  border-radius: 999px;
+  background: #b7ff17;
+}
+
+.riskPill--high,
+.riskPill--critical {
+  color: #160202;
+  background: #ff5f5f;
+}
+
+.riskPill--medium {
+  color: #160d02;
+  background: #ffb84d;
+}
+
+/* =========================================
+   Responsive
+   ========================================= */
 
 @media (max-width: 1180px) {
-  .dashboardCards {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .dashboardHero {
     align-items: flex-start;
     flex-direction: column;
-    min-height: 330px;
+    min-height: 380px;
   }
 
   .dashboardHero__status {
     flex: initial;
     width: min(100%, 420px);
   }
+
+  .dashboardMetricGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboardMainGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboardPanel--wide {
+    grid-row: auto;
+  }
 }
 
 @media (max-width: 720px) {
   .dashboardHero {
-    min-height: 420px;
-    border-radius: 24px;
+    min-height: 460px;
+    border-radius: 26px;
   }
 
   .dashboardHero::before,
   .dashboardHero::after {
-    opacity: 0.34;
+    opacity: 0.35;
   }
 
-  .dashboardCards {
+  .dashboardMetricGrid,
+  .dashboardEvidenceGrid {
     grid-template-columns: 1fr;
   }
 
-  .dashboardCard {
-    min-height: 240px;
+  .dashboardPanel {
+    border-radius: 22px;
   }
 }
