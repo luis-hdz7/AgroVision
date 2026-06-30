@@ -35,7 +35,8 @@ export type AppRoutePath =
   | "/crops"
   | "/alerts"
   | "/recommendations"
-  | "/reports";
+  | "/reports"
+  | "/vision-ai";
 
 
 /** RouteDefinition define cada ruta base del sistema. 
@@ -77,106 +78,54 @@ export const ROUTES : ReadonlyArray<RouteDefinition> = [
         path: "/crops",
         label: "Cultivos",
         title: "Cultivos",
-        description: "Módulo para ciclos de cultivo, estaddo fenológico y salud agricola", 
-    }, 
+        description: "Módulo para perfiles de cultivos estratégicos, riesgos principales y métricas importantes.",
+    },
     {
         path: "/alerts",
         label: "Alertas",
         title: "Alertas",
-        description: "Módulo para eventos criticos, evidencias, y acciones recomendadas",
+        description: "Módulo para eventos criticos, evidencias, severidad, fuente y acciones recomendadas",
     },
     {
         path: "/recommendations",
         label: "Recomendaciones",
         title: "Recomendaciones",
-        description: "Módulos para acciones inteligentes basadas en sensores, visión y analisis de datos",
+        description: "Módulos para recomendaciones accionables inteligentes basadas en razón, urgencia e impacto esperado",
     },
     {
         path: "/reports",
         label: "Reportes",
         title: "Reportes",
-        description: "Módulo para informes y reportes técnicos, productivos y ejecutivos",
+        description: "Módulo para informes y reportes técnicos, productivos y ejecutivos basados en evidencias y trazabilidad",
+    },
+    {
+        path: "/vision-ai",
+        label: "Vision AI",
+        title: "Vision AI",
+        description:  "Módulo para análisis visual preliminar con predicción, confianza, métricas y explicación.",
     }
 ];
 
-export  function AppRouter({activePath } : {readonly activePath : AppRoutePath}) {
-    // // activePath gusrda la ruta actual
-    // const [activePath, setActivePath] = useState<AppRoutePath>(
-    //     getRouteFromPathname(window.location.pathname)
-    // );
+interface AppRouterProps {
+    readonly activePath: AppRoutePath;
+}
 
-    /** useEffect para sincronizar el router con el navegador.
-     * 
-     * * Hace 3 cosas:
-     * 1. Corrige rutas invalidas hacia dashboard.
-     * 2. Permite usar el botón atrás/adelante
-     * 3. Mantiene activePath actualizado   
-    */
-
-    // useEffect(() => {
-    //     if (!isValidRoutePath(window.location.pathname)) {
-    //         window.history.replaceState(null, "", DEFAULT_ROUTE);
-    //         setActivePath(DEFAULT_ROUTE);
-    //     }
-
-    //     function handlePopState() {
-    //         setActivePath(getRouteFromPathname(window.location.pathname));
-    //     }
-        
-    //     window.addEventListener("popstate", handlePopState);
-
-    //     return () => {
-    //         window.removeEventListener("popstate", handlePopState);
-    //     };
-        
-    // },[]);
-
-
-    /** navigateTo cambia de ruta sin recargar la página 
-     * 
-     * pushState actualiza la url
-     * setActivePath actualiza la pantalla visible
-    */
-
-    // function navigateTo(path: AppRoutePath) {
-    //     window.history.pushState(null, "", path);
-    //     setActivePath(path);
-    // }
+// Renderiza la página correspondiente.
+// Si la ruta aún no tiene feature, renderiza placeholder.
+export function AppRouter({activePath } : AppRouterProps) {
     
+    if (activePath === "/dashboard") {
+        return <DashboardPage />;
+    }
+
     const activeRoute = getRouteDefinition(activePath);
 
     return (
-        <>
-            {/* <nav className = "appRouteNav" aria-label="Rutas principales">
-                {ROUTES.map((route) => (
-                    <button
-                        key={route.path}
-                        type="button"
-                        className={
-                            activePath === route.path ? "appRouteNav__item appRouteNav__item--active" 
-                            : "appRouteNav__item"
-                        }
-                        onClick={() => navigateTo(route.path)}
-                    >
-                        {route.label}
-                    </button>
-                ))}
-            </nav> */}
-
-            <main className="appRouteContent">
-                {activePath === "/dashboard" ? (
-                    <DashboardPage />
-                ) : ( 
-                    <RoutePlaceholder
-                    title={activeRoute.title}
-                    description={activeRoute.description}
-                    />
-                )}
-            </main>
-        </>
+        <RoutePlaceholder
+        title={activeRoute.title}
+        description={activeRoute.description}/>
     );
 }
-
 
 interface RoutePlaceholderProps {
     readonly title: string;
@@ -184,17 +133,13 @@ interface RoutePlaceholderProps {
 }
 
 
-/**
- * Placeholder temporal.
- *
- * Sirve para demostrar que las rutas existen,
- * sin inventar páginas completas todavía.
+/**  Placeholder temporal para módulos pendientes.
+**   No inventa pantallas finales todavía.
 */
-
-function RoutePlaceholder({title, description}: RoutePlaceholderProps) {
-    return  (
-        <section className="routePlaceholder">
-            <p>Módulo en preparación</p>
+function RoutePlaceholder({ title, description }: RoutePlaceholderProps) {
+    return (
+            <section className="routePlaceholder">
+            <p className="routePlaceholder__eyebrow">Módulo en preparación</p>
             <h1>{title}</h1>
             <span>{description}</span>
         </section>
@@ -202,37 +147,20 @@ function RoutePlaceholder({title, description}: RoutePlaceholderProps) {
 }
 
 
-/**
- * Obtiene la ruta actual del navegador.
- *
- * Si la ruta es válida, la devuelve, si no es válida, devuelve /dashboard
+/**  Convierte window.location.pathname en ruta válida.
+**  Si no existe, regresa /dashboard.
 */
-
 export function getRouteFromPathname(pathname: string): AppRoutePath {
-  if (ROUTES.some((route) => route.path === pathname)) {
-    return pathname as AppRoutePath;
-  }
+    if (ROUTES.some((route) => route.path === pathname)) {
+        return pathname as AppRoutePath;
+    }
 
-  return DEFAULT_ROUTE;
+    return DEFAULT_ROUTE;
 }
 
-/**
- * Valida si una ruta pertenece a las rutas permitidas.
- *
- * TypeScript usa "path is AppRoutePath" para entender que
- * después de validar, path ya es una ruta segura.
-*/
-
-// function isValidRoutePath(path: string): path is AppRoutePath {
-//     return ROUTES.some((route) => route.path === path);
-// }
-
-/**
- * Devuelve la difinicion completa de una ruta 
- * 
- * Si algo falla, retorna la primera ruta, osea:  dashboard
-*/
-
+// Busca definición completa de ruta.
 function getRouteDefinition(path: AppRoutePath): RouteDefinition {
     return ROUTES.find((route) => route.path === path) ?? ROUTES[0];
-}
+}    
+
+
