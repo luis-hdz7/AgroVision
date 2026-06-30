@@ -6,7 +6,7 @@ export const zoneInsightMock: ZoneInsight[] = [
         zoneId: "zone-01",
         fieldId: "field-001",
         cropType: "RED_BEAN",
-        finalRiksLevel: "LOW",
+        finalRiskLevel: "LOW",
         healthScore: 92,
         evidence: [
             {
@@ -17,7 +17,7 @@ export const zoneInsightMock: ZoneInsight[] = [
         ],
         mainCause: "Condiciones climáticas y de suelo ideales.",
         summary: "Zona estable. El cultivo se encuentra en un estado de desarrollo vegetativo excelente.",
-        recomendedAction: "Mantener el calendario de riego programado y continuar monitoreo satelital estándar.",
+        recommendedAction: "Mantener el calendario de riego programado y continuar monitoreo satelital estándar.",
         generatedAt: "2026-06-29T15:00:00Z"
     },
     {
@@ -25,7 +25,7 @@ export const zoneInsightMock: ZoneInsight[] = [
         zoneId: "zone-02",
         fieldId: "field-001",
         cropType: "QUEQUISQUE",
-        finalRiksLevel: "MEDIUM",
+        finalRiskLevel: "MEDIUM",
         healthScore: 68,
         evidence: [
             {
@@ -36,7 +36,7 @@ export const zoneInsightMock: ZoneInsight[] = [
         ],
         mainCause: "Drenaje deficiente en micro-relieve de la zona.",
         summary: "Zona en observación. Se registra una propensión a la acumulación excesiva de humedad.",
-        recomendedAction: "Inspeccionar los canales de desagüe secundarios para prevenir pudrición del cormo.",
+        recommendedAction: "Inspeccionar los canales de desagüe secundarios para prevenir pudrición del cormo.",
         generatedAt: "2026-06-29T15:10:00Z"
     },
     {
@@ -44,7 +44,7 @@ export const zoneInsightMock: ZoneInsight[] = [
         zoneId: "zone-03",
         fieldId: "field-002",
         cropType: "ORANGE",
-        finalRiksLevel: "HIGH",
+        finalRiskLevel: "HIGH",
         healthScore: 35,
         evidence: [
             {
@@ -60,7 +60,7 @@ export const zoneInsightMock: ZoneInsight[] = [
         ],
         mainCause: "Anomalía foliar compatible con síntomas iniciales de plaga estructural.",
         summary: "Zona crítica. Pérdida drástica de biomasa fotosintética y vigor.",
-        recomendedAction: "Desplegar cuadrilla técnica para toma de muestras físicas inmediatas y aislar el sector.",
+        recommendedAction: "Desplegar cuadrilla técnica para toma de muestras físicas inmediatas y aislar el sector.",
         generatedAt: "2026-06-29T15:20:00Z"
     }
 ]
