@@ -7,6 +7,9 @@ import fieldRoutes from "./modules/fields/routes/fieldRoutes";
 import cropProfileRoutes from "./modules/crops/routes/cropRoutes";
 //nueva importacion del modulo de vegetacion y analisis satelital
 import vegetationRoutes from "./modules/vegetation/routes/vegetationRoutes";
+//importacion de analisis
+import { zoneAnalysisRouter } from "./modules/analisys/routes/zoneAnalysisRoutes";
+
 const app: Application = express();
 
 // Middlewares globales
@@ -24,5 +27,8 @@ app.use("/api/crops", cropProfileRoutes);
 
 //vinculacion del nuevo modulo de capas espectrales
 app.use("/api/vegetation", vegetationRoutes);
+
+//vinculacion del modulo de analisis
+app.use("/api/analysis", zoneAnalysisRouter);
 
 export default app;
