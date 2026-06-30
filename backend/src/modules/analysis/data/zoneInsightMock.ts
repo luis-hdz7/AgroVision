@@ -6,7 +6,7 @@ export const zoneInsightMock: ZoneInsight[] = [
         zoneId: "zone-01",
         fieldId: "field-001",
         cropType: "RED_BEAN",
-        finalRiksLevel: "LOW",
+        finalRiskLevel: "LOW",
         healthScore: 92,
         evidence: [
             {
@@ -25,7 +25,7 @@ export const zoneInsightMock: ZoneInsight[] = [
         zoneId: "zone-02",
         fieldId: "field-001",
         cropType: "QUEQUISQUE",
-        finalRiksLevel: "MEDIUM",
+        finalRiskLevel: "MEDIUM",
         healthScore: 68,
         evidence: [
             {
@@ -44,7 +44,7 @@ export const zoneInsightMock: ZoneInsight[] = [
         zoneId: "zone-03",
         fieldId: "field-002",
         cropType: "ORANGE",
-        finalRiksLevel: "HIGH",
+        finalRiskLevel: "HIGH",
         healthScore: 35,
         evidence: [
             {
