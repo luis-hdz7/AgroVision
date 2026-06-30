@@ -1,0 +1,540 @@
+
+/* EStilos generales del laypout, como:
+ * - Sidebar
+ * - Topbar
+ * - Min layout
+ * - PlaceHolders de rutas
+*/ 
+:root {
+  --layout-bg: #050806;
+  --layout-panel: rgba(14, 20, 16, 0.88);
+  --layout-panel-soft: rgba(255, 255, 255, 0.055);
+  --layout-border: rgba(255, 255, 255, 0.1);
+
+  --layout-text: #f4f7ef;
+  --layout-text-soft: #c9d2c6;
+  --layout-muted: #8d988d;
+
+  --layout-green: #9dd426;
+  --layout-green-soft: rgba(183, 255, 23, 0.12);
+  --layout-green-glow: rgba(183, 255, 23, 0.34);
+
+  --sidebar-width: 292px;
+  --topbar-height: 150px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-width: 0;
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  background: var(--layout-bg);
+}
+
+button {
+  font: inherit;
+}
+
+/* =========================
+   App frame
+   ========================= */
+
+.agrovisionApp {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+
+  color: var(--layout-text);
+  font-family:
+    Inter,
+    "Space Grotesk",
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  background:
+    radial-gradient(circle at 84% 8%, rgba(183, 255, 23, 0.14), transparent 30%),
+    radial-gradient(circle at 18% 28%, rgba(88, 255, 190, 0.07), transparent 28%),
+    linear-gradient(135deg, #050806 0%, #09100b 46%, #101711 100%);
+}
+
+.agrovisionMain {
+  min-width: 0;
+  display: grid;
+  grid-template-rows: var(--topbar-height) minmax(0, 1fr);
+}
+
+.agrovisionContent {
+  min-width: 0;
+  width: min(1440px, 100%);
+  margin: 0 auto;
+  padding: 28px;
+}
+
+/* =========================
+   Sidebar
+   ========================= */
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  min-width: 0;
+
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 28px;
+
+  padding: 24px 18px;
+
+  border-right: 1px solid var(--layout-border);
+  background: rgba(5, 8, 6, 0.82);
+  backdrop-filter: blur(24px);
+}
+
+.agroSidebar__nav {
+    min-width: 0;
+    display: grid;
+    gap: 16px;
+    width: 100%;
+    padding: 60px 32px;
+
+}
+
+.agroSidebar__brand {
+  margin-top: 1rem;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 0 6px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidebar__logo {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+
+  width: 44px;
+  height: 44px;
+
+  color: #071006;
+  font-size: 0.9rem;
+  font-weight: 950;
+  letter-spacing: -0.05em;
+
+  border-radius: 16px;
+  background: var(--layout-green);
+  box-shadow: 0 0 26px var(--layout-green-glow);
+}
+
+.sidebar__brand div {
+  min-width: 0;
+}
+
+.sidebar__brand strong {
+  display: block;
+  color: var(--layout-text);
+  font-size: 1.18rem;
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
+}
+
+.sidebar__brand span {
+  display: block;
+  margin-top: 4px;
+  color: var(--layout-green);
+  font-size: 1.1rem;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.sidebar__nav {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+
+.sidebar__link {
+  width: 100%;
+  min-width: 0;
+  min-height: 50px;
+
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+
+  padding: 0 14px;
+
+  color: var(--layout-text-soft);
+  font-size: 0.93rem;
+  font-weight: 850;
+  text-align: left;
+
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.sidebar__link:hover {
+  transform: translateX(2px);
+  color: var(--layout-text);
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar__link.is-active {
+  color: #071006;
+  border-color: transparent;
+  background: var(--layout-green);
+  box-shadow: 0 0 28px var(--layout-green-glow);
+}
+
+.sidebar__icon {
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.sidebar__link span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar__footer {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+  margin: 0 26px;
+
+  padding: 16px;
+  border: 1px solid var(--layout-border);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.sidebar__footer small {
+  color: var(--layout-muted);
+  font-size: 0.76rem;
+}
+
+.sidebar__footer strong {
+  color: var(--layout-text);
+  font-size: 0.95rem;
+}
+
+/* =========================
+   Topbar
+   ========================= */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  min-width: 0;
+  min-height: var(--topbar-height);
+  border-radius: 0 0 20px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+
+  padding: 0 28px;
+
+  /* border-bottom: 1px solid var(--layout-border); */
+  background: rgba(5, 8, 6, 0.78);
+  backdrop-filter: blur(24px);
+}
+
+.topbar > div:first-child {
+  min-width: 0;
+}
+
+.topbar__eyebrow {
+  margin: 0 0 6px;
+
+  color: var(--layout-green);
+  font-size: 0.72rem;
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.topbar h1 {
+  margin: 0;
+
+  color: var(--layout-text);
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  line-height: 1;
+  font-weight: 950;
+  letter-spacing: -0.045em;
+}
+
+.topbar span {
+  display: block;
+  margin-top: 6px;
+
+  color: var(--layout-muted);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.topbar__profile {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  max-width: 260px;
+  padding: 8px 10px;
+
+  border: 1px solid var(--layout-border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.topbar__avatar {
+  flex: 0 0 auto;
+
+  display: grid;
+  place-items: center;
+
+  width: 38px;
+  height: 38px;
+
+  color: #071006;
+  font-size: 0.84rem;
+  font-weight: 950;
+
+  border-radius: 999px;
+  background: var(--layout-green);
+}
+
+.topbar__profile div:last-child {
+  min-width: 0;
+}
+
+.topbar__profile strong {
+  display: block;
+  color: var(--layout-text);
+  font-size: 0.82rem;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.topbar__profile span {
+  margin: 3px 0 0;
+  color: var(--layout-muted);
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+/* =========================
+   Route placeholder
+   ========================= */
+
+.routePlaceholder {
+  position: relative;
+
+  min-height: calc(100vh - var(--topbar-height) - 56px);
+  display: grid;
+  align-content: center;
+  gap: 14px;
+
+  padding: clamp(28px, 5vw, 64px);
+  overflow: hidden;
+
+  border: 1px solid var(--layout-border);
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 76% 24%, rgba(183, 255, 23, 0.18), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.03)),
+    var(--layout-panel);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.44);
+}
+
+.routePlaceholder::after {
+  content: "";
+
+  position: absolute;
+  right: 8%;
+  top: 18%;
+
+  width: min(360px, 38vw);
+  height: min(220px, 24vw);
+
+  border-radius: 42px;
+  border: 1px solid rgba(183, 255, 23, 0.22);
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(183, 255, 23, 0.18) 0 1px,
+      transparent 1px 18px
+    ),
+    rgba(183, 255, 23, 0.04);
+
+  transform: rotate(-12deg);
+  opacity: 0.7;
+}
+
+.routePlaceholder__eyebrow,
+.routePlaceholder h1,
+.routePlaceholder span {
+  position: relative;
+  z-index: 1;
+}
+
+.routePlaceholder__eyebrow {
+  width: max-content;
+  margin: 0;
+  padding: 8px 12px;
+
+  color: var(--layout-green);
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  border: 1px solid rgba(183, 255, 23, 0.24);
+  border-radius: 999px;
+  background: rgba(183, 255, 23, 0.08);
+}
+
+.routePlaceholder h1 {
+  max-width: 780px;
+  margin: 0;
+
+  color: var(--layout-text);
+  font-size: clamp(3rem, 7vw, 6.5rem);
+  line-height: 0.88;
+  font-weight: 950;
+  letter-spacing: -0.08em;
+  text-transform: uppercase;
+}
+
+.routePlaceholder span {
+  max-width: 650px;
+  color: var(--layout-text-soft);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+/* =========================
+   Responsive
+   ========================= */
+
+@media (max-width: 980px) {
+  :root {
+    --sidebar-width: 88px;
+  }
+
+  .sidebar {
+    padding: 18px 12px;
+  }
+
+  .sidebar__brand {
+    justify-content: center;
+    padding-inline: 0;
+  }
+
+  .sidebar__brand div,
+  .sidebar__link span:last-child,
+  .sidebar__footer {
+    display: none;
+  }
+
+  .sidebar__link {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    padding: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .agrovisionApp {
+    display: block;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+    display: grid;
+    gap: 16px;
+    padding: 14px;
+    border-right: 0;
+    border-bottom: 1px solid var(--layout-border);
+  }
+
+  .sidebar__brand {
+    justify-content: flex-start;
+    padding-bottom: 12px;
+  }
+
+  .sidebar__brand div {
+    display: block;
+  }
+
+  .sidebar__nav {
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+  }
+
+  .sidebar__link {
+    width: auto;
+    grid-template-columns: 28px auto;
+    padding: 0 14px;
+  }
+
+  .sidebar__link span:last-child {
+    display: inline;
+  }
+
+  .topbar {
+    position: static;
+    min-height: auto;
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 16px;
+  }
+
+  .topbar__profile {
+    width: 100%;
+    max-width: none;
+  }
+
+  .agrovisionContent {
+    padding: 16px;
+  }
+}

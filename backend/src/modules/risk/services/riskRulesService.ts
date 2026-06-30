@@ -1,13 +1,23 @@
 import {AnalysisFactor,AnalysisAnomaly} from "../types/riskTypes";
 import {RISK_THRESHOLDS,RISK_PENALTIES} from "../engine/riskThresholds";
+/*
+    * Resultado estandarizado de una regla de evaluación.
+    * Proporciona los datos necesarios para que el motor construya el informe CropHealthAnalysis.
+*/
 export type RuleResult={
     factor:AnalysisFactor;
     anomaly?:AnalysisAnomaly;
     recommendation?:string;
     penalty:number;
 };
+/*
+    * Evalúa el estrés hídrico comparando la humedad actual contra los umbrales definidos.
+
+    * Genera anomalías de tipo WATER_STRESS si se superan los límites.
+*/
 export function evaluateSoilMoisture(value:number):RuleResult{
     const threshold=RISK_THRESHOLDS.soilMoisturePercentage;
+    // Lógica de penalización y diagnóstico
     if(value<=threshold.critical){
         return{
             factor:{
@@ -63,7 +73,11 @@ export function evaluateSoilMoisture(value:number):RuleResult{
         penalty:0
     };
 }
+/*
+    * Evalúa el estrés térmico basándose en la temperatura ambiente.
 
+    * Identifica riesgos de calor que requieren mitigación inmediata.
+*/
 export function evaluateTemperature(value:number):RuleResult{
     const threshold=
         RISK_THRESHOLDS
@@ -134,7 +148,11 @@ export function evaluateTemperature(value:number):RuleResult{
         penalty:0
     };
 }
-
+/*
+    * Analiza el estado general de salud del cultivo.
+    *
+    * Detecta degradación (VEGETATION_DROP) para alertar al usuario.
+ */
 export function evaluateCropHealth(value:number):RuleResult{
     const threshold=RISK_THRESHOLDS.cropHealthScore;
     if(value<=threshold.critical){
