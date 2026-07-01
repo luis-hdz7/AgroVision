@@ -8,6 +8,8 @@ import cropRoutes from "./modules/crops/routes/cropRoutes";
 //nueva importacion del modulo de vegetacion y analisis satelital
 import vegetationRoutes from "./modules/vegetation/routes/vegetationRoutes";
 const app: Application = express();
+//*modulo de alerts
+import alertRoutes from "./modules/alerts/routes/alertRoutes";
 
 // Middlewares globales
 app.use(express.json());
@@ -21,6 +23,7 @@ app.get("/api/health", (req: Request, res: Response) => {
 app.use("/api/farms", farmRoutes);
 app.use("/api/fields", fieldRoutes);
 app.use("/api/crops", cropRoutes);
+app.use("/api/alerts", alertRoutes);
 
 //vinculacion del nuevo modulo de capas espectrales
 app.use("/api/vegetation", vegetationRoutes);
