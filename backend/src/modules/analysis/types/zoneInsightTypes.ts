@@ -16,6 +16,6 @@ export interface ZoneInsight {
     readonly evidence: readonly EvidenceItem[];
     readonly mainCause: string;
     readonly summary: string;
-    readonly recommmendedAction: string;
+    readonly recommendedAction: string;
     readonly generatedAt: string;
 }

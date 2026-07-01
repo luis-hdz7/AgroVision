@@ -1,4 +1,4 @@
-import { zoneInsightMock } from "../data/zoneInsightMock";
+import { zoneInsightMock } from "../../analysis/data/zoneInsightMock";
 
 /**
  * Servicio para gestionar las consultas de análisis por zona

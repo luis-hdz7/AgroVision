@@ -1,13 +1,17 @@
 import { Request, Response } from "express";
-import { zoneInsightMock } from "../data/zoneInsightMock";
+import { getZoneInsightByzoneId } from "../../analysis/services/zoneInsightMockService";
 import { ok, fail } from "../../../shared/responses/apiResponses";
 
 export const getZoneAnalysis = async (req: Request, res: Response): Promise<void> => {
     try {
         const { zoneId } = req.params;
+        if (typeof zoneId !== "string") {
+            res.status(400).json(fail("Invalid zone"));
+            return;
+        }
 
         // Busca en el mock del lunes por el zoneId
-        const zoneData = zoneInsightMock.find((zone: any) => zone.zoneId === zoneId);
+        const zoneData = getZoneInsightByzoneId(zoneId);
         if (!zoneData) {
             res.status(404).json(fail(`Zone analysis for ID ${zoneId} not found`));
             return;
