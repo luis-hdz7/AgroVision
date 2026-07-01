@@ -1,5 +1,4 @@
-import { EvidenceItem } from "../../analysis/services/evidenceFusionService";
-
+import { EvidenceItem } from "../../analysis/types/zoneInsightTypes";
 /*
     * Nivel de prioridad de una recomendación.
 */

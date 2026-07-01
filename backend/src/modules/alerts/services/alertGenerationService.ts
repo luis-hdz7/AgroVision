@@ -18,6 +18,7 @@ function getCropDisplayName(cropType: ZoneInsight["cropType"]): string {
 */
 function mapSeverity(riskLevel: ZoneInsight["finalRiskLevel"]): AlertSeverity {
     switch (riskLevel) {
+        case "CRITICAL": return "CRITICAL";
         case "HIGH": return "HIGH";
         case "MEDIUM": return "MEDIUM";
         default: return "LOW";
