@@ -32,7 +32,7 @@ export class CropProfileController {
             const cropType = type.toUpperCase() as CropType;
             //Llamar al servicio de forma segura
             const profile = CropProfileService.getProfileByType(cropType);
-            
+
             if (!profile) {
                 res.status(404).json(fail(`Crop profile with type ${cropType} not found`));
                 return;

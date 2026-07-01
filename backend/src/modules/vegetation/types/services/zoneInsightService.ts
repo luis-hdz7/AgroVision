@@ -20,6 +20,6 @@ export class ZoneInsightService {
      * Filtra los insights basados en el nivel de riesgo crítico (LOW, MEDIUM, HIGH).
      */
     public static getInsightsByRisk(riskLevel: "LOW" | "MEDIUM" | "HIGH"): ZoneInsight[] {
-        return zoneInsightMock.filter((insight) => insight.finalRiksLevel === riskLevel);
+        return zoneInsightMock.filter((insight) => insight.finalRiskLevel === riskLevel);
     }
 }

@@ -28,3 +28,18 @@ export function fail<T>(error: string): ApiResponse<T>  {
         timestamp: Date.now()
     }
 };
+
+export function createApiResponse<T> (
+    success: boolean,
+    data: T | null,
+    message: string,
+    error: string | null = null
+): ApiResponse<T> {
+    return {
+        success,
+        data,
+        message,
+        error,
+        timestamp: Date.now()
+    }
+}
