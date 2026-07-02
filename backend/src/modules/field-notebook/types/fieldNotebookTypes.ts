@@ -14,6 +14,7 @@ export interface FieldNotebookEvidence {
 export interface FieldNotebookEntry {
   id: string;
   fieldId: string;
+  zoneId: string;
   cropId: string;
   activityType: FieldActivityType;
   description: string;

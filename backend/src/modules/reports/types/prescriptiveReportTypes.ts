@@ -1,168 +1,117 @@
-// ================================
-// Tipos auxiliares
-// ================================
+// ================================================================
+// prescriptiveReportTypes.ts
+// ================================================================
+// Tipos del reporte prescriptivo. Actúan como capa de ADAPTACIÓN
+// sobre las fuentes reales de datos del proyecto:
+//   - ZoneInsight        (Jorge — types/zoneInsightTypes.ts)
+//   - AgriculturalAlert  (Jorge — alertsTypes.ts)
+//   - Recommendation     (Jorge — recommendations/types/recommendationTypes.ts)
+//   - Cuaderno de campo  (TODO: pendiente de confirmar ubicación/forma)
+//
+// Este módulo NO redefine reglas de negocio de Jorge: reutiliza sus
+// tipos (RiskLevel, RecommendationPriority) y solo agrega los campos
+// que el reporte necesita y que las fuentes originales no producen
+// (ids de evidencia, fechas normalizadas, relatedEvidenceIds, etc).
+// ================================================================
 
-// Nivel de riesgo general del reporte
-export type RiskLevel = "LOW" | "MEDIUM" | "HIGH";
-
-// Nivel de prioridad para recomendaciones y acciones
-export type Priority = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
-
-// Nivel de severidad de las alertas
-export type AlertLevel = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
-
-// Fuentes válidas de evidencia utilizadas por el sistema
-export type EvidenceSource =
-    | "SATELLITE"
-    | "SIMULATION"
-    | "ROVER_CAMERA"
-    | "UPLOAD"
-    | "HISTORICAL";
+import { RiskLevel } from "../../risk/types/riskTypes";
+import { RecommendationPriority } from "../../recommendations/types/recommendationTypes"; // ajustar path real
 
 // ================================
 // Evidencias
 // ================================
 
-// Representa una evidencia utilizada para justificar
-// el diagnóstico realizado sobre el cultivo.
+// Forma base tomada de ZoneInsight.evidence[] (zoneInsightTypes.ts).
+// ZoneInsight.evidence NO trae id ni fecha propia, así que se agregan
+// aquí al construir el reporte, usando ZoneInsight.generatedAt como
+// fecha de referencia.
 export interface PrescriptiveEvidenceSummary {
-
-    // Identificador único de la evidencia
-    id: string;
-
-    // Fuente desde donde se obtuvo la evidencia
-    source: EvidenceSource;
-
-    // Descripción técnica de la evidencia
+    id: string;          // generado en buildPrescriptiveReport (ej. "ev-001")
+    type: string;         // mismo valor que ZoneInsight.evidence[].type (ej. "SATELLITE", "ROVER_CAMERA")
+    value: string;
     description: string;
-
-    // Fecha en formato ISO
-    date: string;
+    date: string;          // ISO — derivado de ZoneInsight.generatedAt
 }
 
 // ================================
 // Recomendaciones
 // ================================
 
-// Acción recomendada por el sistema para disminuir
-// el riesgo detectado.
+// Adaptado desde Recommendation (recommendationTypes.ts).
+// ASUNCIÓN PENDIENTE DE CONFIRMAR: `recommendation` concatena
+// reason + suggestedAction para no perder el "por qué" en el reporte
+// (importante para el pitch de Linda). Ajustar si el equipo prefiere
+// usar solo suggestedAction.
 export interface PrescriptiveRecommendationSummary {
-
-    // Identificador único de la recomendación
     id: string;
-
-    // Zona donde debe aplicarse la recomendación
     zoneId: string;
-
-    // Acción sugerida
-    recommendation: string;
-
-    // Nivel de prioridad
-    priority: Priority;
+    recommendation: string;            // Recommendation.reason + " → " + Recommendation.suggestedAction
+    priority: RecommendationPriority;   // reusa el enum real de Jorge (incluye URGENT)
+    relatedEvidenceIds: string[];        // ids de PrescriptiveEvidenceSummary que la sustentan
 }
 
 // ================================
 // Acciones realizadas
 // ================================
 
-// Registro de acciones que ya fueron ejecutadas
-// como respuesta al problema detectado.
+// TODO: forma temporal. No se ha confirmado el tipo real del
+// "cuaderno de campo" (de dónde sale actionsTaken/pendingActions).
+// Se define aquí como tipo nuevo y documentado, NO como copia de
+// algo existente, para no asumir una estructura de Jorge que no
+// hemos visto.
 export interface PrescriptiveActionLog {
-
-    // Identificador único del registro
     id: string;
-
-    // Acción ejecutada
     actionTaken: string;
-
-    // Responsable de realizar la acción
     responsible: string;
-
-    // Fecha de ejecución en formato ISO
-    executionDate: string;
+    executionDate: string; // ISO
 }
 
 // ================================
 // Alertas activas
 // ================================
 
-// Alerta actualmente activa sobre la zona analizada.
+// Adaptado desde AgriculturalAlert (alertsTypes.ts).
+// ASUNCIÓN PENDIENTE DE CONFIRMAR: `message` usa AgriculturalAlert.title
+// (más corto, apto para listas/dashboard). Si se necesita el detalle
+// completo, cambiar a `.message` o concatenar ambos.
 export interface PrescriptiveAlertSummary {
-
-    // Identificador de la alerta
     id: string;
-
-    // Zona afectada
     zoneId: string;
-
-    // Nivel de gravedad
-    level: AlertLevel;
-
-    // Descripción de la alerta
-    message: string;
+    severity: RiskLevel;   // mismo tipo que AgriculturalAlert.severity
+    message: string;        // = AgriculturalAlert.title (a confirmar)
 }
 
 // ================================
 // Acciones pendientes
 // ================================
 
-// Acciones que todavía deben ejecutarse.
+// TODO: misma situación que PrescriptiveActionLog — forma temporal
+// hasta confirmar el tipo real del cuaderno de campo.
 export interface PrescriptivePendingAction {
-
-    // Identificador único
     id: string;
-
-    // Descripción de la tarea pendiente
     description: string;
-
-    // Fecha límite (ISO) o null si aún no existe
-    dueDate: string | null;
-
-    // Prioridad de ejecución
-    priority: Priority;
+    dueDate: string | null; // ISO o null
+    priority: RecommendationPriority;
 }
 
 // ================================
 // Reporte Prescriptivo
 // ================================
 
-// Reporte completo generado por el sistema para
-// apoyar la toma de decisiones agrícolas.
+// Reporte completo. Cada campo documenta explícitamente de qué
+// fuente real de Jorge se deriva, para que quede trazable en
+// prescriptive-traceability-v0.md.
 export interface PrescriptiveFieldReport {
-
-    // Identificador del campo agrícola
-    fieldId: string;
-
-    // Identificador de la zona analizada
-    zoneId: string;
-
-    // Tipo de cultivo
-    cropType: string;
-
-    // Puntaje de salud del cultivo (0 - 100)
-    healthScore: number;
-
-    // Nivel de riesgo final calculado
-    finalRiskLevel: RiskLevel;
-
-    // Principal causa identificada
-    mainCause: string;
-
-    // Evidencias utilizadas para generar el reporte
-    evidence: PrescriptiveEvidenceSummary[];
-
-    // Alertas activas relacionadas con la zona
-    activeAlerts: PrescriptiveAlertSummary[];
-
-    // Recomendaciones generadas automáticamente
-    recommendations: PrescriptiveRecommendationSummary[];
-
-    // Acciones que ya fueron ejecutadas
-    actionsTaken: PrescriptiveActionLog[];
-
-    // Acciones pendientes de ejecutar
-    pendingActions: PrescriptivePendingAction[];
-
-    // Fecha de creación del reporte (formato ISO)
-    createdAt: string;
+    fieldId: string;          // = ZoneInsight.fieldId
+    zoneId: string;            // = ZoneInsight.zoneId
+    cropType: string;           // = ZoneInsight.cropType
+    healthScore: number;         // = ZoneInsight.healthScore
+    finalRiskLevel: RiskLevel;    // = ZoneInsight.finalRiskLevel
+    mainCause: string;             // = ZoneInsight.mainCause
+    evidence: PrescriptiveEvidenceSummary[];        // adaptado de ZoneInsight.evidence[]
+    activeAlerts: PrescriptiveAlertSummary[];         // adaptado de AgriculturalAlert[]
+    recommendations: PrescriptiveRecommendationSummary[]; // adaptado de Recommendation[]
+    actionsTaken: PrescriptiveActionLog[];              // TODO: fuente pendiente (cuaderno de campo)
+    pendingActions: PrescriptivePendingAction[];         // TODO: fuente pendiente (cuaderno de campo)
+    createdAt: string;                                    // ISO, generado al construir el reporte
 }

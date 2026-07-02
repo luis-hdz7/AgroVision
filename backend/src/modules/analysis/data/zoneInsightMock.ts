@@ -17,7 +17,7 @@ export const zoneInsightMock: ZoneInsight[] = [
         ],
         mainCause: "Condiciones climáticas y de suelo ideales.",
         summary: "Zona estable. El cultivo se encuentra en un estado de desarrollo vegetativo excelente.",
-        recomendedAction: "Mantener el calendario de riego programado y continuar monitoreo satelital estándar.",
+        recommendedAction: "Mantener el calendario de riego programado y continuar monitoreo satelital estándar.",
         generatedAt: "2026-06-29T15:00:00Z"
     },
     {
@@ -36,7 +36,7 @@ export const zoneInsightMock: ZoneInsight[] = [
         ],
         mainCause: "Drenaje deficiente en micro-relieve de la zona.",
         summary: "Zona en observación. Se registra una propensión a la acumulación excesiva de humedad.",
-        recomendedAction: "Inspeccionar los canales de desagüe secundarios para prevenir pudrición del cormo.",
+        recommendedAction: "Inspeccionar los canales de desagüe secundarios para prevenir pudrición del cormo.",
         generatedAt: "2026-06-29T15:10:00Z"
     },
     {
@@ -60,7 +60,7 @@ export const zoneInsightMock: ZoneInsight[] = [
         ],
         mainCause: "Anomalía foliar compatible con síntomas iniciales de plaga estructural.",
         summary: "Zona crítica. Pérdida drástica de biomasa fotosintética y vigor.",
-        recomendedAction: "Desplegar cuadrilla técnica para toma de muestras físicas inmediatas y aislar el sector.",
+        recommendedAction: "Desplegar cuadrilla técnica para toma de muestras físicas inmediatas y aislar el sector.",
         generatedAt: "2026-06-29T15:20:00Z"
     }
 ]

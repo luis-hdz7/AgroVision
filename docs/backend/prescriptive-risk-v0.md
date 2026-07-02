@@ -18,11 +18,19 @@ El sistema no realiza diagnósticos definitivos de enfermedades. Su propósito e
 ```text
 Sensor + Weather + Vision + Satellite + History
                     ↓
-            EvidenceItem[]
+              EvidenceItem[]
                     ↓
-       EvidenceRiskService
+         EvidenceRiskService
                     ↓
-             ZoneInsight
+              ZoneInsight
+                    ↓
+       AlertGenerationService
+                    ↓
+       AgriculturalAlert[]
+                    ↓
+ RecommendationGenerationService
+                    ↓
+          Recommendation[]
 ```
 
 ---
@@ -48,7 +56,7 @@ Sensor + Weather + Vision + Satellite + History
 
 ---
 
-## Reglas iniciales
+## Reglas iniciales del motor de riesgo
 
 ### Humedad
 
@@ -78,22 +86,220 @@ Sensor + Weather + Vision + Satellite + History
 
 ---
 
-## Resultado esperado
+## Resultado esperado del análisis
 
 El análisis debe devolver:
 
 * mainCause
-* riskLevel
-* criticalEvidence
+* finalRiskLevel
+* evidence
 * recommendedAction
 
-Posteriormente estos datos alimentan:
+Estos resultados son encapsulados posteriormente en un objeto ZoneInsight.
 
-* ZoneInsight
-* Alert
-* Recommendation
-* Dashboard
-* Reports
+---
+
+## Reglas de generación de alertas
+
+Las alertas se generan a partir de ZoneInsight.
+
+### WATER_STRESS
+
+Se genera cuando la causa principal contiene indicadores asociados a:
+
+* humedad;
+* agua;
+* riego;
+* drenaje;
+* saturación;
+* estrés hídrico.
+
+### LOW_VIGOR
+
+Se genera cuando:
+
+```text
+healthScore <= 50
+```
+
+### HEAT_STRESS
+
+Se genera cuando la causa principal contiene indicadores asociados a:
+
+* calor;
+* temperatura;
+* heat;
+* estrés térmico.
+
+### VISUAL_ANOMALY
+
+Se genera cuando existe evidencia proveniente de:
+
+* ROVER_CAMERA;
+* UPLOAD.
+
+---
+
+## Contrato de Alertas
+
+Toda alerta debe incluir:
+
+* severidad;
+* evidencia;
+* acción recomendada;
+* zona afectada;
+* fecha de generación.
+
+Una alerta sin evidencia no debe generarse.
+
+Las alertas producidas por el sistema son:
+
+* WATER_STRESS
+* LOW_VIGOR
+* HEAT_STRESS
+* VISUAL_ANOMALY
+
+---
+
+## Reglas de generación de recomendaciones
+
+Las recomendaciones se generan utilizando:
+
+* ZoneInsight;
+* AgriculturalAlert[];
+* CropProfile (opcional).
+
+Su objetivo es transformar:
+
+```text
+Causa
+     ↓
+Evidencia
+     ↓
+Acción
+     ↓
+Impacto esperado
+```
+
+en una recomendación accionable para el productor agrícola.
+
+---
+
+## Prioridad de recomendaciones
+
+| Riesgo   | Prioridad |
+| -------- | --------- |
+| LOW      | LOW       |
+| MEDIUM   | MEDIUM    |
+| HIGH     | HIGH      |
+| CRITICAL | URGENT    |
+
+---
+
+## Obtención de acciones sugeridas
+
+Si existe un CropProfile para el cultivo analizado:
+
+```text
+CropProfile.recommendationTemplates
+```
+
+se utilizarán las recomendaciones especializadas del cultivo.
+
+Ejemplos:
+
+* RED_BEAN
+* CASSAVA
+* QUEQUISQUE
+* ORANGE
+* SORGHUM
+
+Si no existe un perfil específico:
+
+```text
+ZoneInsight.recommendedAction
+```
+
+será utilizada como acción sugerida por defecto.
+
+---
+
+## Impactos esperados soportados
+
+* WATER_SAVING
+* YIELD_PROTECTION
+* DISEASE_PREVENTION
+* COST_REDUCTION
+* CROP_HEALTH
+
+---
+
+## Contrato de Recomendaciones
+
+Toda recomendación debe incluir:
+
+* priority;
+* reason;
+* suggestedAction;
+* expectedImpact;
+* evidence;
+* createdAt.
+
+Toda recomendación debe estar respaldada por evidencia verificable.
+
+Toda recomendación debe explicar explícitamente por qué se recomienda actuar.
+
+---
+
+## Reglas de calidad
+
+### Alertas
+
+Toda alerta debe:
+
+* incluir evidencia verificable;
+* indicar severidad;
+* indicar acción recomendada;
+* estar asociada a una zona.
+
+No deben generarse alertas sin evidencia.
+
+### Recomendaciones
+
+Toda recomendación debe:
+
+* incluir una razón explícita;
+* estar respaldada por evidencia;
+* contener una acción concreta y ejecutable;
+* indicar el impacto esperado.
+
+### Acciones sugeridas
+
+Incorrecto:
+
+```text
+Monitorear cultivo
+```
+
+Correcto:
+
+```text
+Inspeccionar la zona afectada durante las próximas 24 horas y verificar humedad del suelo.
+```
+
+Incorrecto:
+
+```text
+Revisar cultivo
+```
+
+Correcto:
+
+```text
+Realizar inspección visual en el sector afectado y tomar muestras físicas para análisis agronómico.
+```
+
+---
 
 # Ejemplos de Validación
 
@@ -181,3 +387,17 @@ La combinación de baja humedad, NDVI crítico y deterioro visual sugiere una co
 ### Acción recomendada
 
 Incrementar riego, verificar distribución de agua y realizar inspección de campo.
+
+---
+
+## Consumidores del resultado
+
+Los resultados generados por este flujo son utilizados por:
+
+* Dashboard Ejecutivo.
+* Módulo de Alertas.
+* Módulo de Recomendaciones.
+* Sistema de Reportes.
+* Análisis Agrícola por Zona.
+
+El objetivo final es transformar datos aislados en decisiones accionables respaldadas por evidencia.
