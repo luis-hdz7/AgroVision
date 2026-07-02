@@ -13,7 +13,8 @@ import { zoneAnalysisRouter } from "./modules/analisys/routes/zoneAnalysisRoutes
 const app: Application = express();
 //*modulo de alerts
 import alertRoutes from "./modules/alerts/routes/alertRoutes";
-
+//*modulos de recommendations
+import recommendationsRoutes from "./modules/recommendations/routes/recommendationRoutes"
 // Middlewares globales
 app.use(express.json());
 
@@ -27,6 +28,7 @@ app.use("/api/farms", farmRoutes);
 app.use("/api/fields", fieldRoutes);
 app.use("/api/crops", cropProfileRoutes);
 app.use("/api/alerts", alertRoutes);
+app.use("/api/recommendations", recommendationsRoutes)
 
 //vinculacion del nuevo modulo de capas espectrales
 app.use("/api/vegetation", vegetationRoutes);
