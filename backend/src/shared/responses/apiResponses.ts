@@ -5,7 +5,7 @@ export interface ApiResponse<T> {
     readonly data: T | null;
     readonly message: string;
     readonly error: string | null;
-    readonly timestamp: number;
+    readonly timestamp: string;
 }
 
 // respuestas exitosas
@@ -15,7 +15,7 @@ export function ok<T>(data: T, message = "Data loaded successfully"): ApiRespons
         data,
         message,
         error: null,
-        timestamp: Date.now(),
+        timestamp: new Date().toISOString(),
     };
 };
 //manejar errores de forma estandarizada
@@ -25,7 +25,7 @@ export function fail<T>(error: string): ApiResponse<T>  {
         data: null,
         message: "An error ocurred",
         error,
-        timestamp: Date.now()
+        timestamp: new Date().toISOString(),
     }
 };
 
@@ -40,6 +40,6 @@ export function createApiResponse<T> (
         data,
         message,
         error,
-        timestamp: Date.now()
+        timestamp: Date.now().toString(),
     }
 }
