@@ -12,9 +12,9 @@ export const vegetationIndexMock: VegetationIndexSnapshot[] = [
             gndvi: 0.71   // Buen contenido de clorofila
         },
         interpretation: {
-            vigorLevel: "VIGOR_EXCEPCIONAL",
+            vigorLevel: "HIGH",
             anomalyDetected: false,
-            explanation: "Densidad foliar óptima detectada mediante reflectancia satelital."
+            explanation: "Optimal canopy density detected through satellite reflectance."
         },
         capturedAt: "2026-06-29T14:00:00Z"
     },
@@ -29,15 +29,15 @@ export const vegetationIndexMock: VegetationIndexSnapshot[] = [
             gndvi: 0.49
         },
         interpretation: {
-            vigorLevel: "ESTRES_MODERADO",
+            vigorLevel: "MEDIUM",
             anomalyDetected: true,
-            explanation: "Simulación predictiva muestra descenso leve en la retención de agua foliar."
+            explanation: "Predictive simulation shows a slight decrease in leaf water retention"
         },
         capturedAt: "2026-06-29T14:15:00Z"
     },
     {
         id: "veg-003",
-        fieldId: "field-002",
+        fieldId: "field-001",
         zoneId: "zone-03",
         source: "ROVER_CAMERA",
         indices: {
@@ -46,9 +46,9 @@ export const vegetationIndexMock: VegetationIndexSnapshot[] = [
             gndvi: 0.29
         },
         interpretation: {
-            vigorLevel: "BAJO_VIGOR",
+            vigorLevel: "LOW",
             anomalyDetected: true,
-            explanation: "Anomalía crítica confirmada en terreno mediante captura óptica del rover."
+            explanation: "Critical anomaly confirmed through rover optical imagery."
         },
         capturedAt: "2026-06-29T14:30:00Z"
     }

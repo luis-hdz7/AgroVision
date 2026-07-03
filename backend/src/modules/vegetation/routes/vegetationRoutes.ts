@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import { VegetationService } from "../types/services/vegetationService";
 import { ZoneInsightService } from "../types/services/zoneInsightService";
+import { getVegetationIndices } from "../controllers/vegetationController";
 import { ok } from "../../../shared/responses/apiResponses";
 
 const router = Router();
@@ -28,5 +29,7 @@ router.get("/insights/zone/:zoneId", (req: Request, res: Response) => {
     const data = ZoneInsightService.getInsightByZone(zoneId);
     res.status(200).json(ok(data, `Análisis de la zona ${req.params.zoneId} obtenido`));
 });
+
+router.get("/indices", getVegetationIndices)
 
 export default router;

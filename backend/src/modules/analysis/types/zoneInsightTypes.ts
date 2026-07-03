@@ -6,7 +6,9 @@ export type EvidenceSource =
     | "SENSOR"
     | "WEATHER"
     | "HISTORY"
-    | "MAPPING";
+    | "MAPPING"
+    | "SIMULATION"
+    | "ROVER_CAMERA";
 
 export type EvidenceStatus =
     | "NORMAL"
