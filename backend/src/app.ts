@@ -9,6 +9,7 @@ import cropProfileRoutes from "./modules/crops/routes/cropRoutes";
 import vegetationRoutes from "./modules/vegetation/routes/vegetationRoutes";
 //importacion de analisis
 import { zoneAnalysisRouter } from "./modules/analisys/routes/zoneAnalysisRoutes";
+import reportRoutes from "./modules/reports/routes/reportRoutes";
 
 const app: Application = express();
 //*modulo de alerts
@@ -29,6 +30,7 @@ app.use("/api/fields", fieldRoutes);
 app.use("/api/crops", cropProfileRoutes);
 app.use("/api/alerts", alertRoutes);
 app.use("/api/recommendations", recommendationsRoutes)
+app.use("/api/reports", reportRoutes);
 
 //vinculacion del nuevo modulo de capas espectrales
 app.use("/api/vegetation", vegetationRoutes);
