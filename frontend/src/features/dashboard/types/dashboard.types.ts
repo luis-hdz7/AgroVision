@@ -186,17 +186,11 @@ export interface DashboardSummary {
   };
 
   readonly healthScore: number;
-
   readonly alerts: DashboardAlertSummary;
-
   readonly recommendations: DashboardRecommendationSummary;
-
   readonly intelligence: DashboardIntelligence;
-
   readonly vegetation: DashboardVegetationSummary;
-
   readonly vision: DashboardVisionSummary;
-
   readonly lastUpdatedAt: string;
 }
 
