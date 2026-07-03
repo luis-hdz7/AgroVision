@@ -22,11 +22,12 @@
  * 
 */
 
-//import { useEffect, useState } from "react";
+
 import { DashboardPage } from "../features/dashboard/pages/DashboardPage";
+import { CropsPage } from "../features/crops/pages/CropsPage";
+import { VisionAiPage } from "../features/vision-ai/pages/VisionAiPage";
 
 /** AppRouterPath  define las rutas permitidsas.
- * 
  * así se evita navegar por rutas no existentes de forma accidental.
 */
 
@@ -116,6 +117,14 @@ export function AppRouter({activePath } : AppRouterProps) {
     
     if (activePath === "/dashboard") {
         return <DashboardPage />;
+    }
+
+    if (activePath === "/crops") {
+        return <CropsPage />;
+    }
+
+    if (activePath === "/vision-ai") {
+        return <VisionAiPage />;
     }
 
     const activeRoute = getRouteDefinition(activePath);

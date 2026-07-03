@@ -29,7 +29,8 @@ export type AlertStatus =
 export type AlertSeverity =
     | "LOW"
     | "MEDIUM"
-    | "HIGH";
+    | "HIGH"
+    | "CRITICAL";
 
 /*
     * Contrato prescriptivo de alerta.

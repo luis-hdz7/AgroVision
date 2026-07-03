@@ -11,8 +11,10 @@ export interface VegetationIndices {
     readonly gndvi: number;
 }
 
+
+
 export interface VegetationInterpretation { // interpretacion agronomica automatizada NDVI
-    readonly vigorLevel: "BAJO_VIGOR" | "ESTRES_MODERADO" | "SALUDABLE" | "VIGOR_EXCEPCIONAL";
+    readonly vigorLevel:  | "LOW" | "MEDIUM" | "HIGH" | "UNKNOWN";
     readonly anomalyDetected: boolean;
     readonly explanation: string;
 }

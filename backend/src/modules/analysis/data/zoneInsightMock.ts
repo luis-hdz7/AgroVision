@@ -10,15 +10,33 @@ export const zoneInsightMock: ZoneInsight[] = [
         healthScore: 92,
         evidence: [
             {
-                type: "SATELLITE",
-                value: "NDVI: 0.78",
-                description: "Alta absorción de clorofila libre de estrés hídrico."
+                source: "SATELLITE",
+                metric: "ndvi",
+                value: 0.82,
+                unit: null,
+                status: "NORMAL",
+                explanation:"High vegetation vigor detected across the zone."
+            },
+            {
+                source: "SENSOR",
+                metric: "soilMoisturePercentage",
+                value: 68,
+                unit: "%",
+                status: "NORMAL",
+                explanation:"Soil moisture remains within optimal range."
+            },
+            {
+                source: "VISION",
+                metric: "visualAnomaly",
+                value: false,
+                status: "NORMAL",
+                explanation:"No visual anomalies detected during inspection."
             }
         ],
-        mainCause: "Condiciones climáticas y de suelo ideales.",
-        summary: "Zona estable. El cultivo se encuentra en un estado de desarrollo vegetativo excelente.",
-        recommendedAction: "Mantener el calendario de riego programado y continuar monitoreo satelital estándar.",
-        generatedAt: "2026-06-29T15:00:00Z"
+        mainCause:"Vegetation and moisture indicators remain within expected ranges.",
+        summary:"Evidence from satellite, sensor and visual inspection suggests stable crop conditions with good vegetation vigor.",
+        recommendedAction:"Maintain current irrigation schedule and continue routine monitoring.",
+        generatedAt: "2026-07-03T12:00:00Z"
     },
     {
         id: "ins-002",
@@ -26,18 +44,36 @@ export const zoneInsightMock: ZoneInsight[] = [
         fieldId: "field-001",
         cropType: "QUEQUISQUE",
         finalRiskLevel: "MEDIUM",
-        healthScore: 68,
+        healthScore: 70,
         evidence: [
             {
-                type: "SIMULATION",
-                value: "NDWI: 0.18",
-                description: "Modelo predictivo alerta posible saturación estancada."
+                source: "SATELLITE",
+                metric: "ndvi",
+                value: 0.55,
+                status: "WATCH",
+                explanation:"Vegetation vigor is lower than optimal."
+            },
+            {
+                source: "SENSOR",
+                metric: "soilMoisturePercentage",
+                value: 48,
+                unit: "%",
+                status: "WATCH",
+                explanation:"Soil moisture is slightly below the desired range."
+            },
+            {
+                source: "HISTORY",
+                metric: "vegetationTrend",
+                value: -15,
+                unit: "%",
+                status: "WARNING",
+                explanation:"Recent vegetation trend indicates gradual decline."
             }
         ],
-        mainCause: "Drenaje deficiente en micro-relieve de la zona.",
-        summary: "Zona en observación. Se registra una propensión a la acumulación excesiva de humedad.",
-        recommendedAction: "Inspeccionar los canales de desagüe secundarios para prevenir pudrición del cormo.",
-        generatedAt: "2026-06-29T15:10:00Z"
+        mainCause:"Evidence suggests moderate reduction in vegetation performance.",
+        summary:"The zone shows preliminary signs compatible with moderate stress and should remain under observation.",
+        recommendedAction:"Inspect irrigation coverage and perform a field verification.",
+        generatedAt: "2026-07-03T12:05:00Z"
     },
     {
         id: "ins-003",
@@ -48,19 +84,38 @@ export const zoneInsightMock: ZoneInsight[] = [
         healthScore: 35,
         evidence: [
             {
-                type: "ROVER_CAMERA",
-                value: "Imágenes RGB Rover",
-                description: "Detección visual de defoliación y clorosis moteada."
+                source: "SATELLITE",
+                metric: "ndvi",
+                value: 0.24,
+                status: "CRITICAL",
+                explanation:"Very low vegetation vigor detected."
             },
             {
-                type: "SATELLITE",
-                value: "GNDVI: 0.28",
-                description: "Caída severa en el índice verde de la zona."
+                source: "SATELLITE",
+                metric: "ndwi",
+                value: 0.12,
+                status: "CRITICAL",
+                explanation:"Canopy water content appears significantly reduced."
+            },
+            {
+                source: "WEATHER",
+                metric: "temperatureCelsius",
+                value: 38,
+                unit: "°C",
+                status: "WARNING",
+                explanation:"Elevated temperature may increase crop stress."
+            },
+            {
+                source: "VISION",
+                metric: "dryAreaDetected",
+                value: true,
+                status: "WARNING",
+                explanation:"Visual inspection detected dry area patterns."
             }
         ],
-        mainCause: "Anomalía foliar compatible con síntomas iniciales de plaga estructural.",
-        summary: "Zona crítica. Pérdida drástica de biomasa fotosintética y vigor.",
-        recommendedAction: "Desplegar cuadrilla técnica para toma de muestras físicas inmediatas y aislar el sector.",
-        generatedAt: "2026-06-29T15:20:00Z"
+        mainCause:"Multiple sources indicate conditions compatible with water stress.",
+        summary:"Satellite, weather and visual evidence indicate reduced vegetation vigor and low canopy water availability. Technical inspection is recommended.",
+        recommendedAction:"Inspect irrigation infrastructure and perform an on-site agronomic assessment.",
+        generatedAt: "2026-07-03T12:10:00Z"
     }
-]
+];

@@ -1,0 +1,333 @@
+/* =========================================
+   Vision AI Page
+   ========================================= */
+
+.visionAiPage {
+  display: grid;
+  gap: 24px;
+}
+
+.visionAiHero {
+  min-height: 320px;
+  display: grid;
+  align-content: end;
+
+  padding: clamp(28px, 5vw, 56px);
+  overflow: hidden;
+
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 78% 18%, rgba(145, 231, 255, 0.16), transparent 34%),
+    radial-gradient(circle at 22% 24%, rgba(183, 255, 23, 0.12), transparent 32%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025)),
+    rgba(18, 24, 20, 0.86);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+}
+
+.visionAiHero__eyebrow {
+  width: max-content;
+  margin: 0 0 14px;
+  padding: 8px 12px;
+
+  color: #b7ff17;
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  border: 1px solid rgba(183, 255, 23, 0.28);
+  border-radius: 999px;
+  background: rgba(183, 255, 23, 0.08);
+}
+
+.visionAiHero h1 {
+  max-width: 900px;
+  margin: 0;
+
+  color: #f4f7ef;
+  font-size: clamp(3rem, 7vw, 7rem);
+  line-height: 0.86;
+  font-weight: 950;
+  letter-spacing: -0.085em;
+  text-transform: uppercase;
+}
+
+.visionAiHero span {
+  display: block;
+  max-width: 720px;
+  margin-top: 18px;
+
+  color: #c8d0c4;
+  line-height: 1.65;
+}
+
+.visionAiGrid {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.8fr) minmax(0, 1.2fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.visionAiPanel,
+.visionResultCard,
+.visionAiEmptyState {
+  min-width: 0;
+
+  padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.105);
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.03)),
+    rgba(18, 24, 20, 0.82);
+  box-shadow: 0 18px 54px rgba(0, 0, 0, 0.26);
+}
+
+.visionAiPanel {
+  display: grid;
+  align-content: start;
+  gap: 18px;
+}
+
+.visionAiPanel header,
+.visionResultCard__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.visionAiPanel header p,
+.visionResultCard__header p {
+  width: max-content;
+  margin: 0 0 8px;
+  padding: 6px 10px;
+
+  color: #081006;
+  font-size: 0.68rem;
+  font-weight: 950;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+
+  border-radius: 999px;
+  background: #b7ff17;
+}
+
+.visionAiPanel h2,
+.visionResultCard h2 {
+  margin: 0;
+
+  color: #f4f7ef;
+  font-size: clamp(1.65rem, 3vw, 2.4rem);
+  line-height: 0.95;
+  font-weight: 950;
+  letter-spacing: -0.06em;
+}
+
+.visionAiField {
+  display: grid;
+  gap: 8px;
+}
+
+.visionAiField span {
+  color: #c8d0c4;
+  font-size: 0.84rem;
+  font-weight: 850;
+}
+
+.visionAiField select,
+.visionAiField input {
+  width: 100%;
+  min-height: 46px;
+
+  color: #f4f7ef;
+  border: 1px solid rgba(255, 255, 255, 0.105);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.055);
+  padding: 0 14px;
+}
+
+.visionAiMockPreview {
+  display: grid;
+  gap: 6px;
+
+  padding: 16px;
+  border: 1px solid rgba(183, 255, 23, 0.18);
+  border-radius: 18px;
+  background: rgba(183, 255, 23, 0.055);
+}
+
+.visionAiMockPreview span,
+.visionAiMockPreview small {
+  color: #8d988d;
+}
+
+.visionAiMockPreview strong {
+  color: #f4f7ef;
+}
+
+.visionAiButton {
+  min-height: 48px;
+
+  color: #081006;
+  font-weight: 950;
+
+  border: 0;
+  border-radius: 999px;
+  background: #b7ff17;
+  cursor: pointer;
+}
+
+.visionAiButton:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.visionResultCard {
+  display: grid;
+  gap: 20px;
+}
+
+.visionResultCard__header strong {
+  width: max-content;
+  height: max-content;
+
+  padding: 8px 12px;
+  color: #b7ff17;
+
+  border: 1px solid rgba(183, 255, 23, 0.22);
+  border-radius: 999px;
+  background: rgba(183, 255, 23, 0.07);
+}
+
+.visionResultCard__header span {
+  color: #8d988d;
+}
+
+.visionResultCard__metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.visionMetricBox {
+  display: grid;
+  gap: 8px;
+
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.visionMetricBox span {
+  color: #8d988d;
+  font-size: 0.76rem;
+}
+
+.visionMetricBox strong {
+  color: #f4f7ef;
+  font-size: 1.35rem;
+  font-weight: 950;
+}
+
+.visionResultCard__section {
+  display: grid;
+  gap: 8px;
+}
+
+.visionResultCard__section h3 {
+  margin: 0;
+
+  color: #b7ff17;
+  font-size: 0.82rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.visionResultCard__section p {
+  margin: 0;
+
+  color: #c8d0c4;
+  line-height: 1.55;
+}
+
+.visionEvidenceList {
+  display: grid;
+  gap: 10px;
+}
+
+.visionEvidenceItem {
+  display: grid;
+  gap: 6px;
+
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.visionEvidenceItem strong {
+  color: #f4f7ef;
+}
+
+.visionEvidenceItem span {
+  color: #b7ff17;
+  font-weight: 900;
+}
+
+.visionEvidenceItem small {
+  color: #8d988d;
+  line-height: 1.45;
+}
+
+.visionEvidenceItem--warning {
+  border-color: rgba(255, 184, 77, 0.28);
+}
+
+.visionEvidenceItem--critical {
+  border-color: rgba(255, 95, 95, 0.3);
+}
+
+.visionAiEmptyState {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  min-height: 420px;
+  text-align: center;
+}
+
+.visionAiEmptyState p {
+  margin: 0;
+
+  color: #f4f7ef;
+  font-size: 1.4rem;
+  font-weight: 950;
+}
+
+.visionAiEmptyState span {
+  max-width: 420px;
+  color: #8d988d;
+  line-height: 1.55;
+}
+
+@media (max-width: 1080px) {
+  .visionAiGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .visionResultCard__metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .visionResultCard__metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .visionAiHero {
+    border-radius: 26px;
+  }
+}
