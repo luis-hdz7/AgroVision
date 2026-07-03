@@ -1,22 +1,14 @@
 import { Router, Request, Response } from "express";
-import { VegetationService } from "../types/services/vegetationService";
+import { getAllSnapshots,getVegetationHistory,getVegetationIndices } from "../controllers/vegetationController";
 import { ZoneInsightService } from "../types/services/zoneInsightService";
-import { getVegetationIndices } from "../controllers/vegetationController";
 import { ok } from "../../../shared/responses/apiResponses";
 
 const router = Router();
 
 // Endpoints de Índices de Vegetación (Satelital)
-router.get("/snapshots", (req: Request, res: Response) => {
-    const data = VegetationService.getAllSnapshots();
-    res.status(200).json(ok(data, "Snapshots de vegetación recuperados exitosamente"));
-});
+router.get("/snapshots", getAllSnapshots);
 
-router.get("/snapshots/field/:fieldId", (req: Request, res: Response) => {
-    const fieldId = req.params.fieldId as string;
-    const data = VegetationService.getHistoryByField(fieldId);
-    res.status(200).json(ok(data, `Historial de vegetación para la parcela ${req.params.fieldId} recuperado`));
-});
+router.get("/snapshots/field/:fieldId", getVegetationHistory);
 
 // Endpoints de ZoneInsight (Análisis de Riesgo Multifuente)
 router.get("/insights", (req: Request, res: Response) => {

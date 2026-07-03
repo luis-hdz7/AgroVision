@@ -9,10 +9,14 @@ export class VegetationService {
     public static getAllSnapshots(): VegetationIndexSnapshot[] {
         return vegetationIndexMock;
     }
-    /**Filtra y retorna el histórico cronológico de vigor vegetal asignado a una parcela específica.
-     * Útil para renderizar gráficas de evolución de salud satelital por campo.
-     * *@param fieldId Identificador único de la parcela (ej. 'field-001')
-     */
+    /**
+ * Recupera los registros de índices de vegetación
+ * correspondientes a una parcela específica.
+ *
+ ** @param fieldId Identificador único de la parcela.
+ ** @returns Lista de snapshots asociados a la parcela.
+ */
+    
     public static getHistoryByField(fieldId: string): VegetationIndexSnapshot[] {
         return vegetationIndexMock.filter((snapshot) => snapshot.fieldId === fieldId);
     }
