@@ -1,10 +1,11 @@
+
 import { cropProfilesMock } from "../data/cropProfileMock";
-import { CropProfile, CropType } from "../types/cropProfileTypes";
+import type { CropProfile, CropType } from "../types/cropProfileTypes";
 
 export class CropProfileService {
   /**
    * Obtiene todos los perfiles técnicos de cultivo disponibles.
-   */
+   *
   public static getAllProfiles(): CropProfile[] {
     return cropProfilesMock;
   }
