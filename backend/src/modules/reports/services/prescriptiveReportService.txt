@@ -1,0 +1,136 @@
+""// ================================================================
+// prescriptiveReportService.ts
+// ================================================================
+// Construye un PrescriptiveFieldReport a partir de las fuentes reales
+// del proyecto. Actúa como capa de adaptación/normalización — no
+// recalcula riesgo, evidencia ni recomendaciones (eso es responsabilidad
+// de Jorge / riskEngine), solo las combina en el formato del reporte.
+// ================================================================
+
+import { ZoneInsight } from "../../analysis/types/zoneInsightTypes"; // ajustar path real
+import { AgriculturalAlert } from "../../alerts/types/alertsTypes"; // ajustar path real
+import { Recommendation } from "../../recommendations/types/recommendationTypes"; // ajustar path real
+import {
+    PrescriptiveFieldReport,
+    PrescriptiveEvidenceSummary,
+    PrescriptiveAlertSummary,
+    PrescriptiveRecommendationSummary,
+    PrescriptiveActionLog,
+    PrescriptivePendingAction,
+} from "../types/prescriptiveReportTypes";
+
+// ----------------------------------------------------------------
+// TODO: Tipo temporal del "cuaderno de campo".
+// La carpeta missions/ está vacía — no existe todavía una fuente
+// real de actionsTaken/pendingActions en el proyecto. Esta forma
+// es una propuesta propia (no copiada de Jorge/Leo) y debe
+// confirmarse o reemplazarse cuando el módulo de cuaderno de campo
+// se implemente.
+// ----------------------------------------------------------------
+export interface FieldNotebookEntry {
+    id: string;
+    type: "ACTION_TAKEN" | "PENDING_ACTION";
+    description: string;
+    responsible?: string;       // solo aplica si type === "ACTION_TAKEN"
+    executionDate?: string;       // ISO, solo si type === "ACTION_TAKEN"
+    dueDate?: string | null;       // ISO, solo si type === "PENDING_ACTION"
+    priority?: Recommendation["priority"]; // reusa el enum real de Recommendation
+}
+
+export interface BuildPrescriptiveReportInput {
+    zoneInsight: ZoneInsight;
+    alerts: AgriculturalAlert[];
+    recommendations: Recommendation[];
+    fieldNotebook: FieldNotebookEntry[];
+}
+
+// ----------------------------------------------------------------
+// Helpers de adaptación (privados al módulo)
+// ----------------------------------------------------------------
+
+function adaptEvidence(insight: ZoneInsight): PrescriptiveEvidenceSummary[] {
+    return insight.evidence.map((ev, index) => ({
+        id: `${insight.id}-EV-${String(index + 1).padStart(2, "0")}`,
+        type: ev.type,
+        value: ev.value,
+        description: ev.description,
+        date: insight.generatedAt, // ZoneInsight.evidence no trae fecha propia
+    }));
+}
+
+function adaptAlerts(alerts: AgriculturalAlert[]): PrescriptiveAlertSummary[] {
+    return alerts.map((alert) => ({
+        id: alert.id,
+        zoneId: alert.zoneId ?? "",
+        severity: alert.severity,
+        message: alert.title, // decisión documentada: title (corto) sobre message (detalle)
+    }));
+}
+
+function adaptRecommendations(
+    recommendations: Recommendation[],
+    evidenceSummaries: PrescriptiveEvidenceSummary[]
+): PrescriptiveRecommendationSummary[] {
+    return recommendations.map((rec) => ({
+        id: rec.id,
+        zoneId: rec.zoneId ?? "",
+        recommendation: `${rec.reason} → ${rec.suggestedAction}`,
+        priority: rec.priority,
+        // Vincula evidencia por coincidencia de tipo/metric entre
+        // Recommendation.evidence (EvidenceItem[]) y la evidencia ya
+        // adaptada del ZoneInsight. Si no hay match directo, queda vacío
+        // y debe revisarse manualmente — no se asume relación.
+        relatedEvidenceIds: evidenceSummaries
+            .filter((ev) =>
+                rec.evidence.some((recEv) => recEv.metric === ev.type || recEv.source === ev.type)
+            )
+            .map((ev) => ev.id),
+    }));
+}
+
+function adaptActionsTaken(notebook: FieldNotebookEntry[]): PrescriptiveActionLog[] {
+    return notebook
+        .filter((entry) => entry.type === "ACTION_TAKEN")
+        .map((entry) => ({
+            id: entry.id,
+            actionTaken: entry.description,
+            responsible: entry.responsible ?? "Sin asignar",
+            executionDate: entry.executionDate ?? "",
+        }));
+}
+
+function adaptPendingActions(notebook: FieldNotebookEntry[]): PrescriptivePendingAction[] {
+    return notebook
+        .filter((entry) => entry.type === "PENDING_ACTION")
+        .map((entry) => ({
+            id: entry.id,
+            description: entry.description,
+            dueDate: entry.dueDate ?? null,
+            priority: entry.priority ?? "MEDIUM",
+        }));
+}
+
+// ----------------------------------------------------------------
+// Función principal
+// ----------------------------------------------------------------
+
+export function buildPrescriptiveReport(
+    data: BuildPrescriptiveReportInput
+): PrescriptiveFieldReport {
+    const evidence = adaptEvidence(data.zoneInsight);
+
+    return {
+        fieldId: data.zoneInsight.fieldId,
+        zoneId: data.zoneInsight.zoneId,
+        cropType: data.zoneInsight.cropType,
+        healthScore: data.zoneInsight.healthScore,
+        finalRiskLevel: data.zoneInsight.finalRiskLevel,
+        mainCause: data.zoneInsight.mainCause,
+        evidence,
+        activeAlerts: adaptAlerts(data.alerts),
+        recommendations: adaptRecommendations(data.recommendations, evidence),
+        actionsTaken: adaptActionsTaken(data.fieldNotebook),
+        pendingActions: adaptPendingActions(data.fieldNotebook),
+        createdAt: new Date().toISOString(),
+    };
+}

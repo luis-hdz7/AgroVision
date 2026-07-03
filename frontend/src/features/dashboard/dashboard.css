@@ -369,6 +369,27 @@
 }
 
 /* =========================================
+   Dashboard State
+   ========================================= */
+
+.dashboardState {
+  display: grid;
+  place-items: center;
+  min-height: 360px;
+
+  color: #c8d0c4;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 28px;
+  background: rgba(18, 24, 20, 0.82);
+}
+
+.dashboardState--error {
+  color: #ffb84d;
+  border-color: rgba(255, 184, 77, 0.32);
+}
+
+
+/* =========================================
    Responsive
    ========================================= */
 
