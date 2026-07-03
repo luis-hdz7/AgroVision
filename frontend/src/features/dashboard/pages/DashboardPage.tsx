@@ -19,7 +19,7 @@
 
 import { useEffect , useState } from "react";
 import { getDashboardData } from "../services/dashboardService";
-import { dashboardMock } from "../services/dashboardMock";
+// import { dashboardMock } from "../services/dashboardMock";
 import type { DashboardData, EvidenceItem, RiskLevel } from "../types/dashboard.types";
 import "../dashboard.css";
 
