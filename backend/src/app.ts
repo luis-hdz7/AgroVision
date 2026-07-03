@@ -8,7 +8,7 @@ import cropProfileRoutes from "./modules/crops/routes/cropRoutes";
 //nueva importacion del modulo de vegetacion y analisis satelital
 import vegetationRoutes from "./modules/vegetation/routes/vegetationRoutes";
 //importacion de analisis
-import { zoneAnalysisRouter } from "./modules/analisys/routes/zoneAnalysisRoutes";
+import { zoneAnalysisRouter } from "./modules/analysis/routes/zoneAnalysisRoutes";
 
 const app: Application = express();
 //*modulo de alerts
