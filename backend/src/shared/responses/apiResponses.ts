@@ -23,7 +23,7 @@ export function fail<T>(error: string): ApiResponse<T>  {
     return {
         success: false,
         data: null,
-        message: "An error ocurred",
+        message: "An error occurred",
         error,
         timestamp: new Date().toISOString(),
     }
