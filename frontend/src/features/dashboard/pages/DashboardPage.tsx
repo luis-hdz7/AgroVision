@@ -8,31 +8,78 @@
  * Pantalla base del Dashboard principal.
  *
  * Finalidad:
- * - mostrar la entrada principal del sistema;
- * - colocar las tarjetas requeridas;
+ * - mostrar inteligencia agrícola multifuente;
+ * - consumir los datos desde service y no desde mock directamente;
  * - respetar el contrato de datos;
- * - dejar la pantalla lista para conectar services después.
- *
- * Contratos revisados:
- * - DashboardSummary
- * - FarmOverview
- * - CropCycle
- * - Alert
- * - Recommendation
+ * - representar los riesgos, evidencias y acciones recomendadas.
+ * - ps: dejar la pantalla lista para conectar el backend real después.
  * 
 */
-import { dashboardMock } from "../services/dashboardMock";
-import type { EvidenceItem, RiskLevel } from "../types/dashboard.types";
+
+
+import { useEffect , useState } from "react";
+import { getDashboardData } from "../services/dashboardService";
+// import { dashboardMock } from "../services/dashboardMock";
+import type { DashboardData, EvidenceItem, RiskLevel } from "../types/dashboard.types";
 import "../dashboard.css";
 
 
 export function DashboardPage() {
-  // En esta fase usamos mock local.
-  // Luego se reemplazará por dashboardService.
-  const { summary } = dashboardMock;
 
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+ //carga los datos desde el Service
+ // La pagina no debe saber si vienen de backend o de mock local
+  useEffect(() => {
+    async function loadDashboard() {
+      try {
+        // Si no hay errores, cargamos los datos desde el backend
+          const data  = await getDashboardData();
+
+          setDashboardData(data);
+          setErrorMessage(null);
+      } 
+      // Si hay un error, mostramos un mensaje de error
+      catch {
+          setErrorMessage("Error al intentar cargar datos en dashboard");
+      } 
+      // Finalmente, dejamos de mostrar el loading
+      finally {
+          setIsLoading(false)
+      }
+    }
+    // llamada al loadDashboard cuando se inicializa la pagina
+    void loadDashboard();
+  }, []);
+
+  /** Verificaciones de estado */ 
+  if (isLoading) {
+    return (
+      <section className="dashboardPage">
+          <div className="dashboardState">
+              <p>Cargando...</p>
+          </div>
+      </section>
+    );
+  }
+
+  //Si no hay datos, informamos mediante un mensaje de error
+  if (errorMessage || !dashboardData) {
+    return (
+      <section className="dashboardPage">
+          <div className="dashboardState daashboardSate--error">
+              <p>{errorMessage ?? "No hay datos disponibles."}</p>
+          </div>
+      </section>
+    );
+  }
+
+  const { summary } = dashboardData;
   const mainAlert = summary.alerts.criticalAlerts[0];
   const mainRecommendation = summary.recommendations.mainRecommendation;
+
 
   return (
     <section className="dashboardPage" aria-labelledby="dashboard-title">
@@ -85,7 +132,7 @@ export function DashboardPage() {
         <article className="dashboardMetricCard">
           <span>Capa satelital</span>
           <strong>{summary.intelligence.satelliteLayerStatus}</strong>
-          <small>NDVI simulado: {summary.vegetation.ndvi ?? "N/A"}</small>
+          <small>NDVI (simulado): {summary.vegetation.ndvi ?? "N/A"}</small>
         </article>
       </section>
 
@@ -173,9 +220,12 @@ export function DashboardPage() {
   );
 }
 
+// Componentes auxiliares para evidencias y riesgos
+
 interface EvidenceBadgeProps {
   readonly evidence: EvidenceItem;
 }
+
 
 function EvidenceBadge({ evidence }: EvidenceBadgeProps) {
   return (
@@ -190,9 +240,11 @@ function EvidenceBadge({ evidence }: EvidenceBadgeProps) {
   );
 }
 
+// Componente para mostrar el nivel de riesgo
 interface RiskPillProps {
   readonly riskLevel: RiskLevel;
 }
+
 
 function RiskPill({ riskLevel }: RiskPillProps) {
   return (
@@ -202,6 +254,9 @@ function RiskPill({ riskLevel }: RiskPillProps) {
   );
 }
 
+// Función auxiliar para formatear el texto de un riesgo en forma legible, reemplazando guiones bajos por espacios
 function formatRiskLabel(risk: string): string {
   return risk.replaceAll("_", " ");
 }
+
+/** Siemper cumpliendose el flujo principal de: DashboardPage → dashboardService → dashboardAdapter → dashboardMock */

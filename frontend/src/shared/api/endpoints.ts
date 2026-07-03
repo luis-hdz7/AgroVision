@@ -44,8 +44,11 @@ export const API_ENDPOINTS = {
 
 /**ApiEnpointKey representa los nombres validos dentro de API_ENDPOINTS */
 // ejemplo: "dashboardSummary" o "farmOverview"
-export type ApiEnpointKey = keyof typeof API_ENDPOINTS;
+export type ApiEndpointKey = keyof typeof API_ENDPOINTS;
+
 
 /** ApiEndpointPath representa los valores reales de las rutas de API_ENDPOINTS */
 // ejemplo: "api/dashboard/summary" o "api/farm/overview"
-export type ApiEndpointPath = (typeof API_ENDPOINTS)[ApiEnpointKey];
+export type ApiEndpointPath = (typeof API_ENDPOINTS)[ApiEndpointKey];
+
+

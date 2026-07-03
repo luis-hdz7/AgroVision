@@ -11,7 +11,7 @@
  * Solo comunica señales visuales compatibles con estrés del cultivo.
  */
 
-import type { VisionAnalyzeRequest, VisionInspection, VisionPrediction } from "../types/visionAI.types";
+import type { VisionAnalyzeRequest, VisionInspection, VisionPrediction } from "../types/visionAi.types";
 
 // Mock principal listo para consumir desde una futura VisionAIPage.
 export const visionAiMock: VisionInspection = {
