@@ -30,6 +30,6 @@ router.get("/insights/zone/:zoneId", (req: Request, res: Response) => {
     res.status(200).json(ok(data, `Análisis de la zona ${req.params.zoneId} obtenido`));
 });
 
-router.get("/indices", getVegetationIndices)
+router.get("/indices", getVegetationIndices);
 
 export default router;

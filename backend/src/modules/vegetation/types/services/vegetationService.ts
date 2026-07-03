@@ -2,9 +2,10 @@ import { vegetationIndexMock } from "../data/vegetationIndexMock";
 import { VegetationIndexSnapshot } from "../vegetationTypes";
 
 export class VegetationService {
-    /**
-     * Recupera la totalidad de los registros historicos de NDVI capturados en el sistema
-     */
+/**
+ * Recupera todos los registros de índices de vegetación
+ * disponibles en el sistema.
+ */
     public static getAllSnapshots(): VegetationIndexSnapshot[] {
         return vegetationIndexMock;
     }
