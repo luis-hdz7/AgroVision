@@ -44,12 +44,14 @@ export interface ZoneInsightInput {
     */
     soilMoisturePercentage?: number;
     temperatureCelsius?: number;
-
     ndvi?: number;
-
+    ndwi?: number;
+    gndvi?: number;
     visualAnomalyDetected?: boolean;
-
+    dryAreaDetected?: boolean;
+    chlorosisDetected?: boolean;
     vegetationTrend?: number;
+    mappingRiskDetected?: boolean;
 }
 
 /*
@@ -64,11 +66,18 @@ export interface ZoneInsightInput {
 export class ZoneInsightService {
     static buildInsight(data: ZoneInsightInput): ZoneInsight {
         // 1. Construir evidencia normalizada
-        const evidence =EvidenceFusionService.buildEvidence({soilMoisturePercentage:data.soilMoisturePercentage,
-                temperatureCelsius:data.temperatureCelsius,
-                ndvi:data.ndvi,
-                visualAnomalyDetected:data.visualAnomalyDetected,
-                vegetationTrend:data.vegetationTrend});
+        const evidence = EvidenceFusionService.buildEvidence({
+            soilMoisturePercentage: data.soilMoisturePercentage,
+            temperatureCelsius: data.temperatureCelsius,
+            ndvi: data.ndvi,
+            ndwi: data.ndwi,
+            gndvi: data.gndvi,
+            visualAnomalyDetected: data.visualAnomalyDetected,
+            dryAreaDetected: data.dryAreaDetected,
+            chlorosisDetected: data.chlorosisDetected,
+            vegetationTrend: data.vegetationTrend,
+            mappingRiskDetected: data.mappingRiskDetected
+        });
         // 2. Evaluar riesgo prescriptivo
         const evidenceRisk =EvidenceRiskService.evaluate(evidence);
         // 3. Combinar riesgo tradicional + riesgo prescriptivo
@@ -108,21 +117,20 @@ export class ZoneInsightService {
         * Alertas
         * Reportes
     */
-    private static buildSummary(mainCause: string,riskLevel: RiskLevel): string {
-        switch (mainCause) {
-            case "WATER_STRESS":return `Water stress detected. Final risk level: ${riskLevel}.`;
-            case "HEAT_STRESS":return `Heat stress indicators detected. Final risk level: ${riskLevel}.`;
-            case "LOW_VIGOR":return `Low vegetation vigor detected through NDVI analysis.`;
-            case "VISUAL_ANOMALY":return `Visual anomaly detected. Field inspection is recommended.`;
-            default:return "No significant agricultural risks detected.";
-        }
+private static buildSummary(mainCause: string,riskLevel: RiskLevel): string {
+    switch (mainCause) {
+        case "WATER_STRESS":
+            return `Satellite, sensor and environmental evidence suggest conditions compatible with water stress. The zone should be prioritized for irrigation review and field inspection. Final risk level: ${riskLevel}.`;
+        case "HEAT_STRESS":
+            return `Weather indicators suggest elevated temperature conditions that may affect crop performance. Continued monitoring and mitigation measures should be considered. Final risk level: ${riskLevel}.`;
+        case "LOW_VIGOR":
+            return `Vegetation indices indicate reduced vigor compared to expected crop conditions. Further inspection is recommended to determine possible nutritional, environmental or water-related causes. Final risk level: ${riskLevel}.`;
+        case "VISUAL_ANOMALY":
+            return `Visual analysis identified patterns requiring additional verification. Field inspection is recommended to determine the origin and potential impact of the observed anomaly. Final risk level: ${riskLevel}.`;
+        default:
+            return `Current evidence indicates stable crop conditions with no significant anomalies detected. Continue standard monitoring procedures. Final risk level: ${riskLevel}.`;
     }
 }
-/*
-    TODO:
-    !Migrar ZoneInsight y tipos prescriptivos
-    a contracts/agrovisionIntelligence.contract.ts
-    cuando el contrato oficial sea creado.
-*/
+}
 //*Ediciones de este archivo
 //@luis-hdz7 el 29/6/2026 (creación y primera edición)
