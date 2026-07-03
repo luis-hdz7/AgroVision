@@ -32,11 +32,22 @@ export interface EvidenceItem {
 }
 
 export interface EvidenceFusionInput {
+    // SENSOR
     soilMoisturePercentage?: number;
+    // WEATHER
     temperatureCelsius?: number;
+    // SATELLITE
     ndvi?: number;
+    ndwi?: number;
+    gndvi?: number;
+    // VISION
     visualAnomalyDetected?: boolean;
+    dryAreaDetected?: boolean;
+    chlorosisDetected?: boolean;
+    // HISTORY
     vegetationTrend?: number;
+    // MAPPING
+    mappingRiskDetected?: boolean;
 }
 
 export class EvidenceFusionService {
