@@ -1,9 +1,12 @@
 import { CropType } from "../../crops/types/cropProfileTypes";
 
 export interface EvidenceItem {
-    readonly type: "SATELLITE" | "SIMULATION" | "ROVER_CAMERA" | "UPLOAD";
-    readonly value: string;
-    readonly description: string;
+    readonly source: "SATELLITE" | "SIMULATION" | "ROVER_CAMERA" | "UPLOAD";
+    readonly metric: string;
+    readonly value: number | string;
+    readonly unit: string | null;
+    readonly status: "NORMAL" | "WARNING" | "CRITICAL";
+    readonly explanation: string;
 }
 
 export interface ZoneInsight {

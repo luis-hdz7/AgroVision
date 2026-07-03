@@ -10,14 +10,17 @@ export const zoneInsightMock: ZoneInsight[] = [
         healthScore: 92,
         evidence: [
             {
-                type: "SATELLITE",
-                value: "NDVI: 0.78",
-                description: "Alta absorción de clorofila libre de estrés hídrico."
+                source: "SATELLITE",
+                metric: "NDVI",
+                value: 0.78,
+                unit: null,
+                status: "NORMAL",
+                explanation: "High chlorophyll absorption with no signs of water stress."
             }
         ],
-        mainCause: "Condiciones climáticas y de suelo ideales.",
-        summary: "Zona estable. El cultivo se encuentra en un estado de desarrollo vegetativo excelente.",
-        recommendedAction: "Mantener el calendario de riego programado y continuar monitoreo satelital estándar.",
+        mainCause: "Ideal soil and weather conditions.",
+        summary: "Stable zone. Crop is in excellent vegetative condition.",
+        recommendedAction: "Maintain the scheduled irrigation plan and continue routine satellite monitoring.",
         generatedAt: "2026-06-29T15:00:00Z"
     },
     {
@@ -29,14 +32,17 @@ export const zoneInsightMock: ZoneInsight[] = [
         healthScore: 68,
         evidence: [
             {
-                type: "SIMULATION",
-                value: "NDWI: 0.18",
-                description: "Modelo predictivo alerta posible saturación estancada."
+                source: "SIMULATION",
+                metric: "NDWI",
+                value: 0.18,
+                unit: null,
+                status: "WARNING",
+                explanation: "Predictive model detected possible water accumulation."
             }
         ],
-        mainCause: "Drenaje deficiente en micro-relieve de la zona.",
-        summary: "Zona en observación. Se registra una propensión a la acumulación excesiva de humedad.",
-        recommendedAction: "Inspeccionar los canales de desagüe secundarios para prevenir pudrición del cormo.",
+        mainCause: "Poor drainage in the micro-relief of the area.",
+        summary: "Zone under observation. Excess moisture accumulation has been detected.",
+        recommendedAction: "Inspect secondary drainage channels to prevent root rot.",
         generatedAt: "2026-06-29T15:10:00Z"
     },
     {
@@ -48,19 +54,25 @@ export const zoneInsightMock: ZoneInsight[] = [
         healthScore: 35,
         evidence: [
             {
-                type: "ROVER_CAMERA",
-                value: "Imágenes RGB Rover",
-                description: "Detección visual de defoliación y clorosis moteada."
+                source: "ROVER_CAMERA",
+                metric: "Visual Inspection",
+                value: "RGB Images",
+                unit: null,
+                status: "CRITICAL",
+                explanation: "Visual detection of defoliation and mottled chlorosis."
             },
             {
-                type: "SATELLITE",
-                value: "GNDVI: 0.28",
-                description: "Caída severa en el índice verde de la zona."
+                source: "SATELLITE",
+                metric: "GNDVI",
+                value: 0.28,
+                unit: null,
+                status: "CRITICAL",
+                explanation: "Severe drop in vegetation index across the zone."
             }
         ],
-        mainCause: "Anomalía foliar compatible con síntomas iniciales de plaga estructural.",
-        summary: "Zona crítica. Pérdida drástica de biomasa fotosintética y vigor.",
-        recommendedAction: "Desplegar cuadrilla técnica para toma de muestras físicas inmediatas y aislar el sector.",
+        mainCause: "Leaf anomaly compatible with early structural pest symptoms.",
+        summary: "Critical zone. Significant loss of vegetation vigor and photosynthetic biomass.",
+        recommendedAction: "Deploy a technical field team immediately, collect physical samples, and isolate the affected area",
         generatedAt: "2026-06-29T15:20:00Z"
     }
 ]
