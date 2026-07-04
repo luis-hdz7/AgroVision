@@ -584,9 +584,6 @@ AgroVision/
 │   └── src/
 │       ├── main.tsx
 │       ├── app/
-│       │   ├── App.tsx
-│       │   └── AppRouter.tsx
-│       │
 │       ├── shared/
 │       │   ├── api/
 │       │   ├── components/
@@ -634,10 +631,6 @@ AgroVision/
 │   └── technical/
 │
 └── design/
-    ├── brand/
-    ├── mockups/
-    ├── screenshots/
-    └── icons/
 ```
 
 ---
