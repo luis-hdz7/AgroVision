@@ -752,6 +752,7 @@ git push -u origin feat/nombre-del-cambio
 | Brandon Reynaldo Rodríguez Téllez | `brandonbrt2020@gmail.com` |
 | Jorge Luis Antón Henández | `luisjorgeantonhernandez@gmail.com` |
 | Leonardo Antonio Tellería Trujillo | `telleriatrujilloleonardoanti@gmail.com` |
+| Marvin Osvaldo Solis Hernández | `elhh1985@gmail.com` |
 
 ---
 
