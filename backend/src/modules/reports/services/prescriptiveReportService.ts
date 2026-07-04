@@ -22,9 +22,9 @@ function toRiskLevel(severity: AgriculturalAlert["severity"]): RiskLevel {
 function adaptEvidence(insight: ZoneInsight): PrescriptiveEvidenceSummary[] {
   return insight.evidence.map((item, index) => ({
     id: `ev-${String(index + 1).padStart(3, "0")}`,
-    type: item.type,
+    type: item.source,
     value: item.value,
-    description: item.description,
+    description: item.explanation,
     date: insight.generatedAt,
   }));
 }
@@ -44,7 +44,7 @@ function adaptRecommendations(
 ): PrescriptiveRecommendationSummary[] {
   return recommendations.map((recommendation) => {
     const relatedEvidenceIds = recommendation.evidence
-      .map((item) => evidenceIds.get(`${item.type}:${item.value}:${item.description}`) ?? evidenceIds.get(`${item.description}`))
+      .map((item) => evidenceIds.get(`${item.source}:${item.value}:${item.explanation}`) ?? evidenceIds.get(`${item.explanation}`))
       .filter((id): id is string => Boolean(id));
 
     return {
