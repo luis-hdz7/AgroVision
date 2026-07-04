@@ -618,17 +618,6 @@ AgroVision/
 │   └── AGROVISION_INTELLIGENCE_EXTENSION.md
 │
 ├── docs/
-│   ├── architecture/
-│   ├── ai/
-│   ├── agriculture/
-│   ├── contracts/
-│   ├── deployment/
-│   ├── design/
-│   ├── marketing/
-│   ├── pitch/
-│   ├── reports/
-│   ├── risk/
-│   └── technical/
 │
 └── design/
 ```
