@@ -22,3 +22,16 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+#archivos ejecutables
+*.exe
+*.dll
+*.so
+*.dylib
+*.bin
+
+#archivos comprimidos : *.zip
+*.tar.gz
+*.rar
+*.7z
+
