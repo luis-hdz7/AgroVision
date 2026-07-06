@@ -23,14 +23,14 @@ dist-ssr
 *.sln
 *.sw?
 
-#archivos ejecutables
+# archivos ejecutables
 *.exe
 *.dll
 *.so
 *.dylib
 *.bin
 
-#archivos comprimidos : *.zip
+# archivos comprimidos : *.zip
 *.tar.gz
 *.rar
 *.7z
