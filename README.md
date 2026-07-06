@@ -584,9 +584,6 @@ AgroVision/
 │   └── src/
 │       ├── main.tsx
 │       ├── app/
-│       │   ├── App.tsx
-│       │   └── AppRouter.tsx
-│       │
 │       ├── shared/
 │       │   ├── api/
 │       │   ├── components/
@@ -621,23 +618,8 @@ AgroVision/
 │   └── AGROVISION_INTELLIGENCE_EXTENSION.md
 │
 ├── docs/
-│   ├── architecture/
-│   ├── ai/
-│   ├── agriculture/
-│   ├── contracts/
-│   ├── deployment/
-│   ├── design/
-│   ├── marketing/
-│   ├── pitch/
-│   ├── reports/
-│   ├── risk/
-│   └── technical/
 │
 └── design/
-    ├── brand/
-    ├── mockups/
-    ├── screenshots/
-    └── icons/
 ```
 
 ---
@@ -770,6 +752,7 @@ git push -u origin feat/nombre-del-cambio
 | Brandon Reynaldo Rodríguez Téllez | `brandonbrt2020@gmail.com` |
 | Jorge Luis Antón Henández | `luisjorgeantonhernandez@gmail.com` |
 | Leonardo Antonio Tellería Trujillo | `telleriatrujilloleonardoanti@gmail.com` |
+| Marvin Osvaldo Solis Hernández | `elhh1985@gmail.com` |
 
 ---
 

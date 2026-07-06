@@ -1,21 +1,26 @@
 /*
     * EVIDENCE FUSION SERVICE
-    * Objetivo: Actuar como capa de normalización y transformación.
-    * Recibe datos heterogéneos (sensores, satélite, visión, clima, historial)
-    * y los convierte en objetos 'EvidenceItem' unificados para el motor prescriptivo.
+    * Objetivo:
+    * Normalizar evidencia proveniente de:
+    SENSOR
+    WEATHER
+    SATELLITE
+    VISION
+    HISTORY
+    MAPPING
+    * para construir una colección uniforme de EvidenceItem.
 */
 
-import { evaluateSoilMoisture, evaluateTemperature } from "../../risk/services/riskRulesService";
+import {evaluateSoilMoisture,evaluateTemperature} from "../../risk/services/riskRulesService";
 
-// Tipos de fuentes de datos permitidas
 export type EvidenceSource =
     | "SENSOR"
     | "VISION"
     | "SATELLITE"
     | "WEATHER"
-    | "HISTORY";
+    | "HISTORY"
+    | "MAPPING";
 
-// Niveles de severidad normalizados para el dashboard prescriptivo
 export type EvidenceStatus =
     | "NORMAL"
     | "WATCH"
@@ -32,24 +37,30 @@ export interface EvidenceItem {
 }
 
 export interface EvidenceFusionInput {
+    // SENSOR
     soilMoisturePercentage?: number;
+    // WEATHER
     temperatureCelsius?: number;
+    // SATELLITE
     ndvi?: number;
+    ndwi?: number;
+    gndvi?: number;
+    // VISION
     visualAnomalyDetected?: boolean;
+    dryAreaDetected?: boolean;
+    chlorosisDetected?: boolean;
+    // HISTORY
     vegetationTrend?: number;
+    // MAPPING
+    mappingRiskDetected?: boolean;
 }
 
 export class EvidenceFusionService {
-
-    /*
-        * Procesa entradas multifuente y genera una lista de evidencias normalizadas.
-        * Es el punto de entrada principal para convertir datos brutos en insights.
-    */
     static buildEvidence(data: EvidenceFusionInput): EvidenceItem[] {
         const evidence: EvidenceItem[] = [];
-
-        //* 1. PROCESAMIENTO DE SENSORES (Humedad)
-        // Utiliza reglas de riesgo compartidas para consistencia
+        /*
+            * SENSOR
+        */
         if (data.soilMoisturePercentage !== undefined) {
             const result = evaluateSoilMoisture(data.soilMoisturePercentage);
             evidence.push({
@@ -62,8 +73,10 @@ export class EvidenceFusionService {
             });
         }
 
-        //* 2. PROCESAMIENTO CLIMÁTICO (Temperatura)
-        // Similar a sensores, delega la lógica de umbrales a riskRulesService
+        /*
+            * WEATHER
+        */
+
         if (data.temperatureCelsius !== undefined) {
             const result = evaluateTemperature(data.temperatureCelsius);
             evidence.push({
@@ -75,9 +88,9 @@ export class EvidenceFusionService {
                 explanation: result.factor.explanation
             });
         }
-
-        //* 3. PROCESAMIENTO SATELITAL (NDVI)
-        // Lógica propia de vigor vegetal mediante método privado
+        /*
+            * SATELLITE - NDVI
+        */
         if (data.ndvi !== undefined) {
             const status = this.evaluateNdvi(data.ndvi);
             evidence.push({
@@ -85,54 +98,163 @@ export class EvidenceFusionService {
                 metric: "ndvi",
                 value: data.ndvi,
                 status,
-                explanation:status === "CRITICAL"
-                ? "Very low vegetation vigor detected."
-                : status === "WARNING"
-                ? "Vegetation vigor below expected range."
-                : "Vegetation vigor within acceptable range."
+                explanation:
+                    status === "CRITICAL"
+                        ? "Very low vegetation vigor detected."
+                        : status === "WARNING"
+                        ? "Vegetation vigor below expected range."
+                        : status === "WATCH"
+                        ? "Vegetation vigor should be monitored."
+                        : "Vegetation vigor remains healthy."
             });
         }
+        /*
+            * SATELLITE - NDWI
+        */
+        if (data.ndwi !== undefined) {
+            const status = this.evaluateNdwi(data.ndwi);
+            evidence.push({
+                source: "SATELLITE",
+                metric: "ndwi",
+                value: data.ndwi,
+                status,
+                explanation:
+                    status === "CRITICAL"
+                        ? "Very low canopy water content detected."
+                        : status === "WARNING"
+                        ? "Reduced vegetation water availability detected."
+                        : status === "WATCH"
+                        ? "Water availability should be monitored."
+                        : "Vegetation water content remains within expected range."
+            });
+        }
+        /*
+            * SATELLITE - GNDVI
+        */
+        if (data.gndvi !== undefined) {
+            const status = this.evaluateGndvi(data.gndvi);
+            evidence.push({
+                source: "SATELLITE",
+                metric: "gndvi",
+                value: data.gndvi,
+                status,
+                explanation:
+                    status === "CRITICAL"
+                        ? "Severe reduction in chlorophyll activity detected."
+                        : status === "WARNING"
+                        ? "Vegetation greenness below expected range."
+                        : status === "WATCH"
+                        ? "Vegetation greenness should be monitored."
+                        : "Vegetation greenness remains within expected range."
+            });
+    }
 
-        //* 4. PROCESAMIENTO DE VISIÓN (IA/Cámaras)
-        // Evaluación binaria de anomalías visuales
+        /*
+            * VISION - GENERAL ANOMALY
+        */
         if (data.visualAnomalyDetected !== undefined) {
             evidence.push({
                 source: "VISION",
                 metric: "visualAnomaly",
                 value: data.visualAnomalyDetected,
-                status: data.visualAnomalyDetected ? "WARNING" : "NORMAL",
-                explanation: data.visualAnomalyDetected 
-                    ? "Visual anomaly detected." 
+                status: data.visualAnomalyDetected
+                    ? "WARNING"
+                    : "NORMAL",
+                explanation: data.visualAnomalyDetected
+                    ? "Visual anomaly detected."
                     : "No visual anomalies detected."
             });
         }
 
-        // 5. PROCESAMIENTO DE HISTORIAL (Tendencias)
-        // Evaluación de series temporales basada en umbral fijo (-20%)
+        /*
+            * VISION - DRY AREA
+        */
+
+        if (data.dryAreaDetected !== undefined) {
+            evidence.push({
+                source: "VISION",
+                metric: "dryAreaDetected",
+                value: data.dryAreaDetected,
+                status: data.dryAreaDetected
+                    ? "WARNING"
+                    : "NORMAL",
+                explanation: data.dryAreaDetected
+                    ? "Dry area patterns detected during visual inspection."
+                    : "No dry area patterns detected."
+            });
+        }
+
+        /*
+            * VISION - CHLOROSIS
+        */
+
+        if (data.chlorosisDetected !== undefined) {
+            evidence.push({
+                source: "VISION",
+                metric: "chlorosisDetected",
+                value: data.chlorosisDetected,
+                status: data.chlorosisDetected
+                    ? "WARNING"
+                    : "NORMAL",
+                explanation: data.chlorosisDetected
+                    ? "Visual signs compatible with chlorosis were detected."
+                    : "No chlorosis patterns detected."
+            });
+        }
+        /*
+            * HISTORY
+        */
         if (data.vegetationTrend !== undefined) {
             evidence.push({
                 source: "HISTORY",
                 metric: "vegetationTrend",
                 value: data.vegetationTrend,
                 unit: "%",
-                status: data.vegetationTrend <= -20 ? "WARNING" : "NORMAL",
-                explanation: data.vegetationTrend <= -20
+                status:
+                    data.vegetationTrend <= -20
+                        ? "WARNING"
+                        : "NORMAL",
+                explanation:
+                    data.vegetationTrend <= -20
                         ? "Negative vegetation trend detected."
                         : "Vegetation trend remains stable."
             });
         }
-
+        /*
+            * MAPPING
+        */
+        if (data.mappingRiskDetected !== undefined) {
+            evidence.push({
+                source: "MAPPING",
+                metric: "mappingRiskDetected",
+                value: data.mappingRiskDetected,
+                status: data.mappingRiskDetected
+                    ? "WARNING"
+                    : "NORMAL",
+                explanation: data.mappingRiskDetected
+                    ? "Spatial analysis identified a potential risk area."
+                    : "No significant mapping anomalies detected."
+            });
+        }
         return evidence;
     }
-
-    /*
-        * Helper privado para clasificar el estado de salud basado en el NDVI.
-        ! Si los umbrales cambian en el futuro, actualizar aquí.
-    */
     private static evaluateNdvi(ndvi: number): EvidenceStatus {
         if (ndvi < 0.30) return "CRITICAL";
         if (ndvi < 0.50) return "WARNING";
         if (ndvi < 0.70) return "WATCH";
+        return "NORMAL";
+    }
+
+    private static evaluateNdwi(ndwi: number): EvidenceStatus {
+        if (ndwi < 0.15) return "CRITICAL";
+        if (ndwi < 0.25) return "WARNING";
+        if (ndwi < 0.40) return "WATCH";
+        return "NORMAL";
+    }
+    private static evaluateGndvi(gndvi: number): EvidenceStatus {
+        if (gndvi < 0.25) return "CRITICAL";
+        if (gndvi < 0.40) return "WARNING";
+        if (gndvi < 0.60) return "WATCH";
         return "NORMAL";
     }
 }
@@ -141,3 +263,4 @@ export class EvidenceFusionService {
 //* Ediciones de este archivo
 // @luis-hdz7 el 28/6/2026 (creación y primera edición)
 // @luis-hdz7 el 29/06/2026 (realizando pequeños ajustes)
+// @luis-hdz7 el 03/07/2026
