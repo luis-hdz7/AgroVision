@@ -27,9 +27,12 @@ import { RecommendationPriority } from "../../recommendations/types/recommendati
 // fecha de referencia.
 export interface PrescriptiveEvidenceSummary {
     id: string;          // generado en buildPrescriptiveReport (ej. "ev-001")
-    type: string;         // mismo valor que ZoneInsight.evidence[].type (ej. "SATELLITE", "ROVER_CAMERA")
-    value: string;
-    description: string;
+    source: string;         // mismo valor que ZoneInsight.evidence[].type (ej. "SATELLITE", "ROVER_CAMERA")
+    metric: string;       // ndvi, ndwi, temperature, etc.
+    value: number | string | boolean | null;
+    unit?: string | null;
+    status: string;      // NORMAL | WATCH | WARNING | CRITICAL
+    explanation: string;
     date: string;          // ISO — derivado de ZoneInsight.generatedAt
 }
 

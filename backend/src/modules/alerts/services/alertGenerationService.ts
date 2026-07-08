@@ -65,7 +65,7 @@ function hasHeatStressCause(insight: ZoneInsight): boolean {
 }
 
 function hasVisualEvidence(insight: ZoneInsight): boolean {
-    return insight.evidence.some(e => e.type === "ROVER_CAMERA" || e.type === "UPLOAD");
+    return insight.evidence.some(e => e.source === "VISION");
 }
 
 /*
