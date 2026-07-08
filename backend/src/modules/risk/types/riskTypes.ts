@@ -1,4 +1,5 @@
-import { EvidenceItem } from "../../analysis/types/zoneInsightTypes";
+import { EvidenceItem } from "../../analysis/services/evidenceFusionService";
+import { CropType } from "../../crops/types/cropProfileTypes";
 /*
     * Tipos de datos para el diagnóstico agrícola
     * Siguen las reglas de idioma técnico en inglés y valores explícitos definidos en el contrato[cite: 34, 372].
@@ -59,7 +60,7 @@ export interface CropHealthAnalysis {
 export interface RiskAssessment {
     fieldId: string;
     zoneId: string;
-    cropType: string;
+    cropType: CropType;
     riskLevel: RiskLevel;
     riskScore: number;      // score del análisis prescriptivo
     healthScore: number;    // score del motor existente

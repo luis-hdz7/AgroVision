@@ -1,6 +1,9 @@
 import { CropHealthAnalysis, RiskLevel, HealthStatus,RiskAssessment } from "../types/riskTypes";
 import {evaluateSoilMoisture,evaluateTemperature,evaluateCropHealth} from "../services/riskRulesService";
-import { EvidenceItem,EvidenceStatus } from "../../analysis/types/zoneInsightTypes";
+import { EvidenceStatus } from "../../analysis/services/evidenceFusionService";
+import {EvidenceRiskService} from "../services/evidenceRiskService"
+import { EvidenceItem } from "../../analysis/services/evidenceFusionService";
+import { CropType } from "../../crops/types/cropProfileTypes";
 
     //* Entradas requeridas para el motor de análisis de riesgo.
 
@@ -141,11 +144,10 @@ export function calculateRiskFromEvidence(evidence: EvidenceItem[]): {
 export function buildRiskAssessment(
     analysis: CropHealthAnalysis,
     zoneId: string,
-    cropType: string,
-    evidence: EvidenceItem[],
-    mainCause: string,
-    recommendedAction: string): RiskAssessment {
-    const evidenceRisk =calculateRiskFromEvidence(evidence);
+    cropType: CropType,
+    evidence: EvidenceItem[]
+): RiskAssessment {
+    const evidenceRisk = EvidenceRiskService.evaluate(evidence);
     return {
         fieldId: analysis.fieldId,
         zoneId,
@@ -153,13 +155,13 @@ export function buildRiskAssessment(
         riskLevel: evidenceRisk.riskLevel,
         riskScore: evidenceRisk.riskScore,
         healthScore: analysis.healthScore,
-        mainCause,
+        mainCause: evidenceRisk.mainCause,
         evidence,
-        recommendedAction,
-        generatedAt: new Date().toISOString()
+        recommendedAction: evidenceRisk.recommendedAction,
+        generatedAt: analysis.generatedAt
     };
 }
-/* Ediciones de este archivo
+    /* Ediciones de este archivo
     * @luis-hdz7 el 14/6/2026 (creación y primera edición)
     * @luis-hdz7 el 16/6/2026 (refactor usando riskRulesService)
     * @luis-hdz7 el 26/6/2026 (documentación técnica basada en Risk Rules V0)
