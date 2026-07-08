@@ -15,33 +15,44 @@ export const prescriptiveReportMock: PrescriptiveFieldReport = {
     evidence: [
         {
             id: "EV-01",
-            type: "SATELLITE",
-            value: "NDVI: 0.52",
-            description:
-                "Las imagenes satelitales muestran perdida de vigor en la vegetacion.",
+            source: "SATELLITE",
+            metric: "ndvi",
+            value: 0.52,
+            unit: null,
+            status: "WARNING",
+            explanation: "Las imágenes satelitales muestran pérdida de vigor en la vegetación.",
             date: "2026-06-28T10:57:00Z",
         },
         {
             id: "EV-02",
-            type: "ROVER_CAMERA",
-            value: "Humedad de suelo: 18%",
-            description:
+            source: "SENSOR",
+            metric: "soilMoisturePercentage",
+            value: 18,
+            unit: "%",
+            status: "CRITICAL",
+            explanation:
                 "Los sensores reportan humedad del suelo inferior al nivel recomendado",
             date: "2026-06-29T08:00:00Z",
         },
         {
             id: "EV-03",
-            type: "SIMULATION",
-            value: "Precipitacion: 0mm / 12 dias",
-            description:
+            source: "WEATHER",
+            metric: "rainfall",
+            value: 0,
+            unit: "mmm",
+            status: "WARNING",
+            explanation:
                 "No se registran precipitaciones importantes durante los ultimos 12 dias",
             date: "2026-06-29T10:57:00Z",
         },
         {
             id: "EV-04",
-            type: "HISTORICAL",
+            source: "HISTORY",
+            metric: "historicalPattern",
             value: "Evento similar: hace 10 meses",
-            description:
+            unit: null,
+            status: "WATCH",
+            explanation:
                 "Esta zona presento estres hidrico similar hace 10 meses bajo condiciones comparables",
             date: "2026-06-25T00:00:00Z",
         },
