@@ -1,7 +1,11 @@
 /*
     * EVIDENCE RISK SERVICE
-    * Objetivo: Analizar la evidencia fusionada para generar un diagnóstico de riesgo prescriptivo.
-    * Este servicio traduce datos técnicos (EvidenceItem) en decisiones operativas (MainCause, RiskLevel, Action).
+    * Objetivo:
+    * Transformar evidencia multifuente en:
+    - mainCause
+    - riskLevel
+    - recommendedAction
+    * evitando diagnósticos definitivos.
 */
 
 import { RiskLevel } from "../types/riskTypes";
@@ -21,36 +25,84 @@ export interface EvidenceRiskResult {
     criticalEvidence: EvidenceItem[];
     recommendedAction: string;
 }
-
 export class EvidenceRiskService {
-
-    /*
-        * Evalúa la lista de evidencias y determina el nivel de riesgo y la causa principal.
-        * Es el core de la lógica prescriptiva: jerarquiza la evidencia para priorizar acciones.
-    */
     static evaluate(evidence: EvidenceItem[]): EvidenceRiskResult {
-        //* 1. Clasificación por severidad para lógica de decisión
-        const criticalEvidence = evidence.filter(item => item.status === "CRITICAL");
-        const warningEvidence = evidence.filter(item => item.status === "WARNING");
+        const criticalEvidence = evidence.filter(
+            item => item.status === "CRITICAL"
+        );
+        const warningEvidence = evidence.filter(
+            item => item.status === "WARNING"
+        );
 
-        //* 2. Identificación de disparadores de estrés (Booleano)
-        const waterStress = evidence.some(item =>
-            item.metric === "soilMoisturePercentage" && (item.status === "WARNING" || item.status === "CRITICAL"));
+        /*
+            * Señales compatibles con estrés hídrico
+        */
 
-        const heatStress = evidence.some(item =>
-            item.metric === "temperatureCelsius" && (item.status === "WARNING" || item.status === "CRITICAL"));
+        const waterStress =
+            evidence.some(
+                item =>
+                    item.metric === "soilMoisturePercentage" &&
+                    (item.status === "WARNING" ||
+                        item.status === "CRITICAL")
+            ) ||
+            evidence.some(
+                item =>
+                    item.metric === "ndwi" &&
+                    (item.status === "WARNING" ||
+                        item.status === "CRITICAL")
+            );
+        /*
+            * Estrés térmico
+        */
 
-        const lowVigor = evidence.some(item =>
-            item.metric === "ndvi" && (item.status === "WARNING" || item.status === "CRITICAL"));
-
-        const visualAnomaly = evidence.some(item =>
-            item.metric === "visualAnomaly" && (item.status === "WARNING" || item.status === "CRITICAL"));
+        const heatStress = evidence.some(
+            item =>
+                item.metric === "temperatureCelsius" &&
+                (item.status === "WARNING" ||
+                    item.status === "CRITICAL")
+        );
+        /*
+            * Bajo vigor vegetal
+        */
 
         //* 3. Resolución de diagnósticos finales
         const riskLevel = this.resolveRiskLevel(criticalEvidence.length, warningEvidence.length);
         const riskScore = this.calculateRiskScore(evidence);
         const mainCause = this.resolveMainCause({ waterStress, heatStress, lowVigor, visualAnomaly });
 
+        /*
+            * Anomalías visuales
+        */
+        const visualAnomaly =
+            evidence.some(
+                item =>
+                    item.metric === "visualAnomaly" &&
+                    item.status === "WARNING"
+            ) ||
+            evidence.some(
+                item =>
+                    item.metric === "dryAreaDetected" &&
+                    item.status === "WARNING"
+            );
+        /*
+            * Mapping
+        */
+        const mappingRisk = evidence.some(
+            item =>
+                item.metric === "mappingRiskDetected" &&
+                item.status === "WARNING"
+        );
+        const riskLevel = this.resolveRiskLevel(
+            criticalEvidence.length,
+            warningEvidence.length,
+            mappingRisk
+        );
+        const mainCause = this.resolveMainCause({
+            waterStress,
+            heatStress,
+            lowVigor,
+            visualAnomaly
+        });
         return {
             mainCause,
             riskLevel,
@@ -61,24 +113,24 @@ export class EvidenceRiskService {
         };
     }
 
-    /*
-        * Define la severidad del riesgo basándose en el conteo de evidencias.
-        * Ajustable según la política de la empresa (ej: ¿cuántas advertencias equivalen a riesgo ALTO?).
-    */
-    private static resolveRiskLevel(criticalCount: number, warningCount: number): RiskLevel {
-        if (criticalCount >= 2 || warningCount >= 3) {
+    private static resolveRiskLevel(
+        criticalCount: number,
+        warningCount: number,
+        mappingRisk: boolean): RiskLevel {
+        let score = 0;
+        score += criticalCount * 2;
+        score += warningCount;
+        if (mappingRisk) {
+            score += 1;
+        }
+        if (score >= 4) {
             return "HIGH";
         }
-        if (criticalCount >= 1 || warningCount >= 1) {
+        if (score >= 1) {
             return "MEDIUM";
         }
         return "LOW";
     }
-
-    /*
-        * Jerarquización de causas: Determina cuál es el factor crítico prioritario.
-        * Nota: El orden de esta lista determina la prioridad de atención (ej: el agua se atiende primero).
-    */
     private static resolveMainCause(
         causes: {
             waterStress: boolean;
@@ -87,23 +139,33 @@ export class EvidenceRiskService {
             visualAnomaly: boolean;
         }
     ): MainCause {
-        if (causes.waterStress) return "WATER_STRESS";
-        if (causes.heatStress) return "HEAT_STRESS";
-        if (causes.lowVigor) return "LOW_VIGOR";
-        if (causes.visualAnomaly) return "VISUAL_ANOMALY";
+        /*
+            * Prioridad:
+            * Agua > Calor > Vigor > Visual
+        */
+
+        if (causes.waterStress) {
+            return "WATER_STRESS";
+        }
+        if (causes.heatStress) {
+            return "HEAT_STRESS";
+        }
+        if (causes.lowVigor) {
+            return "LOW_VIGOR";
+        }
+        if (causes.visualAnomaly) {
+            return "VISUAL_ANOMALY";
+        }
         return "NONE";
     }
 
-    /*
-        * Mapeo de acción prescriptiva: Entrega instrucciones claras basadas en la causa detectada.
-    */
     private static resolveRecommendation(cause: MainCause): string {
-        const actions: Record<MainCause, string> = {
-            WATER_STRESS: "Increase irrigation and inspect water distribution.",
-            HEAT_STRESS: "Monitor crop exposure and apply heat mitigation measures.",
-            LOW_VIGOR: "Inspect nutrition status and vegetation health.",
-            VISUAL_ANOMALY: "Perform field inspection to validate the anomaly.",
-            NONE: "Continue normal monitoring."
+        const actions: Record<MainCause,string> = {
+            WATER_STRESS:"Inspect irrigation coverage and verify soil moisture conditions.",
+            HEAT_STRESS:"Monitor temperature conditions and evaluate mitigation measures.",
+            LOW_VIGOR:"Inspect crop vigor and evaluate possible nutritional limitations.",
+            VISUAL_ANOMALY:"Perform a field inspection to validate the detected visual patterns.",
+            NONE:"Continue routine monitoring."
         };
         return actions[cause];
     }
@@ -125,7 +187,7 @@ export class EvidenceRiskService {
         return Math.max(0, score);
     }
 }
-
 //* Ediciones de este archivo
 // @luis-hdz7 el 28/6/2026 (creación y primera edición)
 // @luis-hdz7 el 29/06/2026 (realizando pequeños ajustes)
+// @luis-hdz7 el 03/07/2026
