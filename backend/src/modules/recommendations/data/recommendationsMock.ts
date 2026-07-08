@@ -6,8 +6,10 @@ import { generateRecommendations } from "../services/recommendationGenerationSer
 
 export const recommendationsMock =zoneInsightMock.flatMap(insight => {
         const alerts =generateAlerts(insight);
-        const cropProfile =cropProfilesMock.find(profile =>profile.cropType === insight.cropType);
-
+        const cropProfile =cropProfilesMock.find(profile => profile.cropType === insight.cropType)
+    ?? cropProfilesMock.find(
+        profile => profile.cropType === "GENERAL"
+    );
         return generateRecommendations(
             insight,
             alerts,

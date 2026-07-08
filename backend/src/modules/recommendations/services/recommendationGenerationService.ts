@@ -1,19 +1,29 @@
 import { ZoneInsight } from "../../analysis/types/zoneInsightTypes";
 import { CropProfile } from "../../crops/types/cropProfileTypes";
 import { AgriculturalAlert } from "../../alerts/types/alertsTypes";
-import {Recommendation,RecommendationPriority,ExpectedImpact} from "../types/recommendationTypes";
+import {
+    Recommendation,
+    RecommendationPriority,
+    ExpectedImpact
+} from "../types/recommendationTypes";
 
 /*
     * Convierte el nivel de riesgo en prioridad de recomendación.
- */
-function mapPriority(riskLevel: ZoneInsight["finalRiskLevel"]): RecommendationPriority {
+*/
+function mapPriority(
+    riskLevel: ZoneInsight["finalRiskLevel"]
+): RecommendationPriority {
+
     switch (riskLevel) {
-        case "CRITICAL":
-            return "URGENT";
+        /*case "CRITICAL":
+            return "URGENT";*/
+
         case "HIGH":
             return "HIGH";
+
         case "MEDIUM":
             return "MEDIUM";
+
         default:
             return "LOW";
     }
@@ -22,62 +32,104 @@ function mapPriority(riskLevel: ZoneInsight["finalRiskLevel"]): RecommendationPr
 /*
     * Define el impacto esperado según el tipo de alerta.
 */
-function getExpectedImpact(alertType: AgriculturalAlert["type"]): ExpectedImpact {
+function getExpectedImpact(
+    alertType: AgriculturalAlert["type"]
+): ExpectedImpact {
+
     switch (alertType) {
+
         case "WATER_STRESS":
             return {
                 impactArea: "WATER_SAVING",
-                description:"Reduce pérdidas por estrés hídrico y mejora la eficiencia del riego."
+                description:
+                    "Reduce the potential impact of water stress through timely irrigation adjustments."
             };
 
         case "LOW_VIGOR":
             return {
                 impactArea: "CROP_HEALTH",
-                description:"Favorece la recuperación del vigor y la estabilidad fisiológica del cultivo."
+                description:
+                    "Supports recovery of vegetation vigor through early intervention."
             };
 
         case "HEAT_STRESS":
             return {
                 impactArea: "YIELD_PROTECTION",
-                description:"Disminuye el impacto de temperaturas elevadas sobre el rendimiento."
+                description:
+                    "Helps reduce the potential effects of prolonged heat exposure."
             };
 
         case "VISUAL_ANOMALY":
             return {
                 impactArea: "DISEASE_PREVENTION",
-                description:"Permite detectar oportunamente problemas sanitarios o estructurales."
+                description:
+                    "Allows early validation of visual anomalies before they progress."
             };
 
         default:
             return {
                 impactArea: "CROP_HEALTH",
-                description:"Contribuye al mantenimiento general del cultivo."
+                description:
+                    "Supports continuous crop monitoring."
             };
     }
 }
 
 /*
     * Obtiene la acción sugerida.
-    * Si existe un CropProfile se usan sus plantillas.
-    * Si no existe, se utiliza la acción sugerida del insight.
+    * Si existe un CropProfile se utilizan sus plantillas.
+    * En caso contrario se utiliza la acción sugerida por ZoneInsight.
 */
 function resolveSuggestedAction(
     alert: AgriculturalAlert,
     insight: ZoneInsight,
-    cropProfile?: CropProfile): string {
+    cropProfile?: CropProfile
+): string {
 
     if (!cropProfile) {
         return insight.recommendedAction;
     }
+
     switch (alert.type) {
+
         case "WATER_STRESS":
             return cropProfile.recommendationTemplates.waterStress;
+
         case "LOW_VIGOR":
             return cropProfile.recommendationTemplates.lowVigor;
+
         case "VISUAL_ANOMALY":
             return cropProfile.recommendationTemplates.inspection;
+
         default:
             return insight.recommendedAction;
+    }
+}
+
+/*
+    * Construye la razón prescriptiva de la recomendación.
+*/
+function buildReason(
+    insight: ZoneInsight,
+    alert: AgriculturalAlert
+): string {
+
+    switch (alert.type) {
+
+        case "WATER_STRESS":
+            return "Available evidence suggests conditions compatible with water stress. Technical inspection is recommended.";
+
+        case "LOW_VIGOR":
+            return "Vegetation indicators suggest reduced crop vigor. Field verification is recommended.";
+
+        case "HEAT_STRESS":
+            return "Environmental indicators suggest possible heat stress affecting crop performance.";
+
+        case "VISUAL_ANOMALY":
+            return "Visual evidence indicates patterns requiring technical verification.";
+
+        default:
+            return insight.summary;
     }
 }
 
@@ -88,25 +140,43 @@ function resolveSuggestedAction(
 export function generateRecommendations(
     insight: ZoneInsight,
     alerts: AgriculturalAlert[],
-    cropProfile?: CropProfile): Recommendation[] {
+    cropProfile?: CropProfile
+): Recommendation[] {
 
     return alerts.map(alert => ({
+
         id: `rec-${Date.now()}-${Math.random()
             .toString(36)
             .slice(2, 8)}`,
+
         fieldId: insight.fieldId,
+
         zoneId: insight.zoneId,
+
         priority: mapPriority(insight.finalRiskLevel),
-        reason: alert.type === "LOW_VIGOR"? insight.mainCause: alert.message,suggestedAction: resolveSuggestedAction(
+
+        reason: buildReason(
+            insight,
+            alert
+        ),
+
+        suggestedAction: resolveSuggestedAction(
             alert,
             insight,
-            cropProfile),
+            cropProfile
+        ),
+
         expectedImpact: getExpectedImpact(alert.type),
+
         evidence: [...alert.evidence],
+
         createdAt: insight.generatedAt
+
     }));
 }
 
-
-//* Ediciones de este archivo
-// @luis-hdz7 el 01/7/2026 (creación y primera edición)
+/*
+    * Ediciones de este archivo
+*/
+// @luis-hdz7 el 01/07/2026 (creación y primera edición)
+// @luis-hdz7 el 08/07/2026 (alineación con arquitectura prescriptiva basada en ZoneInsight)
