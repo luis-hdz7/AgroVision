@@ -22,9 +22,12 @@ function toRiskLevel(severity: AgriculturalAlert["severity"]): RiskLevel {
 function adaptEvidence(insight: ZoneInsight): PrescriptiveEvidenceSummary[] {
   return insight.evidence.map((item, index) => ({
     id: `ev-${String(index + 1).padStart(3, "0")}`,
-    type: item.source,
-    value: item.value,
-    description: item.explanation,
+    source: item.source,
+    metric: item.metric,
+    value: item.value ?? null,
+    unit: item.unit ?? null,
+    status: item.status,
+    explanation: item.explanation,
     date: insight.generatedAt,
   }));
 }
@@ -94,8 +97,8 @@ export function getPrescriptiveReportByZone(zoneId: string): PrescriptiveFieldRe
   const evidenceLookup = new Map<string, string>();
 
   evidence.forEach((item) => {
-    evidenceLookup.set(`${item.type}:${item.value}:${item.description}`, item.id);
-    evidenceLookup.set(item.description, item.id);
+    evidenceLookup.set(`${item.source}:${item.value}:${item.explanation}`, item.id);
+    evidenceLookup.set(item.explanation, item.id);
   });
 
   return {
