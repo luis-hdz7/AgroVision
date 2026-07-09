@@ -1,101 +1,78 @@
-ideathon-demo-evidence-map.md
+# ideathon-demo-evidence-map
 
 Este documento explica qué evidencia se muestra durante la demo del ideathon
 y cómo cada tipo de evidencia sustenta la recomendación final entregada al
-agricultor para la zona crítica zone-A3 (campo field-001).
+agricultor para la zona crítica zone-03 (campo field-002).
 
 El objetivo es que cualquier persona del equipo (técnica o no técnica) entienda
 de un vistazo qué está viendo en pantalla y por qué el sistema llegó a esa
 recomendación.
 
+## 1. Zona afectada
 
-1. Evidencia visual
+Se destaca la zona `zone-03`, perteneciente al campo `field-002`, donde el riesgo
+prescriptivo muestra una afectación significativa del vigor vegetal y una anomalía
+foliar compatible con una plaga estructural en etapa inicial.
 
-Qué se muestra: una foto de campo capturada por el técnico, donde se observan
-hojas de café con manchas amarillo-anaranjadas, características de la roya.
+## 2. Evidencia visual
 
-Por qué importa: es la confirmación humana/visual del problema. Es el tipo
-de evidencia más fácil de entender para el agricultor, porque puede compararla
-directamente con lo que ve en su parcela.
+Qué se muestra: una foto de campo capturada por el rover, donde se observan
+hojas con clorosis moteada y defoliación parcial.
 
-Dato mock asociado: ev-001 en prescriptiveReportMock.ts.
+Por qué importa: confirma la observación humana y permite que el usuario del demo
+entienda el impacto visible en la parcela.
 
+Dato mock asociado: `fn-001` en `fieldNotebookMock.ts` y `ev-001` en `prescriptiveReportMock.ts`.
 
-2. Evidencia satelital simulada
+## 3. Evidencia satelital simulada
 
-Qué se muestra: un mapa NDVI (índice de vegetación) simulado que compara
-el estado actual de la zona contra el de hace 12 días, mostrando una caída
-de 0.78 a 0.52.
+Qué se muestra: un mapa GNDVI simulado que compara el estado actual de la zona
+con una referencia de 14 días atrás, mostrando una caída severa del vigor.
 
-Por qué importa: demuestra que el sistema puede detectar pérdida de vigor
-vegetal antes de que sea visible a simple vista en toda la parcela, usando
-datos de tipo satelital (en la demo, simulados).
+Por qué importa: demuestra que el sistema puede detectar pérdida de vegetación
+antes de que el problema se vea en toda la parcela, usando una señal satelital.
 
-Dato mock asociado: ev-002 en prescriptiveReportMock.ts.
+Dato mock asociado: `ev-002` en `prescriptiveReportMock.ts`.
 
+## 4. Evidencia de sensor
 
-3. Evidencia de sensor
+Qué se muestra: lectura de humedad de suelo del sector crítico, por debajo del
+umbral recomendado.
 
-Qué se muestra: lectura de un sensor de humedad de suelo físico ubicado en
-la zona, mostrando 18% de humedad durante 6 días consecutivos, por debajo del
-rango óptimo (35-45%).
+Por qué importa: valida la causa raíz de estrés hídrico y orienta la urgencia del
+riego complementario.
 
-Por qué importa: es el dato cuantitativo y objetivo que confirma la causa
-raíz (estrés hídrico) y permite calcular cuándo y cuánto regar.
+Dato mock asociado: `ev-003` en `prescriptiveReportMock.ts` y `fn-002` en `fieldNotebookMock.ts`.
 
-Dato mock asociado: ev-003 en prescriptiveReportMock.ts.
+## 5. Alerta activa
 
+Qué se muestra: una alerta priorizada que comunica el peligro actual en la zona.
 
-4. Evidencia climática
+Por qué importa: permite visualizar el problema en una sola capa y muestra el
+momento exacto en que el sistema decide actuar.
 
-Qué se muestra: datos de estación climática local: 0 mm de lluvia en 14
-días y temperatura 3°C por encima del promedio histórico para la fecha.
+Dato mock asociado: `AL-01` y `AL-02` en `prescriptiveReportMock.ts`.
 
-Por qué importa: da contexto externo (no controlable por el agricultor)
-que explica por qué la humedad del suelo bajó y por qué el riesgo aumenta si
-no se interviene pronto.
+## 6. Recomendación
 
-Dato mock asociado: ev-004 en prescriptiveReportMock.ts.
+Qué se muestra: una recomendación priorizada generada desde la alerta y la evidencia.
 
+Por qué importa: enlaza el diagnóstico con la acción esperada para el agricultor.
 
-5. Evidencia histórica
+Dato mock asociado: `REC-01` en `prescriptiveReportMock.ts`.
 
-Qué se muestra: un registro del cuaderno digital de campo que indica que
-esta misma zona tuvo un brote de roya similar hace 14 meses, bajo condiciones
-climáticas comparables.
+## 7. Acción tomada o pendiente
 
-Por qué importa: refuerza la confianza del sistema en el diagnóstico
-(no es la primera vez que pasa) y justifica actuar con mayor urgencia.
+Qué se muestra: el historial del cuaderno de campo que registra lo que ya se hizo
+(inspección, riego de emergencia) y lo que todavía está pendiente (revisión técnica).
 
-Dato mock asociado: ev-005 en prescriptiveReportMock.ts.
+Por qué importa: evidencia la trazabilidad del proceso y la transición de la alerta a la
+acción ejecutada o pendiente.
 
+Dato mock asociado: `fn-001`, `fn-002` y `fn-003` en `fieldNotebookMock.ts`.
 
-6. Acción recomendada
+## Flujo resumido para la demo
 
-Con base en las cinco evidencias anteriores, el sistema genera dos
-recomendaciones priorizadas para la zona zone-A3:
+ZoneInsight → Alertas → Recomendaciones → Cuaderno de campo → PrescriptiveFieldReport → Dashboard
 
-
-Riego suplementario de emergencia — sustentado por evidencia
-satelital, de sensor y climática (causa: estrés hídrico).
-Tratamiento fungicida focalizado contra roya — sustentado por
-evidencia visual e histórica (causa: brote de roya activo).
-
-
-Cada recomendación queda vinculada explícitamente a los IDs de evidencia que
-la sustentan (relatedEvidenceIds), de modo que en la demo se puede hacer
-clic en una recomendación y mostrar exactamente qué evidencia la respalda.
-
-Dato mock asociado: rec-201 y rec-202 en prescriptiveReportMock.ts.
-
-
-Flujo resumido para la demo
-
-ZoneInsight (Jorge) ──┐
-Alertas (Jorge) ───────┼──▶ buildPrescriptiveReport() ──▶ PrescriptiveFieldReport ──▶ Dashboard (Brandon)
-Recomendaciones (Jorge)┤
-Cuaderno de campo ─────┘
-
-La demo navega: Evidencia → Causa raíz → Riesgo → Recomendación → Acción,
-mostrando que cada paso está respaldado por datos concretos y no por una
-afirmación genérica.
+La demo navega: zona afectada → evidencia visual → evidencia satelital simulada → evidencia de sensor → alerta → recomendación → acción tomada o pendiente, mostrando que cada paso está respaldado por datos concretos y no por una afirmación genérica.
