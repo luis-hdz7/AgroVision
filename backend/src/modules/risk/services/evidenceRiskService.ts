@@ -27,12 +27,29 @@ export interface EvidenceRiskResult {
 }
 export class EvidenceRiskService {
     static evaluate(evidence: EvidenceItem[]): EvidenceRiskResult {
+        const lowVigor =evidence.some(
+                item =>item.metric === "ndvi" &&(item.status === "WARNING" ||item.status === "CRITICAL")) 
+                ||evidence.some(item =>item.metric === "gndvi" &&(item.status === "WARNING" ||item.status === "CRITICAL"));
         const criticalEvidence = evidence.filter(
             item => item.status === "CRITICAL"
         );
         const warningEvidence = evidence.filter(
             item => item.status === "WARNING"
         );
+        /*
+            * Anomalías visuales
+        */
+        const visualAnomaly =
+            evidence.some(
+                item =>
+                    item.metric === "visualAnomaly" &&
+                    item.status === "WARNING"
+            ) ||
+            evidence.some(
+                item =>
+                    item.metric === "dryAreaDetected" &&
+                    item.status === "WARNING"
+            );
 
         /*
             * Señales compatibles con estrés hídrico
@@ -66,24 +83,7 @@ export class EvidenceRiskService {
         */
 
         //* 3. Resolución de diagnósticos finales
-        const riskLevel = this.resolveRiskLevel(criticalEvidence.length, warningEvidence.length);
         const riskScore = this.calculateRiskScore(evidence);
-        const mainCause = this.resolveMainCause({ waterStress, heatStress, lowVigor, visualAnomaly });
-
-        /*
-            * Anomalías visuales
-        */
-        const visualAnomaly =
-            evidence.some(
-                item =>
-                    item.metric === "visualAnomaly" &&
-                    item.status === "WARNING"
-            ) ||
-            evidence.some(
-                item =>
-                    item.metric === "dryAreaDetected" &&
-                    item.status === "WARNING"
-            );
         /*
             * Mapping
         */
