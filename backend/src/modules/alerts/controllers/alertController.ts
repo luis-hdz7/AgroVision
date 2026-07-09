@@ -14,7 +14,7 @@ export class AlertController {
      */
 
 
-    public static getAllers(req: Request, res: Response): void {
+    public static getAllerts(req: Request, res: Response): void {
         try {
             const alerts = AlertService.getAllAlerts();
             res.status(200).json(ok(alerts, "Agricultural alerts loaded successfully"));

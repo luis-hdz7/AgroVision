@@ -5,7 +5,7 @@ const router = Router();
 
 router.get(
     "/",
-    AlertController.getAlerts
+    AlertController.getAllerts
 );
 
 export default router;
