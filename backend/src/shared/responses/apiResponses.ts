@@ -40,6 +40,6 @@ export function createApiResponse<T> (
         data,
         message,
         error,
-        timestamp: Date.now().toString(),
+        timestamp: new Date().toISOString(),
     }
 }
