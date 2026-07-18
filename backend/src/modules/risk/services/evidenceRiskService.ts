@@ -9,7 +9,7 @@
 */
 
 import { RiskLevel } from "../types/riskTypes";
-import { EvidenceItem } from "../../analysis/services/evidenceFusionService";
+import { EvidenceItem } from "../../analysis/types/evidenceTypes";
 
 export type MainCause =
     | "WATER_STRESS"
