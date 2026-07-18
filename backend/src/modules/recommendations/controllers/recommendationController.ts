@@ -15,8 +15,9 @@ export function getRecommendations(req: Request,res: Response): void {
         const recommendations = RecommendationService.getAllRecommendations();
 
         res.status(200).json(ok(recommendations, "Recommendations loaded successfully"));
-    } catch (error: any) {
-        res.status(500).json(fail(error.message || "Failed to load recommendations"));
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message: "Failed to load recommendations"
+        res.status(500).json(fail(message));
     }
 }
 
