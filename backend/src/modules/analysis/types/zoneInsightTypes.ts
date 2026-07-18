@@ -1,6 +1,6 @@
 import { CropType } from "../../crops/types/cropProfileTypes";
 import { RiskLevel } from "../../risk/types/riskTypes";
-import { EvidenceItem } from "../services/evidenceFusionService";
+import { EvidenceItem } from "./evidenceTypes";
 import { RiskAssessment } from "../../risk/types/riskTypes";
 /*
     * Contrato central del análisis prescriptivo.

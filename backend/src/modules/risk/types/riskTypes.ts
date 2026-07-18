@@ -1,4 +1,4 @@
-import { EvidenceItem } from "../../analysis/services/evidenceFusionService";
+import { EvidenceItem } from "../../analysis/types/evidenceTypes";
 import { CropType } from "../../crops/types/cropProfileTypes";
 /*
  * Tipos de datos para el diagnóstico agrícola

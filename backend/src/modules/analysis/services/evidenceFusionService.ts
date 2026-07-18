@@ -12,29 +12,7 @@
 */
 
 import {evaluateSoilMoisture,evaluateTemperature} from "../../risk/services/riskRulesService";
-
-export type EvidenceSource =
-    | "SENSOR"
-    | "VISION"
-    | "SATELLITE"
-    | "WEATHER"
-    | "HISTORY"
-    | "MAPPING";
-
-export type EvidenceStatus =
-    | "NORMAL"
-    | "WATCH"
-    | "WARNING"
-    | "CRITICAL";
-
-export interface EvidenceItem {
-    source: EvidenceSource;
-    metric: string;
-    value?: number | string | boolean | null;
-    unit?: string | null;
-    status: EvidenceStatus;
-    explanation: string;
-}
+import {EvidenceItem,EvidenceStatus,EvidenceSource} from "../types/evidenceTypes";
 
 export interface EvidenceFusionInput {
     // SENSOR
