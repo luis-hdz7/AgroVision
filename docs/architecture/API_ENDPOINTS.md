@@ -94,6 +94,14 @@ Este endpoint proporciona información satelital utilizada para evaluar vigor ve
     "timestamp": "2026-07-09T15:20:18.342Z"
 }
 ```
+### Uso en frontend
+
+Permite visualizar:
+
+- Estado de vegetación.
+- Indicadores NDVI, NDWI y GNDVI.
+- Detección temprana de anomalías.
+
 
 ### Módulo
 
@@ -137,6 +145,14 @@ Obtiene el análisis prescriptivo completo para una zona agrícola.
     "timestamp": "2026-07-09T15:20:18.342Z"
 }
 ```
+### Uso en frontend
+
+Permite:
+
+- Mostrar diagnóstico agrícola.
+- Identificar zonas críticas.
+- Generar alertas y recomendaciones.
+
 
 ### Módulo
 
@@ -270,6 +286,15 @@ Causa:
 Water stress
 ```
 
+### Uso en frontend
+
+Permite:
+
+- Mostrar riesgos activos.
+- Priorizar zonas críticas.
+- Mostrar evidencia del problema.
+- Presentar acciones recomendadas.
+
 ### Módulo
 
 Alerts
@@ -356,6 +381,14 @@ Acción:
 ```
 Inspect irrigation coverage and verify soil moisture conditions.
 ```
+### Uso en frontend
+
+Permite:
+
+- Mostrar acciones recomendadas.
+- Priorizar tareas agrícolas.
+- Explicar decisiones mediante evidencia.
+- Mostrar beneficios esperados.
 
 
 ### Módulo
