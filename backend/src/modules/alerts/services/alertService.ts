@@ -14,4 +14,16 @@ export class AlertService {
     public static getAllAlerts(): AgriculturalAlert[] {
         return alertsMock
     }
+    /**
+     * Filtrar las alertas pertenecientes a una zona específica.
+     */
+    public static getAlertsByZone(zoneId: string): AgriculturalAlert[] {
+        return this.getAllAlerts().filter(alert => alert.zoneId === zoneId);
+    }
+    /**
+     * Recupera únicamente las alertas de mayor prioridad (HIGH).
+     */
+    public static getCriticalAlerts(): AgriculturalAlert[] {
+        return this.getAllAlerts().filter(alert => alert.severity === "HIGH");
+    }
 }
