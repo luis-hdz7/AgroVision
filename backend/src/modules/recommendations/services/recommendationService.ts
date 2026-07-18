@@ -14,4 +14,10 @@ export class RecommendationService {
     public static getAllRecommendations(): Recommendation[] {
         return recommendationsMock;
     }
+    public static getRecommendationsByZone(zoneId: string): Recommendation[] {
+        return this.getAllRecommendations().filter(recommendation => recommendation.zoneId === zoneId);
+    }
+    public static getHighPriorityRecommendations(): Recommendation[] {
+        return this.getAllRecommendations().filter(recommendation => recommendation.priority === "HIGH" || recommendation.priority === "URGENT");
+    }
 }
