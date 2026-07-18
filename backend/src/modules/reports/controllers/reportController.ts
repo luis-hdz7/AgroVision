@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ok, fail } from "../../../shared/responses/apiResponses";
+import { ok, fail } from "../../../shared/responses/apiResponses"; //ok es una funcion que devuelve un objeto con el reporte prescriptivo y un mensaje de exito.
 import { getPrescriptiveReportByZone } from "../services/prescriptiveReportService";
 
 export function getPrescriptiveReport(req: Request, res: Response): void {
@@ -22,5 +22,3 @@ export function getPrescriptiveReport(req: Request, res: Response): void {
       ok(report, `Prescriptive report for zone ${zoneId} loaded successfully`),
     );
 }
-
-

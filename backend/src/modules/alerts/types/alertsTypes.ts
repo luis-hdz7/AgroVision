@@ -1,42 +1,39 @@
 import { RiskLevel } from "../../risk/types/riskTypes";
-import { EvidenceItem } from "../../analysis/types/evidenceTypes";
+import { EvidenceItem } from "../../analysis/types/evidenceTypes"; //se compuso el error de import, se cambio services/evidenceTypes por types/evidenceTypes.
 
 export type AlertType =
-    | "WATER_STRESS"
-    | "FUNGAL_RISK"
-    | "LOW_VIGOR"
-    | "VISUAL_ANOMALY"
-    | "HEAT_STRESS"
-    | "SYSTEM";
+  | "WATER_STRESS"
+  | "FUNGAL_RISK"
+  | "LOW_VIGOR"
+  | "VISUAL_ANOMALY"
+  | "HEAT_STRESS"
+  | "SYSTEM";
 
-export type AlertStatus =
-    | "ACTIVE"
-    | "RESOLVED"
-    | "IGNORED";
+export type AlertStatus = "ACTIVE" | "RESOLVED" | "IGNORED";
 
 /*
-    * Contrato prescriptivo de alerta.
-    * Cada alerta debe estar respaldada por evidencia multifuente
-    * proveniente del análisis de ZoneInsight.
-*/
+ * Contrato prescriptivo de alerta.
+ * Cada alerta debe estar respaldada por evidencia multifuente
+ * proveniente del análisis de ZoneInsight.
+ */
 export interface AgriculturalAlert {
-    id: string;
-    fieldId: string;
-    zoneId?: string | null;
+  id: string;
+  fieldId: string;
+  zoneId?: string | null;
 
-    type: AlertType;
+  type: AlertType;
 
-    severity: RiskLevel;
+  severity: RiskLevel;
 
-    title: string;
-    message: string;
+  title: string;
+  message: string;
 
-    evidence: EvidenceItem[];
+  evidence: EvidenceItem[];
 
-    recommendedAction: string;
+  recommendedAction: string;
 
-    status: AlertStatus;
+  status: AlertStatus;
 
-    createdAt: string;
-    resolvedAt?: string | null;
+  createdAt: string;
+  resolvedAt?: string | null;
 }
