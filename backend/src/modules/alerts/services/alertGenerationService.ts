@@ -1,21 +1,18 @@
 import { ZoneInsight } from "../../analysis/types/zoneInsightTypes";
 import { AgriculturalAlert, AlertType } from "../types/alertsTypes";
-import { RiskLevel } from "../../risk/types/riskTypes";
+import {EvidenceItem,EvidenceStatus} from "../../analysis/types/evidenceTypes";
 
 /*
-    * HELPER: Formatea el tipo de cultivo para mostrarlo de forma legible.
-    * Transforma 'RED_BEAN' -> 'RED BEAN' para una mejor UI.
-*/
+ * HELPER: Formatea el tipo de cultivo para mostrarlo de forma legible.
+ * Transforma "RED_BEAN" -> "RED BEAN".
+ */
 function getCropDisplayName(cropType: ZoneInsight["cropType"]): string {
     return cropType.replaceAll("_", " ");
 }
 
 /*
-    * HELPER: Mapea el nivel de riesgo del motor a una severidad de alerta.
-*/
-/*
-    * FACTORY: Construye una alerta estandarizada a partir del ZoneInsight.
-*/
+ * FACTORY: Construye una alerta estandarizada a partir del ZoneInsight.
+ */
 function createAlert(
     insight: ZoneInsight,
     type: AlertType,
@@ -38,36 +35,74 @@ function createAlert(
         status: "ACTIVE",
         createdAt: insight.generatedAt
     };
+
 }
 
 /*
-    * HELPER: Determina si la causa principal corresponde a estrés hídrico.
-*/
-function hasWaterStressCause(insight: ZoneInsight): boolean {
-    return insight.mainCause === "WATER_STRESS";
-}
+ * HELPER: Verifica si existe evidencia para una métrica determinada.
+ */
+function hasEvidence(
+    insight: ZoneInsight,
+    metric: string,
+    statuses: EvidenceItem["status"][] = ["WARNING", "CRITICAL"]
+): boolean {
 
-/*
-    * HELPER: Determina si la causa principal corresponde a estrés térmico.
-*/
-function hasHeatStressCause(insight: ZoneInsight): boolean {
-    return insight.mainCause === "HEAT_STRESS";
-}
-
-/*
-    * HELPER: Determina si la causa principal corresponde a bajo vigor.
-*/
-function hasLowVigor(insight: ZoneInsight): boolean {
-    return (
-        insight.mainCause === "LOW_VIGOR" ||
-        insight.healthScore <= 50
+    return insight.evidence.some(item =>
+        item.metric === metric &&
+        statuses.includes(item.status)
     );
+
+}
+/*
+ * HELPER: Riesgo compatible con estrés hídrico.
+ */
+function hasWaterStressEvidence(
+    insight: ZoneInsight
+): boolean {
+
+    return (
+        hasEvidence(insight, "soilMoisturePercentage") ||
+        hasEvidence(insight, "ndwi")
+    );
+
 }
 
 /*
-    * HELPER: Verifica si existe evidencia visual relevante.
-*/
-function hasVisualEvidence(insight: ZoneInsight): boolean {
+ * HELPER: Riesgo compatible con estrés térmico.
+ */
+function hasHeatStressEvidence(
+    insight: ZoneInsight
+): boolean {
+
+    return hasEvidence(
+        insight,
+        "temperatureCelsius"
+    );
+
+}
+
+/*
+ * HELPER: Evidencia de bajo vigor vegetal.
+ */
+function hasLowVigorEvidence(
+    insight: ZoneInsight
+): boolean {
+
+    return (
+        insight.healthScore <= 50 ||
+        hasEvidence(insight, "ndvi") ||
+        hasEvidence(insight, "gndvi")
+    );
+
+}
+
+/*
+ * HELPER: Evidencia visual relevante.
+ */
+function hasVisualEvidence(
+    insight: ZoneInsight
+): boolean {
+
     return insight.evidence.some(item =>
         item.source === "VISION" &&
         (
@@ -75,12 +110,13 @@ function hasVisualEvidence(insight: ZoneInsight): boolean {
             item.status === "CRITICAL"
         )
     );
+
 }
 
 /*
-    * SERVICIO PRINCIPAL
-    * Genera alertas prescriptivas respaldadas por evidencia multifuente.
-*/
+ * SERVICIO PRINCIPAL
+ * Genera alertas prescriptivas respaldadas por evidencia multifuente.
+ */
 export function generateAlerts(
     insight: ZoneInsight
 ): AgriculturalAlert[] {
@@ -90,24 +126,24 @@ export function generateAlerts(
     const cropName = getCropDisplayName(insight.cropType);
 
     /*
-        * 1. Bajo vigor vegetal
-    */
-    if (hasLowVigor(insight)) {
+     * 1. Bajo vigor vegetal
+     */
+    if (hasLowVigorEvidence(insight)) {
 
         alerts.push(
             createAlert(
                 insight,
                 "LOW_VIGOR",
                 "Reduced vegetation vigor",
-                `Available evidence suggests reduced vegetation vigor in ${cropName}. Technical field inspection is recommended.`
+                `Multiple vegetation indicators suggest reduced crop vigor in ${cropName}. Technical field verification is recommended to identify the underlying cause.`
             )
         );
 
     }
 
     /*
-        * 2. Anomalía visual
-    */
+     * 2. Anomalía visual
+     */
     if (hasVisualEvidence(insight)) {
 
         alerts.push(
@@ -115,49 +151,51 @@ export function generateAlerts(
                 insight,
                 "VISUAL_ANOMALY",
                 "Visual anomaly detected",
-                `Visual evidence suggests patterns requiring technical inspection in ${cropName}.`
+                `Visual inspection detected anomalies compatible with vegetation stress in ${cropName}. Field verification is recommended before applying corrective measures.`
             )
         );
 
     }
 
     /*
-        * 3. Estrés hídrico
-    */
-    if (hasWaterStressCause(insight)) {
+     * 3. Estrés hídrico
+     */
+    if (hasWaterStressEvidence(insight)) {
 
         alerts.push(
             createAlert(
                 insight,
                 "WATER_STRESS",
                 "Potential water stress",
-                "Available evidence suggests conditions compatible with water stress. Irrigation review and field verification are recommended."
+                "Low soil moisture and vegetation water indicators suggest conditions compatible with water stress. Irrigation infrastructure and field conditions should be verified."
             )
         );
 
     }
 
     /*
-        * 4. Estrés térmico
-    */
-    if (hasHeatStressCause(insight)) {
+     * 4. Estrés térmico
+     */
+    if (hasHeatStressEvidence(insight)) {
 
         alerts.push(
             createAlert(
                 insight,
                 "HEAT_STRESS",
                 "Potential heat stress",
-                "Environmental indicators suggest elevated temperature conditions. Continue monitoring and perform technical inspection if necessary."
+                "Elevated air temperature may increase crop stress and reduce vegetation performance. Continue monitoring environmental conditions and perform field verification if required."
             )
         );
 
     }
 
     return alerts;
+
 }
 
 /*
-    * Ediciones de este archivo
-*/
+ * Ediciones de este archivo
+ */
 // @luis-hdz7 el 30/06/2026 (creación y primera edición)
 // @luis-hdz7 el 08/07/2026 (refactorización para arquitectura prescriptiva basada en ZoneInsight y EvidenceItem)
+// @luis-hdz7 el 18/07/2026 (alineación de alertas con evidencia multifuente)

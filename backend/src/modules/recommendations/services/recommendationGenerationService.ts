@@ -15,8 +15,8 @@ function mapPriority(
 ): RecommendationPriority {
 
     switch (riskLevel) {
-        /*case "CRITICAL":
-            return "URGENT";*/
+        case "CRITICAL":
+            return "URGENT";
 
         case "HIGH":
             return "HIGH";
@@ -101,36 +101,21 @@ function resolveSuggestedAction(
         case "VISUAL_ANOMALY":
             return cropProfile.recommendationTemplates.inspection;
 
+        case "HEAT_STRESS":
+            return insight.recommendedAction;
+
         default:
             return insight.recommendedAction;
     }
 }
 
 /*
-    * Construye la razón prescriptiva de la recomendación.
-*/
-function buildReason(
-    insight: ZoneInsight,
-    alert: AgriculturalAlert
-): string {
-
-    switch (alert.type) {
-
-        case "WATER_STRESS":
-            return "Available evidence suggests conditions compatible with water stress. Technical inspection is recommended.";
-
-        case "LOW_VIGOR":
-            return "Vegetation indicators suggest reduced crop vigor. Field verification is recommended.";
-
-        case "HEAT_STRESS":
-            return "Environmental indicators suggest possible heat stress affecting crop performance.";
-
-        case "VISUAL_ANOMALY":
-            return "Visual evidence indicates patterns requiring technical verification.";
-
-        default:
-            return insight.summary;
-    }
+ * Construye la razón prescriptiva de la recomendación.
+ * Se reutiliza el análisis generado por ZoneInsight para
+ * mantener consistencia entre riesgo, alertas y recomendaciones.
+ */
+function buildReason(insight: ZoneInsight,_alert: AgriculturalAlert): string {
+    return `${insight.mainCause} ${insight.summary}`;
 }
 
 /*
@@ -163,7 +148,7 @@ export function generateRecommendations(
         suggestedAction: resolveSuggestedAction(
             alert,
             insight,
-            cropProfile
+            cropProfile,
         ),
 
         expectedImpact: getExpectedImpact(alert.type),
