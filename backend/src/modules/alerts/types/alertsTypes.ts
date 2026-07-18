@@ -1,5 +1,5 @@
 import { RiskLevel } from "../../risk/types/riskTypes";
-import { EvidenceItem } from "../../analysis/types/evidenceTypes";
+import { EvidenceItem } from "../../analysis/types/evidenceTypes"; //se compuso el error de import, se cambio services/evidenceTypes por types/evidenceTypes.
 
 export type AlertType =
   | "WATER_STRESS"
