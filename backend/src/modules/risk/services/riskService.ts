@@ -1,6 +1,7 @@
 import { buildRiskSummary } from "./riskSummaryService";
 import { CropHealthAnalysis } from "../types/riskTypes";
-
+import { RiskAssessment, RiskLevel } from "../types/riskTypes";
+import { ZoneInsight } from "../../analysis/types/zoneInsightTypes";
 export class RiskService {
     /*
      * Obtiene el resumen ejecutivo de riesgo para una parcela.
@@ -12,8 +13,38 @@ export class RiskService {
      *
      * @param fieldId Identificador único de la parcela.
      */
+
+    public static buildRiskAssessmentFromZoneInsight(insight: ZoneInsight): RiskAssessment {
+        return {
+            fieldId: insight.fieldId,
+            zoneId: insight.zoneId,
+            cropType: insight.cropType,
+            riskLevel: insight.finalRiskLevel,
+            riskScore: this.calculateRiskScore(insight.finalRiskLevel,insight.healthScore),
+            healthScore: insight.healthScore,
+            mainCause: insight.mainCause,
+            evidence: [...insight.evidence],
+            recommendedAction: insight.recommendedAction,
+            generatedAt: insight.generatedAt
+        };
+    }
+    private static calculateRiskScore(riskLevel: RiskLevel,healthScore: number): number {
+        const baseScores: Record<RiskLevel, number> = {
+            LOW: 25,
+            MEDIUM: 55,
+            HIGH: 80,
+            CRITICAL: 95
+        };
+        let score = baseScores[riskLevel];
+        // Ajuste ligero utilizando el healthScore.
+        if (healthScore < 40) {
+            score += 5;
+        } else if (healthScore > 85) {
+            score -= 5;
+        }
+        return Math.max(0, Math.min(100, score));
+    }
     public static getRiskByField(fieldId: string) {
-        //temporal mientras se conecta el motor real
         const analysis: CropHealthAnalysis = {
             cropId: "crop-001",
             fieldId,

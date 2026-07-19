@@ -7,7 +7,7 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "mi:test": "ts-node src/modules/analysis/testZoneInsight.ts",
+    "mi:test": "ts-node src/modules/analysis/data/x.ts",
     "field-report:test": "tsx src/modules/reports/services/fieldReportService.test.ts"
   },
   "keywords": [],
