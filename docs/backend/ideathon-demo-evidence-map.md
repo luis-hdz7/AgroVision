@@ -71,8 +71,20 @@ acción ejecutada o pendiente.
 
 Dato mock asociado: `fn-001`, `fn-002` y `fn-003` en `fieldNotebookMock.ts`.
 
+## 8. Relación con el reporte prescriptivo
+
+Qué se muestra: el cuaderno de campo permite demostrar cómo una inspección realizada,
+una acción tomada y una acción pendiente se relacionan con el reporte prescriptivo final
+para la zona `zone-03` del campo `field-002`.
+
+Por qué importa: conecta el historial operativo del campo con la narrativa del reporte,
+permitiendo explicar al usuario qué se observó, qué se hizo y qué sigue pendiente antes de
+consolidar la recomendación de negocio o técnica.
+
+Dato mock asociado: `fn-001` (inspección realizada), `fn-002` (acción tomada), `fn-003` (acción pendiente) y el flujo de `prescriptiveReportService`.
+
 ## Flujo resumido para la demo
 
 ZoneInsight → Alertas → Recomendaciones → Cuaderno de campo → PrescriptiveFieldReport → Dashboard
 
-La demo navega: zona afectada → evidencia visual → evidencia satelital simulada → evidencia de sensor → alerta → recomendación → acción tomada o pendiente, mostrando que cada paso está respaldado por datos concretos y no por una afirmación genérica.
+La demo navega: zona afectada → evidencia visual → evidencia satelital simulada → evidencia de sensor → alerta → recomendación → inspección realizada → acción tomada → acción pendiente → reporte prescriptivo, mostrando que cada paso está respaldado por datos concretos y no por una afirmación genérica.

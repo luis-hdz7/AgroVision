@@ -1,4 +1,4 @@
-import { EvidenceItem } from "../../analysis/services/evidenceFusionService";
+import { EvidenceItem } from "../../analysis/types/evidenceTypes";
 export type RecommendationPriority =
     | "LOW"
     | "MEDIUM"

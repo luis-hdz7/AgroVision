@@ -1,7 +1,7 @@
 import express, { Application, Request, Response } from "express";
 import { ok } from "./shared/responses/apiResponses";
 // Importaciones de rutas existentes
-import farmRoutes from "./modules/farms/routs/farmRoutes"
+import farmRoutes from "./modules/farms/routs/farmRoutes";
 import fieldRoutes from "./modules/fields/routes/fieldRoutes";
 //modulo de cultivos
 import cropProfileRoutes from "./modules/crops/routes/cropRoutes";
@@ -12,11 +12,12 @@ import { zoneAnalysisRouter } from "./modules/analysis/routes/zoneAnalysisRoutes
 import reportRoutes from "./modules/reports/routes/reportRoutes";
 //importacion de riesgos
 import riskRouter from "./modules/risk/routes/riskRoutes";
+import fieldNotebookRoutes from "./modules/field-notebook/routes/fieldNotebookRoutes";
 const app: Application = express();
 //*modulo de alerts
 import alertRoutes from "./modules/alerts/routes/alertRoutes";
 //*modulos de recommendations
-import recommendationsRoutes from "./modules/recommendations/routes/recommendationRoutes"
+import recommendationsRoutes from "./modules/recommendations/routes/recommendationRoutes";
 // Middlewares globales
 app.use(express.json());
 
@@ -30,8 +31,9 @@ app.use("/api/farms", farmRoutes);
 app.use("/api/fields", fieldRoutes);
 app.use("/api/crops", cropProfileRoutes);
 app.use("/api/alerts", alertRoutes);
-app.use("/api/recommendations", recommendationsRoutes)
+app.use("/api/recommendations", recommendationsRoutes);
 app.use("/api/reports", reportRoutes);
+app.use("/api/field-notebook", fieldNotebookRoutes);
 //nuevo modulo de riesgos
 app.use("/api/risk", riskRouter);
 
