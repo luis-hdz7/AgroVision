@@ -21,6 +21,12 @@ Indicador de vigor vegetal y actividad fotosintética.
 | 0.50 - 0.69 | Vigor moderado         | WATCH  |
 | >= 0.70     | Vegetación saludable   | LOW    |
 
+### Justificación Técnica
+
+El NDVI representa el nivel de actividad fotosintética y el vigor general de la vegetación. Valores bajos indican una disminución de biomasa activa y una menor capacidad del cultivo para mantener un crecimiento saludable.
+
+Un NDVI persistentemente bajo no constituye un diagnóstico definitivo por sí solo, pero incrementa el nivel de riesgo cuando coincide con evidencia adicional proveniente de sensores, índices de humedad, análisis visual o tendencias históricas.
+
 ### Acción Recomendada
 
 * Revisar disponibilidad hídrica.
@@ -40,6 +46,12 @@ Indicador de contenido hídrico de la cobertura vegetal.
 | 0.25 - 0.39 | Monitoreo recomendado                | WATCH  |
 | >= 0.40     | Disponibilidad hídrica adecuada      | LOW    |
 
+### Justificación Técnica
+
+El NDWI estima el contenido de agua presente en la cobertura vegetal. Valores bajos pueden indicar una reducción de la disponibilidad hídrica o un incremento del estrés por déficit de agua.
+
+Cuando un NDWI reducido coincide con baja humedad del suelo, temperaturas elevadas o una disminución del vigor vegetal, aumenta la confianza del análisis prescriptivo al sugerir la presencia de estrés hídrico.
+
 ### Acción Recomendada
 
 * Revisar sistema de riego.
@@ -58,6 +70,12 @@ Indicador relacionado con actividad clorofílica y estado nutricional.
 | 0.25 - 0.39 | Posible deterioro fisiológico              | MEDIUM |
 | 0.40 - 0.59 | Nivel aceptable con observación            | WATCH  |
 | >= 0.60     | Condición favorable                        | LOW    |
+
+### Justificación Técnica
+
+El GNDVI está relacionado con la actividad clorofílica y el estado fisiológico del cultivo. Valores bajos pueden reflejar una disminución en la capacidad fotosintética, deficiencias nutricionales o procesos de deterioro vegetal.
+
+Cuando este índice presenta valores reducidos junto con NDVI y NDWI bajos, refuerza la evidencia de pérdida de vigor del cultivo y aumenta el nivel de confianza del análisis.
 
 ### Acción Recomendada
 
@@ -79,7 +97,9 @@ Condiciones compatibles con deterioro significativo del cultivo.
 * GNDVI bajo.
 * Presencia de clorosis.
 * Tendencia negativa persistente.
+### Acción
 
+Inspección técnica prioritaria.
 ### Riesgo
 
 HIGH
