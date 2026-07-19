@@ -544,14 +544,18 @@ Recommendations
 
 # Resumen de Endpoints
 
-| Método | Endpoint                                    | Módulo          |
-| ------ | ------------------------------------------- | --------------- |
-| GET    | `/api/health`                               | Shared          |
-| GET    | `/api/vegetation/indices?fieldId=field-001` | Vegetation      |
-| GET    | `/api/analysis/zone/:zoneId`                | Analysis        |
-| GET    | `/api/risk/field/:fieldId`                  | Risk            |
-| GET    | `/api/alerts`                               | Alerts          |
-| GET    | `/api/recommendations`                      | Recommendations |
+| Método | Endpoint | Módulo |
+| ------- | -------- | ------- |
+| GET | `/api/health` | Shared |
+| GET | `/api/vegetation/indices?fieldId=field-001` | Vegetation |
+| GET | `/api/analysis/zone/:zoneId` | Analysis |
+| GET | `/api/risk/field/:fieldId` | Risk |
+| GET | `/api/alerts` | Alerts |
+| GET | `/api/recommendations` | Recommendations |
+| GET | `/api/reports/prescriptive/:zoneId` | Reports |
+| GET | `/api/field-notebook` | Field Notebook |
+| GET | `/api/field-notebook/zone/:zoneId` | Field Notebook |
+| GET | `/api/field-notebook/field/:fieldId` | Field Notebook |
 
 ---
 
@@ -564,6 +568,62 @@ Recommendations
 - AgriculturalAlert
 - Recommendation
 - EvidenceItem
+- PrescriptiveReport
+- FieldNotebookEntry
+
+
+---
+---
+
+# Reports
+
+## GET /api/reports/prescriptive/:zoneId
+
+### Descripción
+
+Obtiene el reporte prescriptivo generado para una zona agrícola específica. Este reporte consolida el análisis de riesgo, la evidencia recopilada y las acciones recomendadas para apoyar la toma de decisiones del productor.
+
+### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | ---- | ----------- |
+| zoneId | string | Identificador de la zona agrícola. Ejemplo: `zone-03` |
+
+### Response
+
+```json
+{
+  "success": true,
+  "data": {
+    "zoneId": "zone-03",
+    "fieldId": "field-002",
+    "cropType": "ORANGE",
+    "riskLevel": "HIGH",
+    "summary": "Multiple evidence sources indicate conditions compatible with water stress.",
+    "recommendedActions": [
+      "Inspect irrigation coverage",
+      "Verify soil moisture conditions"
+    ],
+    "generatedAt": "2026-07-03T12:10:00Z"
+  },
+  "message": "Prescriptive report for zone zone-03 loaded successfully",
+  "error": null,
+  "timestamp": "2026-07-19T00:00:00.000Z"
+}
+```
+
+### Uso en frontend
+
+Permite:
+
+- Mostrar el reporte agrícola completo.
+- Generar la vista de Reportes.
+- Presentar el resumen ejecutivo durante la demo.
+- Servir como base para exportación PDF.
+
+### Módulo
+
+Reports
 
 ---
 
@@ -573,4 +633,21 @@ Recommendations
 
 **Proyecto:** AgroVision Intelligence
 
+**Backend:** Express + TypeScript
+
+**Contrato global:** ApiResponse<T>
+
 **Última actualización:** Julio 2026
+
+Documentación actualizada para la integración de los módulos:
+
+- Health
+- Vegetation
+- Analysis
+- Risk
+- Alerts
+- Recommendations
+- Reports
+- Field Notebook
+
+Todos los endpoints documentados responden utilizando el contrato unificado `ApiResponse<T>`.
