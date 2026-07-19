@@ -107,13 +107,13 @@ export const zoneInsightMock: ZoneInsight[] = [
     ],
     mainCause:"Evidence suggests moderate reduction in vegetation performance.",
     summary:"Vegetation indices indicate reduced vigor compared to expected crop conditions. Further inspection is recommended.",
-    recommendedAction:"Inspect irrigation coverage and perform a field verification.",
+    recommendedAction:"Inspect irrigation infrastructure, validate soil moisture in the affected area and apply corrective irrigation if the field assessment confirms water deficit.",
     generatedAt: "2026-07-03T12:05:00Z"
     },
     {
     id: "ins-003",
     zoneId: "zone-03",
-    fieldId: "field-002",
+    fieldId: "field-001",
     cropType: "ORANGE",
     finalRiskLevel: "HIGH",
     healthScore: 35,
@@ -192,8 +192,8 @@ export const zoneInsightMock: ZoneInsight[] = [
             explanation: "Spatial analysis identified a potential risk area."
         }
     ],
-    mainCause:"Multiple sources indicate conditions compatible with water stress.",
-    summary:"Satellite, sensor and environmental evidence suggest conditions compatible with water stress. The zone should be prioritized for irrigation review and field inspection. Final risk level: HIGH.",
+    mainCause:"Multiple evidence sources indicate severe vegetation deterioration associated with water stress and reduced canopy vigor.",
+    summary:"Satellite vegetation indices, soil moisture measurements, weather conditions and visual inspection consistently indicate severe vegetation deterioration compatible with water stress. Immediate field verification is recommended.",
     recommendedAction:"Inspect irrigation coverage and verify soil moisture conditions.",
     generatedAt: "2026-07-03T12:10:00Z"
 }

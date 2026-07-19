@@ -59,6 +59,7 @@ Shared
 ### Descripción
 
 Obtiene el historial de índices de vegetación correspondientes a una parcela específica.
+Este endpoint proporciona información satelital utilizada para evaluar vigor vegetal, disponibilidad de agua y detección de anomalías.
 
 ### Parámetros
 
@@ -93,6 +94,14 @@ Obtiene el historial de índices de vegetación correspondientes a una parcela e
   "timestamp": "2026-07-09T15:20:18.342Z"
 }
 ```
+
+### Uso en frontend
+
+Permite visualizar:
+
+- Estado de vegetación.
+- Indicadores NDVI, NDWI y GNDVI.
+- Detección temprana de anomalías.
 
 ### Módulo
 
@@ -136,6 +145,14 @@ Obtiene el análisis prescriptivo completo para una zona agrícola.
   "timestamp": "2026-07-09T15:20:18.342Z"
 }
 ```
+
+### Uso en frontend
+
+Permite:
+
+- Mostrar diagnóstico agrícola.
+- Identificar zonas críticas.
+- Generar alertas y recomendaciones.
 
 ### Módulo
 
@@ -200,24 +217,84 @@ Obtiene todas las alertas activas del sistema.
   "success": true,
   "data": [
     {
-      "id": "alert-001",
-      "fieldId": "field-001",
-      "zoneId": "zone-01",
-      "type": "LOW_VIGOR",
+      "id": "alert-003",
+      "fieldId": "field-002",
+      "zoneId": "zone-03",
+      "type": "WATER_STRESS",
       "severity": "HIGH",
-      "title": "Low vegetation vigor detected",
-      "message": "Vegetation health has decreased.",
-      "evidence": [],
-      "recommendedAction": "Inspect crop health.",
+      "title": "High agricultural risk detected",
+      "message": "Multiple sources indicate conditions compatible with water stress.",
+      "evidence": [
+        {
+          "source": "SENSOR",
+          "metric": "soilMoisturePercentage",
+          "value": 28,
+          "unit": "%",
+          "status": "CRITICAL",
+          "explanation": "Critical soil moisture deficit detected."
+        }
+      ],
+      "recommendedAction": "Inspect irrigation coverage and verify soil moisture conditions.",
       "status": "ACTIVE",
-      "createdAt": "2026-07-09T15:20:18.342Z"
+      "createdAt": "2026-07-03T12:10:00Z"
     }
   ],
-  "message": "Alerts retrieved successfully",
+  "message": "Agricultural alerts loaded successfully",
   "error": null,
   "timestamp": "2026-07-09T15:20:18.342Z"
 }
 ```
+
+### Campos principales
+
+| Campo             | Tipo           | Descripción              |
+| ----------------- | -------------- | ------------------------ |
+| id                | string         | Identificador de alerta  |
+| fieldId           | string         | Parcela asociada         |
+| zoneId            | string         | Zona agrícola asociada   |
+| type              | string         | Tipo de alerta           |
+| severity          | RiskLevel      | Nivel de riesgo          |
+| title             | string         | Nombre de la alerta      |
+| message           | string         | Descripción del problema |
+| evidence          | EvidenceItem[] | Evidencia asociada       |
+| recommendedAction | string         | Acción recomendada       |
+| status            | string         | Estado de la alerta      |
+| createdAt         | string         | Fecha de creación        |
+
+### Caso principal de demostración
+
+Zona:
+
+```
+zone-03
+```
+
+Cultivo:
+
+```
+ORANGE
+```
+
+Riesgo:
+
+```
+HIGH
+```
+
+Causa:
+
+```
+Water stress
+```
+
+### Uso en frontend
+
+Permite:
+
+- Mostrar riesgos activos.
+- Priorizar zonas críticas.
+- Mostrar evidencia del problema.
+- Presentar acciones recomendadas.
 
 ### Módulo
 
@@ -382,25 +459,82 @@ Obtiene las recomendaciones prescriptivas generadas por el sistema.
   "success": true,
   "data": [
     {
-      "id": "rec-001",
-      "fieldId": "field-001",
-      "zoneId": "zone-01",
+      "id": "rec-003",
+      "fieldId": "field-002",
+      "zoneId": "zone-03",
       "priority": "HIGH",
-      "reason": "Water stress detected.",
-      "suggestedAction": "Increase irrigation.",
+      "reason": "Multiple sources indicate conditions compatible with water stress.",
+      "suggestedAction": "Inspect irrigation coverage and verify soil moisture conditions.",
       "expectedImpact": {
-        "impactArea": "WATER_SAVING",
-        "description": "Reduce water stress."
+        "impactArea": "CROP_HEALTH",
+        "description": "Reduce crop stress and recover vegetation health."
       },
-      "evidence": [],
+      "evidence": [
+        {
+          "source": "SATELLITE",
+          "metric": "ndvi",
+          "value": 0.24,
+          "status": "CRITICAL",
+          "explanation": "Very low vegetation vigor detected."
+        }
+      ],
       "createdAt": "2026-07-09T15:20:18.342Z"
     }
   ],
-  "message": "Recommendations retrieved successfully",
+  "message": "Recommendations loaded successfully",
   "error": null,
   "timestamp": "2026-07-09T15:20:18.342Z"
 }
 ```
+
+### Campos principales
+
+| Campo           | Tipo                   | Descripción                    |
+| --------------- | ---------------------- | ------------------------------ |
+| id              | string                 | Identificador de recomendación |
+| fieldId         | string                 | Parcela asociada               |
+| zoneId          | string                 | Zona donde aplica              |
+| priority        | RecommendationPriority | Prioridad de ejecución         |
+| reason          | string                 | Motivo basado en evidencia     |
+| suggestedAction | string                 | Acción propuesta               |
+| expectedImpact  | ExpectedImpact         | Impacto esperado               |
+| evidence        | EvidenceItem[]         | Evidencia utilizada            |
+| createdAt       | string                 | Fecha de creación              |
+
+### Caso principal de demostración
+
+Zona:
+
+```
+zone-03
+```
+
+Cultivo:
+
+```
+ORANGE
+```
+
+Situación:
+
+```
+Water stress
+```
+
+Acción:
+
+```
+Inspect irrigation coverage and verify soil moisture conditions.
+```
+
+### Uso en frontend
+
+Permite:
+
+- Mostrar acciones recomendadas.
+- Priorizar tareas agrícolas.
+- Explicar decisiones mediante evidencia.
+- Mostrar beneficios esperados.
 
 ### Módulo
 

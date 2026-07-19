@@ -226,6 +226,48 @@ Evidencia preliminar compatible con déficit hídrico localizado.
 Validación visual y revisión de cobertura de riego.
 
 ---
+---
+
+# Regla Integrada de Deterioro de Vegetación
+
+## Condiciones
+
+Las siguientes condiciones deben evaluarse de manera conjunta:
+
+- NDVI clasificado como **LOW**.
+- NDWI clasificado como **LOW**.
+- GNDVI clasificado como **LOW**.
+
+Cuando esta combinación esté respaldada por evidencia adicional (por ejemplo, humedad del suelo reducida, anomalías visuales o tendencia histórica negativa), el motor prescriptivo deberá considerar que existe una alta probabilidad de deterioro de la vegetación.
+
+### Interpretación
+
+La coincidencia de índices bajos de vigor vegetal (NDVI), contenido hídrico (NDWI) y actividad clorofílica (GNDVI) representa evidencia consistente de reducción del desempeño fisiológico del cultivo.
+
+Estas señales no constituyen un diagnóstico definitivo, pero incrementan el nivel de confianza del análisis cuando son corroboradas mediante evidencia multifuente.
+
+### Riesgo Estimado
+
+**HIGH**
+
+### Evidencia Complementaria
+
+La confianza del análisis aumenta cuando además se detecta una o más de las siguientes condiciones:
+
+- Humedad del suelo clasificada como **WARNING** o **CRITICAL**.
+- Temperatura elevada.
+- Anomalías visuales compatibles con estrés vegetal.
+- Tendencia histórica negativa de la vegetación.
+- Riesgo espacial identificado mediante análisis de mapeo.
+
+### Acción Recomendada
+
+- Priorizar inspección técnica en campo.
+- Verificar cobertura y funcionamiento del sistema de riego.
+- Confirmar la humedad del suelo mediante mediciones locales.
+- Aplicar medidas correctivas únicamente después de validar la evidencia obtenida en campo.
+
+---
 
 # Consideraciones
 
