@@ -107,7 +107,8 @@ export const zoneInsightMock: ZoneInsight[] = [
     ],
     mainCause:"Evidence suggests moderate reduction in vegetation performance.",
     summary:"Vegetation indices indicate reduced vigor compared to expected crop conditions. Further inspection is recommended.",
-    recommendedAction:"Inspect irrigation infrastructure, validate soil moisture in the affected area and apply corrective irrigation if the field assessment confirms water deficit.",
+    recommendedAction:
+    "Immediately inspect irrigation coverage, validate soil moisture in the affected zone and apply corrective irrigation if water deficit is confirmed. Schedule a follow-up inspection after corrective actions.",
     generatedAt: "2026-07-03T12:05:00Z"
     },
     {
@@ -193,7 +194,7 @@ export const zoneInsightMock: ZoneInsight[] = [
         }
     ],
     mainCause:"Multiple evidence sources indicate severe vegetation deterioration associated with water stress and reduced canopy vigor.",
-    summary:"Satellite vegetation indices, soil moisture measurements, weather conditions and visual inspection consistently indicate severe vegetation deterioration compatible with water stress. Immediate field verification is recommended.",
+    summary:"Multiple evidence sources consistently indicate severe vegetation deterioration associated with water stress. Immediate field inspection and corrective irrigation assessment are recommended to prevent further crop decline.",
     recommendedAction:"Inspect irrigation coverage and verify soil moisture conditions.",
     generatedAt: "2026-07-03T12:10:00Z"
 }

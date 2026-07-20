@@ -1,87 +1,119 @@
 import { PrescriptiveFieldReport } from "../types/prescriptiveReportTypes";
 
-//mock es un reporte prescriptivo de ejemplo para pruebas y desarrollo, basada en la estructura de prescriptiveReportTypes, y son datos ficticios
+// Mock de reporte prescriptivo alineado con el caso oficial de la demo:
+// field-001 -> zone-03 -> ORANGE
 
 export const prescriptiveReportMock: PrescriptiveFieldReport = {
-  fieldId: "FIELD-001",
-  zoneId: "ZONE-NORTH-01",
+  fieldId: "field-001",
+  zoneId: "zone-03",
   cropType: "ORANGE",
-  healthScore: 62,
+  healthScore: 35,
   finalRiskLevel: "HIGH",
-  mainCause: "Estres hidrico",
+  mainCause:
+    "Multiple evidence sources indicate severe vegetation deterioration associated with water stress and reduced canopy vigor.",
 
-  // Evidencias — forma adaptada de ZoneInsight.evidence[] (type, value, description)
   evidence: [
     {
       id: "EV-01",
       source: "SATELLITE",
       metric: "ndvi",
-      value: 0.52,
+      value: 0.24,
       unit: null,
-      status: "WARNING",
-      explanation:
-        "Las imágenes satelitales muestran pérdida de vigor en la vegetación.",
-      date: "2026-06-28T10:57:00Z",
+      status: "CRITICAL",
+      explanation: "Very low vegetation vigor detected.",
+      date: "2026-07-03T12:10:00Z",
     },
     {
       id: "EV-02",
-      source: "SENSOR",
-      metric: "soilMoisturePercentage",
-      value: 18,
-      unit: "%",
+      source: "SATELLITE",
+      metric: "ndwi",
+      value: 0.12,
+      unit: null,
       status: "CRITICAL",
-      explanation:
-        "Los sensores reportan humedad del suelo inferior al nivel recomendado",
-      date: "2026-06-29T08:00:00Z",
+      explanation: "Very low canopy water content detected.",
+      date: "2026-07-03T12:10:00Z",
     },
     {
       id: "EV-03",
-      source: "WEATHER",
-      metric: "rainfall",
-      value: 0,
-      unit: "mmm",
-      status: "WARNING",
-      explanation:
-        "No se registran precipitaciones importantes durante los ultimos 12 dias",
-      date: "2026-06-29T10:57:00Z",
+      source: "SATELLITE",
+      metric: "gndvi",
+      value: 0.22,
+      unit: null,
+      status: "CRITICAL",
+      explanation: "Severe reduction in chlorophyll activity detected.",
+      date: "2026-07-03T12:10:00Z",
     },
     {
       id: "EV-04",
+      source: "SENSOR",
+      metric: "soilMoisturePercentage",
+      value: 28,
+      unit: "%",
+      status: "CRITICAL",
+      explanation: "Critical soil moisture deficit detected.",
+      date: "2026-07-03T12:10:00Z",
+    },
+    {
+      id: "EV-05",
+      source: "WEATHER",
+      metric: "temperatureCelsius",
+      value: 38,
+      unit: "°C",
+      status: "WARNING",
+      explanation: "Elevated temperature may increase crop stress.",
+      date: "2026-07-03T12:10:00Z",
+    },
+    {
+      id: "EV-06",
       source: "HISTORY",
-      metric: "historicalPattern",
-      value: "Evento similar: hace 10 meses",
-      unit: null,
-      status: "WATCH",
-      explanation:
-        "Esta zona presento estres hidrico similar hace 10 meses bajo condiciones comparables",
-      date: "2026-06-25T00:00:00Z",
+      metric: "vegetationTrend",
+      value: -35,
+      unit: "%",
+      status: "WARNING",
+      explanation: "Negative vegetation trend detected.",
+      date: "2026-07-03T12:10:00Z",
     },
   ],
 
-  // Alertas — severity reemplaza a level (coincide con AgriculturalAlert.severity, RiskLevel)
   activeAlerts: [
     {
       id: "AL-01",
-      zoneId: "ZONE-NORTH-01",
+      zoneId: "zone-03",
       severity: "HIGH",
-      message: "Estres hidrico critico.",
+      message:
+        "Multiple vegetation indicators suggest severe loss of crop vigor.",
     },
     {
       id: "AL-02",
-      zoneId: "ZONE-NORTH-01",
-      severity: "MEDIUM",
-      message: "Posible aparicion de enfermedad foliar.",
+      zoneId: "zone-03",
+      severity: "HIGH",
+      message:
+        "Critical soil moisture deficit indicates potential water stress.",
+    },
+    {
+      id: "AL-03",
+      zoneId: "zone-03",
+      severity: "HIGH",
+      message:
+        "Elevated temperature may intensify vegetation stress conditions.",
     },
   ],
 
-  // Recomendaciones — relatedEvidenceIds vincula con evidence[] para trazabilidad
   recommendations: [
     {
       id: "REC-01",
-      zoneId: "ZONE-NORTH-01",
-      recommendation: "Aplicar riego suplementario en la zona norte",
+      zoneId: "zone-03",
+      recommendation:
+        "Inspect irrigation coverage, validate soil moisture conditions and apply corrective irrigation if water deficit is confirmed.",
       priority: "HIGH",
-      relatedEvidenceIds: ["EV-01", "EV-02", "EV-03"],
+      relatedEvidenceIds: [
+        "EV-01",
+        "EV-02",
+        "EV-03",
+        "EV-04",
+        "EV-05",
+        "EV-06",
+      ],
     },
   ],
 
@@ -90,11 +122,12 @@ export const prescriptiveReportMock: PrescriptiveFieldReport = {
   pendingActions: [
     {
       id: "PEND-01",
-      description: "Programar riego suplementario en sector norte",
-      dueDate: "2026-07-02T00:00:00Z",
+      description:
+        "Perform immediate field inspection in zone-03 and execute corrective irrigation if required.",
+      dueDate: "2026-07-04T00:00:00Z",
       priority: "HIGH",
     },
   ],
 
-  createdAt: "2026-06-29T11:00:00Z",
+  createdAt: "2026-07-03T12:10:00Z",
 };

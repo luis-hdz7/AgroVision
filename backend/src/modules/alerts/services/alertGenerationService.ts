@@ -1,6 +1,6 @@
 import { ZoneInsight } from "../../analysis/types/zoneInsightTypes";
 import { AgriculturalAlert, AlertType } from "../types/alertsTypes";
-import {EvidenceItem,EvidenceStatus} from "../../analysis/types/evidenceTypes";
+import {EvidenceItem} from "../../analysis/types/evidenceTypes";
 
 /*
  * HELPER: Formatea el tipo de cultivo para mostrarlo de forma legible.
@@ -23,7 +23,7 @@ function createAlert(
     const cropName = getCropDisplayName(insight.cropType);
 
     return {
-        id: `alert-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        id: `alert-${insight.zoneId}-${type.toLowerCase()}`,
         fieldId: insight.fieldId,
         zoneId: insight.zoneId,
         type,

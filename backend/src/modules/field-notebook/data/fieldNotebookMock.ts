@@ -3,12 +3,12 @@ import { FieldNotebookEntry } from "../types/fieldNotebookTypes";
 export const fieldNotebookMock: FieldNotebookEntry[] = [
   {
     id: "fn-001",
-    fieldId: "field-002",
+    fieldId: "field-001",
     zoneId: "zone-03",
     cropId: "crop-orange-01",
     activityType: "INSPECTION",
     description: "Inspección visual inicial de la zona afectada.",
-    problemObserved: "Defoliación y clorosis moteada en el sector central.",
+    problemObserved: "Visual inspection confirmed dry canopy sections and chlorosis symptoms consistent with severe water stress.",
     actionTaken:
       "Se documentó evidencia visual y se aisló el sector para revisión técnica inmediata.",
     responsibleUser: "Sofía Vega",
@@ -27,7 +27,7 @@ export const fieldNotebookMock: FieldNotebookEntry[] = [
   },
   {
     id: "fn-002",
-    fieldId: "field-002",
+    fieldId: "field-001",
     zoneId: "zone-03",
     cropId: "crop-orange-01",
     activityType: "IRRIGATION",
@@ -50,7 +50,7 @@ export const fieldNotebookMock: FieldNotebookEntry[] = [
   },
   {
     id: "fn-003",
-    fieldId: "field-002",
+    fieldId: "field-001",
     zoneId: "zone-03",
     cropId: "crop-orange-01",
     activityType: "INSPECTION",

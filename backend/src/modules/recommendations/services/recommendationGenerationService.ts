@@ -130,16 +130,10 @@ export function generateRecommendations(
 
     return alerts.map(alert => ({
 
-        id: `rec-${Date.now()}-${Math.random()
-            .toString(36)
-            .slice(2, 8)}`,
-
+        id: `rec-${insight.zoneId}-${alert.type.toLowerCase()}`,
         fieldId: insight.fieldId,
-
         zoneId: insight.zoneId,
-
         priority: mapPriority(insight.finalRiskLevel),
-
         reason: buildReason(
             insight,
             alert
