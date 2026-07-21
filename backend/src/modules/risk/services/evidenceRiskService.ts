@@ -9,7 +9,7 @@
 */
 
 import { RiskLevel } from "../types/riskTypes";
-import { EvidenceItem } from "../../analysis/services/evidenceFusionService";
+import { EvidenceItem } from "../../analysis/types/evidenceTypes";
 
 export type MainCause =
     | "WATER_STRESS"
@@ -21,17 +21,35 @@ export type MainCause =
 export interface EvidenceRiskResult {
     mainCause: MainCause;
     riskLevel: RiskLevel;
+    riskScore: number;
     criticalEvidence: EvidenceItem[];
     recommendedAction: string;
 }
 export class EvidenceRiskService {
     static evaluate(evidence: EvidenceItem[]): EvidenceRiskResult {
+        const lowVigor =evidence.some(
+                item =>item.metric === "ndvi" &&(item.status === "WARNING" ||item.status === "CRITICAL")) 
+                ||evidence.some(item =>item.metric === "gndvi" &&(item.status === "WARNING" ||item.status === "CRITICAL"));
         const criticalEvidence = evidence.filter(
             item => item.status === "CRITICAL"
         );
         const warningEvidence = evidence.filter(
             item => item.status === "WARNING"
         );
+        /*
+            * Anomalías visuales
+        */
+        const visualAnomaly =
+            evidence.some(
+                item =>
+                    item.metric === "visualAnomaly" &&
+                    item.status === "WARNING"
+            ) ||
+            evidence.some(
+                item =>
+                    item.metric === "dryAreaDetected" &&
+                    item.status === "WARNING"
+            );
 
         /*
             * Señales compatibles con estrés hídrico
@@ -64,38 +82,8 @@ export class EvidenceRiskService {
             * Bajo vigor vegetal
         */
 
-        const lowVigor =evidence.some(
-                item =>
-                    item.metric === "ndvi" &&
-                    (item.status === "WARNING" ||
-                        item.status === "CRITICAL")
-            ) ||
-            evidence.some(
-                item =>
-                    item.metric === "gndvi" &&
-                    (item.status === "WARNING" ||
-                        item.status === "CRITICAL")
-            ) ||
-            evidence.some(
-                item =>
-                    item.metric === "chlorosisDetected" &&
-                    item.status === "WARNING"
-            );
-
-        /*
-            * Anomalías visuales
-        */
-        const visualAnomaly =
-            evidence.some(
-                item =>
-                    item.metric === "visualAnomaly" &&
-                    item.status === "WARNING"
-            ) ||
-            evidence.some(
-                item =>
-                    item.metric === "dryAreaDetected" &&
-                    item.status === "WARNING"
-            );
+        //* 3. Resolución de diagnósticos finales
+        const riskScore = this.calculateRiskScore(evidence);
         /*
             * Mapping
         */
@@ -118,11 +106,10 @@ export class EvidenceRiskService {
         return {
             mainCause,
             riskLevel,
-            criticalEvidence:
-                criticalEvidence.length > 0
-                    ? criticalEvidence
-                    : warningEvidence,
-            recommendedAction:this.resolveRecommendation(mainCause)
+            riskScore,
+            // Fallback: si no hay críticas, pasamos las advertencias para que el dashboard no quede vacío
+            criticalEvidence: criticalEvidence.length > 0 ? criticalEvidence : warningEvidence,
+            recommendedAction: this.resolveRecommendation(mainCause)
         };
     }
 
@@ -181,6 +168,23 @@ export class EvidenceRiskService {
             NONE:"Continue routine monitoring."
         };
         return actions[cause];
+    }
+    private static calculateRiskScore(evidence: EvidenceItem[]): number {
+        let score = 100;
+        for (const item of evidence) {
+            switch (item.status) {
+                case "WATCH":
+                    score -= 10;
+                    break;
+                case "WARNING":
+                    score -= 20;
+                    break;
+                case "CRITICAL":
+                    score -= 35;
+                    break;
+            }
+        }
+        return Math.max(0, score);
     }
 }
 //* Ediciones de este archivo

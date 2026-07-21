@@ -47,7 +47,7 @@ export function evaluateSoilMoisture(value:number):RuleResult{
 
             recommendation:"Monitor irrigation schedule",
 
-            penalty:RISK_PENALTIES.soilMoisture.watch
+            penalty:RISK_PENALTIES.soilMoisture.warning
         };}
     if(value<=threshold.watch){
         return{
@@ -58,7 +58,7 @@ export function evaluateSoilMoisture(value:number):RuleResult{
                 unit:"%",
                 status:"WATCH",
                 explanation:"Soil moisture should be monitored"},
-            penalty:RISK_PENALTIES.soilMoisture.warning
+            penalty:RISK_PENALTIES.soilMoisture.watch
         };
     }
     return{

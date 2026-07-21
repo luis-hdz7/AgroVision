@@ -1,7 +1,7 @@
-import { Router, Request, Response } from "express";
+import { Router } from "express";
 import { getAllSnapshots,getVegetationHistory,getVegetationIndices } from "../controllers/vegetationController";
-import { ZoneInsightService } from "../types/services/zoneInsightService";
-import { ok } from "../../../shared/responses/apiResponses";
+//import { ZoneInsightService } from "../types/services/zoneInsightService";
+//import { ok } from "../../../shared/responses/apiResponses";
 
 const router = Router();
 

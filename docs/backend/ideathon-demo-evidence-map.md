@@ -1,101 +1,194 @@
-ideathon-demo-evidence-map.md
+# ideathon-demo-evidence-map
 
-Este documento explica qué evidencia se muestra durante la demo del ideathon
-y cómo cada tipo de evidencia sustenta la recomendación final entregada al
-agricultor para la zona crítica zone-A3 (campo field-001).
+Este documento describe el caso oficial utilizado durante la demostración del ideathon y explica cómo cada fuente de evidencia respalda el análisis prescriptivo y la recomendación final entregada al productor.
 
-El objetivo es que cualquier persona del equipo (técnica o no técnica) entienda
-de un vistazo qué está viendo en pantalla y por qué el sistema llegó a esa
-recomendación.
+La demo utiliza un único flujo de extremo a extremo para garantizar consistencia entre análisis, alertas, recomendaciones, cuaderno de campo y reporte prescriptivo.
 
+## Caso oficial de la demo
 
-1. Evidencia visual
+- **Campo:** `field-001`
+- **Zona:** `zone-03`
+- **Cultivo:** `ORANGE`
+- **Nivel de riesgo:** `HIGH`
 
-Qué se muestra: una foto de campo capturada por el técnico, donde se observan
-hojas de café con manchas amarillo-anaranjadas, características de la roya.
+El objetivo es que cualquier integrante del equipo (técnico o no técnico) pueda comprender fácilmente qué información se presenta durante la demostración y cómo el sistema llega a la recomendación final.
 
-Por qué importa: es la confirmación humana/visual del problema. Es el tipo
-de evidencia más fácil de entender para el agricultor, porque puede compararla
-directamente con lo que ve en su parcela.
+---
 
-Dato mock asociado: ev-001 en prescriptiveReportMock.ts.
+## 1. Zona afectada
 
+La demostración se centra en la zona `zone-03`, perteneciente al campo `field-001`.
 
-2. Evidencia satelital simulada
+El análisis prescriptivo identifica un **riesgo HIGH**, respaldado por múltiples fuentes de evidencia que indican un deterioro severo del vigor vegetal asociado principalmente a estrés hídrico.
 
-Qué se muestra: un mapa NDVI (índice de vegetación) simulado que compara
-el estado actual de la zona contra el de hace 12 días, mostrando una caída
-de 0.78 a 0.52.
+---
 
-Por qué importa: demuestra que el sistema puede detectar pérdida de vigor
-vegetal antes de que sea visible a simple vista en toda la parcela, usando
-datos de tipo satelital (en la demo, simulados).
+## 2. Evidencia visual
 
-Dato mock asociado: ev-002 en prescriptiveReportMock.ts.
+**Qué se muestra**
 
+Imágenes capturadas durante la inspección de campo donde se observan áreas secas, clorosis y pérdida de vigor en la vegetación.
 
-3. Evidencia de sensor
+**Por qué importa**
 
-Qué se muestra: lectura de un sensor de humedad de suelo físico ubicado en
-la zona, mostrando 18% de humedad durante 6 días consecutivos, por debajo del
-rango óptimo (35-45%).
+Permite validar visualmente los síntomas detectados por los demás sistemas de monitoreo y facilita la interpretación del problema por parte del usuario.
 
-Por qué importa: es el dato cuantitativo y objetivo que confirma la causa
-raíz (estrés hídrico) y permite calcular cuándo y cuánto regar.
+**Datos asociados**
 
-Dato mock asociado: ev-003 en prescriptiveReportMock.ts.
+- `fn-001` en `fieldNotebookMock.ts`
+- Evidencia visual en `zoneInsightMock.ts`
 
+---
 
-4. Evidencia climática
+## 3. Evidencia satelital simulada
 
-Qué se muestra: datos de estación climática local: 0 mm de lluvia en 14
-días y temperatura 3°C por encima del promedio histórico para la fecha.
+**Qué se muestra**
 
-Por qué importa: da contexto externo (no controlable por el agricultor)
-que explica por qué la humedad del suelo bajó y por qué el riesgo aumenta si
-no se interviene pronto.
+Índices de vegetación simulados (NDVI, NDWI y GNDVI) que evidencian una disminución significativa del vigor y del contenido de agua en la vegetación.
 
-Dato mock asociado: ev-004 en prescriptiveReportMock.ts.
+**Por qué importa**
 
+Demuestra cómo AgroVision puede detectar deterioro del cultivo mediante análisis remoto antes de que el problema afecte completamente la parcela.
 
-5. Evidencia histórica
+**Datos asociados**
 
-Qué se muestra: un registro del cuaderno digital de campo que indica que
-esta misma zona tuvo un brote de roya similar hace 14 meses, bajo condiciones
-climáticas comparables.
+- Evidencias satelitales en `zoneInsightMock.ts`
+- `EV-01`, `EV-02` y `EV-03` en `prescriptiveReportMock.ts`
 
-Por qué importa: refuerza la confianza del sistema en el diagnóstico
-(no es la primera vez que pasa) y justifica actuar con mayor urgencia.
+---
 
-Dato mock asociado: ev-005 en prescriptiveReportMock.ts.
+## 4. Evidencia de sensores
 
+**Qué se muestra**
 
-6. Acción recomendada
+Lecturas de humedad del suelo inferiores al rango recomendado y temperatura elevada.
 
-Con base en las cinco evidencias anteriores, el sistema genera dos
-recomendaciones priorizadas para la zona zone-A3:
+**Por qué importa**
 
+Confirma que las condiciones ambientales son compatibles con un escenario de estrés hídrico y justifican una intervención prioritaria.
 
-Riego suplementario de emergencia — sustentado por evidencia
-satelital, de sensor y climática (causa: estrés hídrico).
-Tratamiento fungicida focalizado contra roya — sustentado por
-evidencia visual e histórica (causa: brote de roya activo).
+**Datos asociados**
 
+- `fn-002` en `fieldNotebookMock.ts`
+- `EV-04` y `EV-05` en `prescriptiveReportMock.ts`
 
-Cada recomendación queda vinculada explícitamente a los IDs de evidencia que
-la sustentan (relatedEvidenceIds), de modo que en la demo se puede hacer
-clic en una recomendación y mostrar exactamente qué evidencia la respalda.
+---
 
-Dato mock asociado: rec-201 y rec-202 en prescriptiveReportMock.ts.
+## 5. Alertas activas
 
+**Qué se muestra**
 
-Flujo resumido para la demo
+Alertas generadas automáticamente a partir del análisis de evidencia multifuente.
 
-ZoneInsight (Jorge) ──┐
-Alertas (Jorge) ───────┼──▶ buildPrescriptiveReport() ──▶ PrescriptiveFieldReport ──▶ Dashboard (Brandon)
-Recomendaciones (Jorge)┤
-Cuaderno de campo ─────┘
+Entre ellas:
 
-La demo navega: Evidencia → Causa raíz → Riesgo → Recomendación → Acción,
-mostrando que cada paso está respaldado por datos concretos y no por una
-afirmación genérica.
+- Bajo vigor vegetal.
+- Estrés hídrico.
+- Estrés térmico.
+
+**Por qué importa**
+
+Permiten comunicar rápidamente el nivel de riesgo y priorizar la atención de la zona afectada.
+
+**Datos asociados**
+
+- Alertas generadas desde `alertGenerationService.ts`
+- `activeAlerts` en `prescriptiveReportMock.ts`
+
+---
+
+## 6. Recomendación prescriptiva
+
+**Qué se muestra**
+
+Una recomendación priorizada basada en la evidencia recopilada.
+
+**Por qué importa**
+
+Convierte el diagnóstico técnico en una acción concreta para el productor.
+
+**Acción recomendada**
+
+- Verificar la cobertura del sistema de riego.
+- Validar las condiciones de humedad del suelo.
+- Aplicar riego correctivo si se confirma déficit hídrico.
+- Programar una inspección de seguimiento.
+
+**Datos asociados**
+
+- `recommendationsMock.ts`
+- `REC-01` en `prescriptiveReportMock.ts`
+
+---
+
+## 7. Cuaderno de campo
+
+**Qué se muestra**
+
+El historial operativo de la zona, incluyendo:
+
+- inspección realizada;
+- riego de emergencia;
+- inspección técnica pendiente.
+
+**Por qué importa**
+
+Demuestra la trazabilidad entre la detección del problema y las acciones ejecutadas o planificadas.
+
+**Datos asociados**
+
+- `fn-001`
+- `fn-002`
+- `fn-003`
+
+---
+
+## 8. Relación con el reporte prescriptivo
+
+El reporte prescriptivo consolida toda la información proveniente de:
+
+- ZoneInsight;
+- evidencia multifuente;
+- alertas;
+- recomendaciones;
+- cuaderno de campo.
+
+Esto permite explicar claramente:
+
+- qué ocurrió;
+- por qué ocurrió;
+- qué evidencia respalda el diagnóstico;
+- qué acciones deben ejecutarse.
+
+**Datos asociados**
+
+- `prescriptiveReportService.ts`
+- `prescriptiveReportMock.ts`
+
+---
+
+# Flujo oficial de la demo
+
+```
+ZoneInsight
+      ↓
+Evidence Fusion
+      ↓
+Alerts
+      ↓
+Recommendations
+      ↓
+Field Notebook
+      ↓
+Prescriptive Field Report
+      ↓
+Dashboard
+```
+
+La demostración sigue un único caso de principio a fin utilizando:
+
+- `field-001`
+- `zone-03`
+- `ORANGE`
+
+garantizando que todas las pantallas, reportes y recomendaciones correspondan al mismo escenario y mantengan coherencia entre los distintos módulos del sistema.

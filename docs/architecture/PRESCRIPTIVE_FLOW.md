@@ -1,24 +1,23 @@
 # PRESCRIPTIVE_FLOW.md
 
+# Prescriptive Flow
+
 ## Objetivo
 
-Describir el flujo utilizado por AgroVision para transformar datos agrícolas heterogéneos en recomendaciones accionables para productores y técnicos.
+Describir el flujo utilizado por AgroVision para transformar datos agrícolas heterogéneos en información prescriptiva que apoye la toma de decisiones.
 
 El objetivo principal es convertir:
 
-**Evidencia → Causa → Riesgo → Acción Recomendada**
+**Evidencia → Evaluación de Riesgo → ZoneInsight → Alertas → Recomendaciones**
 
 ---
 
 # Arquitectura General
 
 ```text
-SATELLITE
-VISION
-SENSOR
-WEATHER
-HISTORY
-MAPPING
+RiskEngine
+        ↓
+CropHealthAnalysis
         ↓
 EvidenceFusionService
         ↓
@@ -26,18 +25,38 @@ EvidenceItem[]
         ↓
 EvidenceRiskService
         ↓
-Main Cause
-Risk Level
-Recommended Action
+RiskAssessment
         ↓
 ZoneInsightService
         ↓
 ZoneInsight
-        ↓
-Alerts
-Recommendations
-Dashboard
+        ├──────────────► AlertGenerationService
+        │                      ↓
+        │               AgriculturalAlert[]
+        │
+        └──────────────► RecommendationGenerationService
+                               ↓
+                        Recommendation[]
+                               ↓
+                           Dashboard
 ```
+
+---
+
+# Flujo de Información
+
+El sistema integra información proveniente de múltiples fuentes para construir una evaluación de riesgo explicable.
+
+Fuentes utilizadas:
+
+- SATELLITE
+- SENSOR
+- WEATHER
+- VISION
+- HISTORY
+- MAPPING
+
+Cada fuente aporta evidencia específica que posteriormente es normalizada y analizada.
 
 ---
 
@@ -47,28 +66,28 @@ Dashboard
 
 Proporciona índices espectrales:
 
-* NDVI
-* NDWI
-* GNDVI
+- NDVI
+- NDWI
+- GNDVI
 
 Objetivo:
 
-* Evaluar vigor vegetal.
-* Detectar reducción de disponibilidad hídrica.
-* Identificar cambios fisiológicos.
+- Evaluar vigor vegetal.
+- Detectar reducción de disponibilidad hídrica.
+- Identificar cambios fisiológicos.
 
 ---
 
 ## SENSOR
 
-Proporciona información de campo:
+Proporciona:
 
-* Humedad de suelo.
+- Soil Moisture
 
 Objetivo:
 
-* Detectar déficit hídrico.
-* Corroborar evidencia satelital.
+- Detectar déficit hídrico.
+- Corroborar evidencia satelital.
 
 ---
 
@@ -76,12 +95,12 @@ Objetivo:
 
 Proporciona:
 
-* Temperatura ambiental.
+- Temperatura ambiental.
 
 Objetivo:
 
-* Detectar condiciones compatibles con estrés térmico.
-* Complementar análisis de disponibilidad hídrica.
+- Detectar condiciones compatibles con estrés térmico.
+- Complementar el análisis ambiental.
 
 ---
 
@@ -89,14 +108,14 @@ Objetivo:
 
 Proporciona:
 
-* VisualAnomalyDetected
-* DryAreaDetected
-* ChlorosisDetected
+- Visual Anomaly
+- Dry Area Detected
+- Chlorosis Detected
 
 Objetivo:
 
-* Validar patrones observables.
-* Reforzar evidencia satelital.
+- Detectar patrones visibles.
+- Reforzar la evidencia obtenida por sensores e imágenes satelitales.
 
 ---
 
@@ -104,12 +123,12 @@ Objetivo:
 
 Proporciona:
 
-* VegetationTrend
+- Vegetation Trend
 
 Objetivo:
 
-* Analizar evolución temporal.
-* Detectar deterioros progresivos.
+- Analizar la evolución temporal del cultivo.
+- Detectar deterioros progresivos.
 
 ---
 
@@ -117,11 +136,11 @@ Objetivo:
 
 Proporciona:
 
-* MappingRiskDetected
+- Mapping Risk Detected
 
 Objetivo:
 
-* Identificar riesgos espaciales localizados.
+- Identificar riesgos espaciales localizados.
 
 ---
 
@@ -133,7 +152,7 @@ Responsable:
 
 Objetivo:
 
-Normalizar todas las fuentes en una estructura común.
+Normalizar toda la información proveniente de diferentes fuentes en una estructura común (`EvidenceItem`).
 
 Ejemplo:
 
@@ -149,7 +168,7 @@ Ejemplo:
 
 ---
 
-# Risk Interpretation
+# Risk Assessment
 
 Responsable:
 
@@ -157,27 +176,30 @@ Responsable:
 
 Objetivo:
 
-Transformar evidencia técnica en información accionable.
+Interpretar la evidencia disponible y construir una evaluación prescriptiva reutilizable para el resto del sistema.
 
-Resultados:
+El resultado se representa mediante el contrato:
 
-* Main Cause
-* Risk Level
-* Recommended Action
+`RiskAssessment`
 
-Ejemplo:
+Incluye:
 
-```text
-NDWI bajo
-+
-Humedad baja
-↓
-WATER_STRESS
-```
+- fieldId
+- zoneId
+- cropType
+- riskLevel
+- riskScore
+- healthScore
+- mainCause
+- evidence
+- recommendedAction
+- generatedAt
+
+Este contrato centraliza la interpretación del riesgo y evita recalcular información en otros módulos.
 
 ---
 
-# Zone Insight Generation
+# Zone Insight
 
 Responsable:
 
@@ -185,16 +207,58 @@ Responsable:
 
 Objetivo:
 
-Construir un resumen ejecutivo entendible para dashboard y reportes.
+Transformar un `RiskAssessment` en un resumen ejecutivo para el dashboard.
+
+Este servicio **no recalcula el riesgo**, únicamente adapta la información para facilitar su interpretación.
 
 Genera:
 
-* finalRiskLevel
-* healthScore
-* mainCause
-* summary
-* recommendedAction
-* evidence
+- finalRiskLevel
+- healthScore
+- mainCause
+- summary
+- recommendedAction
+- evidence
+
+---
+
+# Alert Generation
+
+Responsable:
+
+`AlertGenerationService`
+
+Objetivo:
+
+Generar alertas agrícolas utilizando la información proveniente de `ZoneInsight`.
+
+Cada alerta contiene:
+
+- tipo
+- severidad
+- mensaje
+- evidencia
+- acción recomendada
+
+---
+
+# Recommendation Generation
+
+Responsable:
+
+`RecommendationGenerationService`
+
+Objetivo:
+
+Generar recomendaciones priorizadas basadas en la evidencia disponible y el nivel de riesgo identificado.
+
+Cada recomendación incluye:
+
+- razón
+- acción sugerida
+- prioridad
+- impacto esperado
+- evidencia utilizada
 
 ---
 
@@ -202,41 +266,60 @@ Genera:
 
 ## Caso 1 — Zona Sana
 
-### Resultado Esperado
+Resultado esperado:
 
-* Riesgo LOW
-* Sin anomalías relevantes
-* Monitoreo rutinario
+- Riesgo LOW
+- Sin anomalías relevantes
+- Monitoreo rutinario
 
 ---
 
 ## Caso 2 — Zona en Observación
 
-### Resultado Esperado
+Resultado esperado:
 
-* Riesgo MEDIUM
-* Reducción moderada de vigor
-* Seguimiento reforzado
+- Riesgo MEDIUM
+- Reducción moderada del vigor vegetal
+- Seguimiento reforzado
 
 ---
 
 ## Caso 3 — Zona Crítica
 
-### Resultado Esperado
+Resultado esperado:
 
-* Riesgo HIGH
-* Evidencia multifuente compatible con estrés hídrico
-* Inspección prioritaria
+- Riesgo HIGH
+- Evidencia multifuente compatible con estrés hídrico
+- Inspección prioritaria en campo
 
 ---
 
-# Ejemplo ZoneInsight
+# Ejemplo de RiskAssessment
+
+```json
+{
+  "fieldId": "field-002",
+  "zoneId": "zone-03",
+  "cropType": "ORANGE",
+  "riskLevel": "HIGH",
+  "riskScore": 35,
+  "healthScore": 35,
+  "mainCause": "WATER_STRESS",
+  "recommendedAction": "Inspect irrigation coverage and verify soil moisture conditions."
+}
+```
+
+---
+
+# Ejemplo de ZoneInsight
 
 ```json
 {
   "zoneId": "zone-03",
   "finalRiskLevel": "HIGH",
+  "healthScore": 35,
   "mainCause": "WATER_STRESS",
+  "summary": "Multiple evidence sources suggest conditions compatible with water stress.",
   "recommendedAction": "Inspect irrigation coverage and verify soil moisture conditions."
 }
 ```
@@ -245,22 +328,32 @@ Genera:
 
 # Principios de Diseño
 
-* No generar diagnósticos definitivos.
-* Priorizar explicabilidad.
-* Utilizar evidencia defendible.
-* Mantener trazabilidad de cada decisión.
-* Facilitar interpretación para dashboard y reportes.
+- No generar diagnósticos definitivos.
+- Basar cada interpretación en evidencia disponible.
+- Mantener trazabilidad entre evidencia y decisión.
+- Evitar duplicación de lógica entre servicios.
+- Utilizar `RiskAssessment` como contrato central de integración.
+- Facilitar la interpretación para dashboard y reportes.
+
+---
+
+# Consideraciones
+
+Las salidas generadas representan una interpretación prescriptiva basada en la evidencia disponible.
+
+Los resultados describen riesgos estimados y señales compatibles con posibles condiciones del cultivo, por lo que las acciones propuestas deben considerarse recomendaciones de apoyo para la toma de decisiones y pueden requerir inspección técnica en campo.
 
 ---
 
 # Resultado Esperado
 
-Cada ZoneInsight debe proporcionar:
+Cada evaluación debe proporcionar:
 
 1. Evidencia identificable.
-2. Causa principal.
-3. Nivel de riesgo.
-4. Acción concreta.
-5. Resumen comprensible para usuario final.
+2. Evaluación de riesgo consistente.
+3. Causa principal.
+4. Resumen ejecutivo para el usuario.
+5. Alertas respaldadas por evidencia.
+6. Recomendaciones accionables.
 
-De esta manera AgroVision transforma datos agrícolas complejos en decisiones operativas comprensibles y accionables.
+De esta manera AgroVision transforma datos agrícolas provenientes de múltiples fuentes en decisiones operativas comprensibles, trazables y defendibles.

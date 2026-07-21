@@ -1,7 +1,4 @@
-import { EvidenceItem } from "../../analysis/types/zoneInsightTypes";
-/*
-    * Nivel de prioridad de una recomendación.
-*/
+import { EvidenceItem } from "../../analysis/types/evidenceTypes";
 export type RecommendationPriority =
     | "LOW"
     | "MEDIUM"
