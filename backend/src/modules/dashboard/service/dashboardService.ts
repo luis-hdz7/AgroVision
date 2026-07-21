@@ -6,10 +6,15 @@ import { DashboardSummary } from "../types/dashboardTypes";
 
 export class DashboardService {
     public static getDashboardSummary(): DashboardSummary {
+        //analisis prescriptivo de la zona principal
         const insight = zoneInsightMock.find(zone => zone.zoneId === "zone-03");
+        //alerta de zona critica
         const alert = alertsMock.find(alert => alert.zoneId === "zone-03");
+        //recomendacion prscriptiva
         const recommendation = recommendationsMock.find(recommendation => recommendation.zoneId === "zone-03");
+        //reporte
         const report = getPrescriptiveReportByZone("zone-03");
+        //resumen reutilizando la informacion disponible del reporte
         const prescriptiveSummary = `Main cause: ${report?.mainCause}.` + `${report?.recommendations.length ?? 0} recommendation(s) generated`;
 
         if (!insight || !alert || !recommendation || !report) {
