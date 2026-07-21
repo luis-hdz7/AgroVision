@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./frontend/src/assets/logos/logoPrincipal-AgroVision.png" alt="AgroVision Intelligence Logo" width="180" />
+  <img src="frontend/src/assets/logos/imagotipo-V-clara.svg" alt="AgroVision Intelligence Logo" width="180" />
 </p>
 
 <h1 align="center">🌱 AgroVision Intelligence</h1>
@@ -36,7 +36,6 @@
 </p>
 
 ---
-<p align="center">...logo...</p>
 
 
 **Tabla de Contenidos**
