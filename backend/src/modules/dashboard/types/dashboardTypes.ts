@@ -12,6 +12,6 @@ export interface DashboardSummary {
     readonly prescriptiveSummary: string;
     readonly mainAlert: AgriculturalAlert;
     readonly mainRecommendation: Recommendation;
-    readonly evidence: EvidenceItem[];
+    readonly evidence: readonly EvidenceItem[];
     readonly generatedAt: string;
 }
