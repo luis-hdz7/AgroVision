@@ -337,6 +337,28 @@ Resultado esperado:
 
 ---
 
+# Dashboard Summary
+
+## Responsable
+
+DashboardService
+
+## Objetivo
+
+Construir un resumen ejecutivo reutilizando la información generada por los módulos prescriptivos existentes.
+
+El Dashboard no recalcula el riesgo. Selecciona automáticamente:
+
+- la zona más crítica;
+- el riesgo dominante;
+- la evidencia principal;
+- la alerta activa más relevante;
+- la recomendación de mayor prioridad.
+
+Toda la información presentada proviene de ZoneInsight, AlertGenerationService y RecommendationGenerationService, garantizando trazabilidad entre la evidencia y la decisión mostrada al usuario.
+
+El resumen prescriptivo resume la situación de la zona crítica y proporciona una visión rápida para apoyar la toma de decisiones sin sustituir una inspección técnica en campo.
+
 # Consideraciones
 
 Las salidas generadas representan una interpretación prescriptiva basada en la evidencia disponible.

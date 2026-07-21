@@ -10,7 +10,7 @@ export const prescriptiveReportMock: PrescriptiveFieldReport = {
   healthScore: 35,
   finalRiskLevel: "HIGH",
   mainCause:
-    "Multiple evidence sources indicate severe vegetation deterioration associated with water stress and reduced canopy vigor.",
+    "Multiple evidence sources indicate severe vegetation deterioration associated with water stress and reduced canopy vigor. Critical soil moisture deficit and reduced vegetation indices support this assessment. Immediate inspection of irrigation coverage and soil moisture conditions is recommended.",
 
   evidence: [
     {
