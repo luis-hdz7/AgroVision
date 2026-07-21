@@ -556,6 +556,7 @@ Recommendations
 | GET | `/api/field-notebook` | Field Notebook |
 | GET | `/api/field-notebook/zone/:zoneId` | Field Notebook |
 | GET | `/api/field-notebook/field/:fieldId` | Field Notebook |
+| GET | `/api/dashboard/summary` | Dashboard |
 
 ---
 
@@ -627,6 +628,328 @@ Reports
 
 ---
 
+# Dashboard
+
+## GET /api/dashboard/summary
+
+### Descripción
+
+Obtiene un resumen prescriptivo consolidado para el Dashboard principal de AgroVision Intelligence.
+
+El endpoint integra información proveniente del análisis de zonas, alertas agrícolas, recomendaciones prescriptivas y el reporte generado para presentar un único resumen listo para ser consumido por el frontend.
+
+### Parámetros
+
+| Nombre | Tipo | Descripción |
+| ------- | ---- | ----------- |
+| Ninguno | - | El endpoint retorna automáticamente el caso de demostración correspondiente a `field-001` y `zone-03`. |
+
+### Response
+
+```json
+{
+  "success": true,
+  "data": {
+    "fieldId": "field-001",
+    "criticalZoneId": "zone-03",
+    "dominantRiskLevel": "HIGH",
+    "healthScore": 35,
+    "mainCause": "Multiple evidence sources indicate severe vegetation deterioration associated with water stress and reduced canopy vigor.",
+    "prescriptiveSummary": "Main cause: Multiple evidence sources indicate severe vegetation deterioration associated with water stress and reduced canopy vigor..4 recommendation(s) generated",
+    "mainAlert": {
+      "id": "alert-zone-03-low_vigor",
+      "fieldId": "field-001",
+      "zoneId": "zone-03",
+      "type": "LOW_VIGOR",
+      "severity": "HIGH",
+      "title": "Reduced vegetation vigor (ORANGE)",
+      "message": "Multiple vegetation indicators suggest reduced crop vigor in ORANGE. Technical field verification is recommended to identify the underlying cause.",
+      "evidence": [
+        {
+          "source": "SENSOR",
+          "metric": "soilMoisturePercentage",
+          "value": 28,
+          "unit": "%",
+          "status": "CRITICAL",
+          "explanation": "Critical soil moisture deficit detected."
+        },
+        {
+          "source": "WEATHER",
+          "metric": "temperatureCelsius",
+          "value": 38,
+          "unit": "°C",
+          "status": "WARNING",
+          "explanation": "Elevated temperature may increase crop stress."
+        },
+        {
+          "source": "SATELLITE",
+          "metric": "ndvi",
+          "value": 0.24,
+          "status": "CRITICAL",
+          "explanation": "Very low vegetation vigor detected."
+        },
+        {
+          "source": "SATELLITE",
+          "metric": "ndwi",
+          "value": 0.12,
+          "status": "CRITICAL",
+          "explanation": "Very low canopy water content detected."
+        },
+        {
+          "source": "SATELLITE",
+          "metric": "gndvi",
+          "value": 0.22,
+          "status": "CRITICAL",
+          "explanation": "Severe reduction in chlorophyll activity detected."
+        },
+        {
+          "source": "VISION",
+          "metric": "visualAnomaly",
+          "value": true,
+          "status": "WARNING",
+          "explanation": "Visual anomaly detected."
+        },
+        {
+          "source": "VISION",
+          "metric": "dryAreaDetected",
+          "value": true,
+          "status": "WARNING",
+          "explanation": "Dry area patterns detected during visual inspection."
+        },
+        {
+          "source": "VISION",
+          "metric": "chlorosisDetected",
+          "value": true,
+          "status": "WARNING",
+          "explanation": "Visual signs compatible with chlorosis were detected."
+        },
+        {
+          "source": "HISTORY",
+          "metric": "vegetationTrend",
+          "value": -35,
+          "unit": "%",
+          "status": "WARNING",
+          "explanation": "Negative vegetation trend detected."
+        },
+        {
+          "source": "MAPPING",
+          "metric": "mappingRiskDetected",
+          "value": true,
+          "status": "WARNING",
+          "explanation": "Spatial analysis identified a potential risk area."
+        }
+      ],
+      "recommendedAction": "Inspect irrigation coverage and verify soil moisture conditions.",
+      "status": "ACTIVE",
+      "createdAt": "2026-07-03T12:10:00Z"
+    },
+    "mainRecommendation": {
+      "id": "rec-zone-03-low_vigor",
+      "fieldId": "field-001",
+      "zoneId": "zone-03",
+      "priority": "HIGH",
+      "reason": "Multiple evidence sources indicate severe vegetation deterioration associated with water stress and reduced canopy vigor. Multiple evidence sources consistently indicate severe vegetation deterioration associated with water stress. Immediate field inspection and corrective irrigation assessment are recommended to prevent further crop decline.",
+      "suggestedAction": "Pérdida drástica de vigor foliar en cítrico (NDVI bajo). Programar muestreo de campo preventivo para HLB.",
+      "expectedImpact": {
+        "impactArea": "CROP_HEALTH",
+        "description": "Supports recovery of vegetation vigor through early intervention."
+      },
+      "evidence": [
+        {
+          "source": "SENSOR",
+          "metric": "soilMoisturePercentage",
+          "value": 28,
+          "unit": "%",
+          "status": "CRITICAL",
+          "explanation": "Critical soil moisture deficit detected."
+        },
+        {
+          "source": "WEATHER",
+          "metric": "temperatureCelsius",
+          "value": 38,
+          "unit": "°C",
+          "status": "WARNING",
+          "explanation": "Elevated temperature may increase crop stress."
+        },
+        {
+          "source": "SATELLITE",
+          "metric": "ndvi",
+          "value": 0.24,
+          "status": "CRITICAL",
+          "explanation": "Very low vegetation vigor detected."
+        },
+        {
+          "source": "SATELLITE",
+          "metric": "ndwi",
+          "value": 0.12,
+          "status": "CRITICAL",
+          "explanation": "Very low canopy water content detected."
+        },
+        {
+          "source": "SATELLITE",
+          "metric": "gndvi",
+          "value": 0.22,
+          "status": "CRITICAL",
+          "explanation": "Severe reduction in chlorophyll activity detected."
+        },
+        {
+          "source": "VISION",
+          "metric": "visualAnomaly",
+          "value": true,
+          "status": "WARNING",
+          "explanation": "Visual anomaly detected."
+        },
+        {
+          "source": "VISION",
+          "metric": "dryAreaDetected",
+          "value": true,
+          "status": "WARNING",
+          "explanation": "Dry area patterns detected during visual inspection."
+        },
+        {
+          "source": "VISION",
+          "metric": "chlorosisDetected",
+          "value": true,
+          "status": "WARNING",
+          "explanation": "Visual signs compatible with chlorosis were detected."
+        },
+        {
+          "source": "HISTORY",
+          "metric": "vegetationTrend",
+          "value": -35,
+          "unit": "%",
+          "status": "WARNING",
+          "explanation": "Negative vegetation trend detected."
+        },
+        {
+          "source": "MAPPING",
+          "metric": "mappingRiskDetected",
+          "value": true,
+          "status": "WARNING",
+          "explanation": "Spatial analysis identified a potential risk area."
+        }
+      ],
+      "createdAt": "2026-07-03T12:10:00Z"
+    },
+    "evidence": [
+      {
+        "source": "SENSOR",
+        "metric": "soilMoisturePercentage",
+        "value": 28,
+        "unit": "%",
+        "status": "CRITICAL",
+        "explanation": "Critical soil moisture deficit detected."
+      },
+      {
+        "source": "WEATHER",
+        "metric": "temperatureCelsius",
+        "value": 38,
+        "unit": "°C",
+        "status": "WARNING",
+        "explanation": "Elevated temperature may increase crop stress."
+      },
+      {
+        "source": "SATELLITE",
+        "metric": "ndvi",
+        "value": 0.24,
+        "status": "CRITICAL",
+        "explanation": "Very low vegetation vigor detected."
+      },
+      {
+        "source": "SATELLITE",
+        "metric": "ndwi",
+        "value": 0.12,
+        "status": "CRITICAL",
+        "explanation": "Very low canopy water content detected."
+      },
+      {
+        "source": "SATELLITE",
+        "metric": "gndvi",
+        "value": 0.22,
+        "status": "CRITICAL",
+        "explanation": "Severe reduction in chlorophyll activity detected."
+      },
+      {
+        "source": "VISION",
+        "metric": "visualAnomaly",
+        "value": true,
+        "status": "WARNING",
+        "explanation": "Visual anomaly detected."
+      },
+      {
+        "source": "VISION",
+        "metric": "dryAreaDetected",
+        "value": true,
+        "status": "WARNING",
+        "explanation": "Dry area patterns detected during visual inspection."
+      },
+      {
+        "source": "VISION",
+        "metric": "chlorosisDetected",
+        "value": true,
+        "status": "WARNING",
+        "explanation": "Visual signs compatible with chlorosis were detected."
+      },
+      {
+        "source": "HISTORY",
+        "metric": "vegetationTrend",
+        "value": -35,
+        "unit": "%",
+        "status": "WARNING",
+        "explanation": "Negative vegetation trend detected."
+      },
+      {
+        "source": "MAPPING",
+        "metric": "mappingRiskDetected",
+        "value": true,
+        "status": "WARNING",
+        "explanation": "Spatial analysis identified a potential risk area."
+      }
+    ],
+    "generatedAt": "2026-07-03T12:10:00Z"
+  },
+  "message": "Dashboard summary loaded successfully",
+  "error": null,
+  "timestamp": "2026-07-21T19:56:23.840Z"
+}
+```
+
+### Campos principales
+
+| Campo | Tipo | Descripción |
+| ------ | ---- | ----------- |
+| fieldId | string | Parcela principal del resumen |
+| criticalZoneId | string | Zona con mayor nivel de riesgo |
+| dominantRiskLevel | RiskLevel | Riesgo dominante identificado |
+| healthScore | number | Puntaje general de salud del cultivo |
+| mainCause | string | Causa principal del riesgo detectado |
+| prescriptiveSummary | string | Resumen ejecutivo del análisis |
+| mainAlert | AgriculturalAlert | Alerta agrícola principal |
+| mainRecommendation | Recommendation | Recomendación principal |
+| evidence | EvidenceItem[] | Evidencia utilizada para generar el resumen |
+| generatedAt | string | Fecha de generación del resumen |
+
+### Relación con el caso demo
+
+El Dashboard utiliza la información correspondiente a la zona crítica **zone-03**, asociada al cultivo **ORANGE**, donde el sistema detecta un riesgo **HIGH** respaldado por evidencia satelital, sensores y análisis prescriptivo.
+
+### Uso en frontend
+
+Permite:
+
+- Mostrar el resumen principal del Dashboard.
+- Identificar la zona más crítica.
+- Visualizar la alerta principal.
+- Mostrar la recomendación prioritaria.
+- Presentar la evidencia más relevante.
+- Mostrar el resumen prescriptivo sin realizar múltiples consultas al backend.
+
+### Módulo
+
+Dashboard
+
+---
+
 # Estado
 
 **Versión:** 1.0
@@ -649,5 +972,6 @@ Documentación actualizada para la integración de los módulos:
 - Recommendations
 - Reports
 - Field Notebook
+- DashboardSummary
 
 Todos los endpoints documentados responden utilizando el contrato unificado `ApiResponse<T>`.
