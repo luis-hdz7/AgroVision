@@ -39,6 +39,14 @@ export const API_ENDPOINTS = {
   recommendations: '/api/recommendations',
   // analisis visual vía backend 
   visionAnalyze: '/api/vision/analyze',
+  // reportes prescriptivos
+  reportsPrescriptiveBase: '/api/reports/prescriptive',
+  // cuaderno de campo 
+  fieldNotebook: '/api/field-notebook',
+  // cuaderno de campo filtrado por zona
+  fieldNotebookByZone: '/api/field-notebook/zone',
+  // Cuaderno de campo filtrado por parcela/campo
+  fieldNotebookByField: '/api/field-notebook/field',
 } as const;
 
 

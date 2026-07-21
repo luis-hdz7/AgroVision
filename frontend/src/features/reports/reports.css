@@ -1,0 +1,371 @@
+/* =========================================
+   Reports Page
+   ========================================= */
+
+.reportsPage {
+  display: grid;
+  gap: 24px;
+}
+
+.reportsHero {
+  min-height: 320px;
+  display: grid;
+  align-content: end;
+
+  padding: clamp(28px, 5vw, 56px);
+  overflow: hidden;
+
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 78% 18%, rgba(145, 231, 255, 0.15), transparent 34%),
+    radial-gradient(circle at 22% 24%, rgba(183, 255, 23, 0.12), transparent 32%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025)),
+    rgba(18, 24, 20, 0.86);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+}
+
+.reportsHero__eyebrow {
+  width: max-content;
+  margin: 0 0 14px;
+  padding: 8px 12px;
+
+  color: #b7ff17;
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  border: 1px solid rgba(183, 255, 23, 0.28);
+  border-radius: 999px;
+  background: rgba(183, 255, 23, 0.08);
+}
+
+.reportsHero h1 {
+  max-width: 980px;
+  margin: 0;
+
+  color: #f4f7ef;
+  font-size: clamp(3rem, 7vw, 7rem);
+  line-height: 0.86;
+  font-weight: 950;
+  letter-spacing: -0.085em;
+  text-transform: uppercase;
+}
+
+.reportsHero span {
+  display: block;
+  max-width: 740px;
+  margin-top: 18px;
+
+  color: #c8d0c4;
+  line-height: 1.65;
+}
+
+/* =========================================
+   Risk summary
+   ========================================= */
+
+.reportRiskSummary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.reportRiskBox,
+.reportRiskSummary__cause {
+  display: grid;
+  gap: 10px;
+
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.105);
+  border-radius: 24px;
+  background: rgba(18, 24, 20, 0.82);
+}
+
+.reportRiskBox span,
+.reportRiskSummary__cause span {
+  color: #8d988d;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.reportRiskBox strong {
+  color: #f4f7ef;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 950;
+  letter-spacing: -0.06em;
+}
+
+.reportRiskBox--high,
+.reportRiskBox--critical {
+  border-color: rgba(255, 95, 95, 0.34);
+}
+
+.reportRiskSummary__cause {
+  grid-column: 1 / -1;
+}
+
+.reportRiskSummary__cause p {
+  margin: 0;
+
+  color: #c8d0c4;
+  line-height: 1.55;
+}
+
+/* =========================================
+   Main cards
+   ========================================= */
+
+.prescriptiveReportCard,
+.reportPanel {
+  display: grid;
+  gap: 18px;
+
+  padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.105);
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.03)),
+    rgba(18, 24, 20, 0.82);
+  box-shadow: 0 18px 54px rgba(0, 0, 0, 0.26);
+}
+
+.prescriptiveReportCard__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.prescriptiveReportCard__header p,
+.reportPanel header p {
+  width: max-content;
+  margin: 0 0 8px;
+  padding: 6px 10px;
+
+  color: #081006;
+  font-size: 0.68rem;
+  font-weight: 950;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+
+  border-radius: 999px;
+  background: #b7ff17;
+}
+
+.prescriptiveReportCard__header h2,
+.reportPanel header h2 {
+  margin: 0;
+
+  color: #f4f7ef;
+  font-size: clamp(1.55rem, 2vw, 2.2rem);
+  line-height: 0.95;
+  font-weight: 950;
+  letter-spacing: -0.06em;
+}
+
+.prescriptiveReportCard__header span {
+  display: block;
+  max-width: 820px;
+  margin-top: 10px;
+
+  color: #c8d0c4;
+  line-height: 1.55;
+}
+
+.prescriptiveReportCard__header strong {
+  height: max-content;
+
+  padding: 8px 12px;
+  color: #081006;
+  font-size: 0.76rem;
+  font-weight: 950;
+
+  border-radius: 999px;
+  background: #ffb84d;
+}
+
+.reportSplitGrid,
+.reportActionsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.reportCompactList,
+.reportActionsList {
+  display: grid;
+  gap: 10px;
+}
+
+.reportCompactItem,
+.reportActionItem {
+  display: grid;
+  gap: 8px;
+
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.reportCompactItem--high,
+.reportCompactItem--critical {
+  border-color: rgba(255, 95, 95, 0.32);
+}
+
+.reportCompactItem strong,
+.reportActionItem strong {
+  color: #f4f7ef;
+  font-weight: 950;
+}
+
+.reportCompactItem span,
+.reportActionItem p {
+  margin: 0;
+
+  color: #c8d0c4;
+  line-height: 1.5;
+}
+
+.reportCompactItem small,
+.reportActionItem small {
+  color: #8d988d;
+  line-height: 1.45;
+}
+
+/* =========================================
+   Evidence timeline
+   ========================================= */
+
+.reportEvidenceTimeline {
+  display: grid;
+  gap: 10px;
+}
+
+.reportEvidenceItem {
+  display: grid;
+  gap: 8px;
+
+  padding: 16px;
+  border-left: 3px solid rgba(183, 255, 23, 0.55);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.reportEvidenceItem--warning {
+  border-left-color: #ffb84d;
+}
+
+.reportEvidenceItem--critical {
+  border-left-color: #ff5f5f;
+}
+
+.reportEvidenceItem div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.reportEvidenceItem strong {
+  color: #b7ff17;
+  font-size: 0.78rem;
+  font-weight: 950;
+}
+
+.reportEvidenceItem span {
+  color: #8d988d;
+  font-size: 0.78rem;
+}
+
+.reportEvidenceItem h3 {
+  margin: 0;
+
+  color: #f4f7ef;
+  font-size: 1rem;
+}
+
+.reportEvidenceItem p {
+  margin: 0;
+
+  color: #c8d0c4;
+  line-height: 1.5;
+}
+
+/* =========================================
+   Actions
+   ========================================= */
+
+.reportActionItem div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.reportActionItem span {
+  width: max-content;
+  height: max-content;
+
+  padding: 6px 10px;
+  color: #b7ff17;
+  font-size: 0.72rem;
+  font-weight: 950;
+
+  border: 1px solid rgba(183, 255, 23, 0.22);
+  border-radius: 999px;
+  background: rgba(183, 255, 23, 0.07);
+}
+
+.reportActionItem--pending span {
+  color: #ffb84d;
+  border-color: rgba(255, 184, 77, 0.28);
+  background: rgba(255, 184, 77, 0.07);
+}
+
+.reportActionsEmpty {
+  margin: 0;
+  color: #8d988d;
+}
+
+/* =========================================
+   States
+   ========================================= */
+
+.reportsState {
+  display: grid;
+  place-items: center;
+  min-height: 220px;
+
+  color: #c8d0c4;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 28px;
+  background: rgba(18, 24, 20, 0.82);
+}
+
+.reportsState--error {
+  color: #ffb84d;
+  border-color: rgba(255, 184, 77, 0.32);
+}
+
+@media (max-width: 1040px) {
+  .reportRiskSummary,
+  .reportSplitGrid,
+  .reportActionsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .prescriptiveReportCard__header {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 720px) {
+  .reportsHero {
+    border-radius: 26px;
+  }
+
+  .reportEvidenceItem div,
+  .reportActionItem div {
+    flex-direction: column;
+  }
+}
