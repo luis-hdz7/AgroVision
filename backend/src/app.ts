@@ -18,6 +18,9 @@ const app: Application = express();
 import alertRoutes from "./modules/alerts/routes/alertRoutes";
 //*modulos de recommendations
 import recommendationsRoutes from "./modules/recommendations/routes/recommendationRoutes";
+//modulo dashboard
+
+import dashboardRoutes from "./modules/dashboard/routes/dashboardRoutes";
 // Middlewares globales
 app.use(express.json());
 
@@ -42,5 +45,8 @@ app.use("/api/vegetation", vegetationRoutes);
 
 //vinculacion del modulo de analisis
 app.use("/api/analysis", zoneAnalysisRouter);
+
+//vinculacion del modulo dashboard
+app.use("/api/dashboard", dashboardRoutes)
 
 export default app;
