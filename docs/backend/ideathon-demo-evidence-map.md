@@ -1,8 +1,19 @@
 # ideathon-demo-evidence-map
 
-Este documento describe el caso oficial utilizado durante la demostración del ideathon y explica cómo cada fuente de evidencia respalda el análisis prescriptivo y la recomendación final entregada al productor.
+Este documento describe el caso oficial utilizado durante la demostración y muestra cómo la narrativa del cuaderno de campo se convierte en una secuencia técnica útil para la demo, los reportes y la trazabilidad.
 
-La demo utiliza un único flujo de extremo a extremo para garantizar consistencia entre análisis, alertas, recomendaciones, cuaderno de campo y reporte prescriptivo.
+La demo sigue un flujo claro y comprensible para un jurado técnico y no técnico:
+
+1. Se detecta una zona crítica.
+2. Se recopila evidencia visual.
+3. Se incorpora evidencia satelital simulada.
+4. Se valida con evidencia de sensores.
+5. Se genera una alerta.
+6. Se propone una recomendación.
+7. Se registra la acción en el notebook.
+8. Se consolida todo en el reporte prescriptivo.
+
+---
 
 ## Caso oficial de la demo
 
@@ -11,129 +22,80 @@ La demo utiliza un único flujo de extremo a extremo para garantizar consistenci
 - **Cultivo:** `ORANGE`
 - **Nivel de riesgo:** `HIGH`
 
-El objetivo es que cualquier integrante del equipo (técnico o no técnico) pueda comprender fácilmente qué información se presenta durante la demostración y cómo el sistema llega a la recomendación final.
+El objetivo es que el equipo pueda seguir la cadena de decisión desde la detección del problema hasta la acción registrada y el reporte final.
 
 ---
 
-## 1. Zona afectada
+## 1. Zona crítica detectada
 
 La demostración se centra en la zona `zone-03`, perteneciente al campo `field-001`.
 
-El análisis prescriptivo identifica un **riesgo HIGH**, respaldado por múltiples fuentes de evidencia que indican un deterioro severo del vigor vegetal asociado principalmente a estrés hídrico.
+El análisis prescriptivo identifica un riesgo `HIGH` asociado principalmente a estrés hídrico y pérdida de vigor.
 
 ---
 
 ## 2. Evidencia visual
 
-**Qué se muestra**
-
-Imágenes capturadas durante la inspección de campo donde se observan áreas secas, clorosis y pérdida de vigor en la vegetación.
-
-**Por qué importa**
-
-Permite validar visualmente los síntomas detectados por los demás sistemas de monitoreo y facilita la interpretación del problema por parte del usuario.
+Se muestra una inspección visual registrada en el notebook con síntomas como clorosis y zonas secas del dosel.
 
 **Datos asociados**
 
 - `fn-001` en `fieldNotebookMock.ts`
-- Evidencia visual en `zoneInsightMock.ts`
+- Evidencia visual en el flujo del reporte prescriptivo
 
 ---
 
 ## 3. Evidencia satelital simulada
 
-**Qué se muestra**
-
-Índices de vegetación simulados (NDVI, NDWI y GNDVI) que evidencian una disminución significativa del vigor y del contenido de agua en la vegetación.
+Se incorpora una referencia de deterioro de vigor y de condiciones de humedad compatibles con el problema detectado.
 
 **Por qué importa**
 
-Demuestra cómo AgroVision puede detectar deterioro del cultivo mediante análisis remoto antes de que el problema afecte completamente la parcela.
-
-**Datos asociados**
-
-- Evidencias satelitales en `zoneInsightMock.ts`
-- `EV-01`, `EV-02` y `EV-03` en `prescriptiveReportMock.ts`
+Permite mostrar que el problema no es solo local, sino que también tiene una lectura temporal y espacial.
 
 ---
 
 ## 4. Evidencia de sensores
 
-**Qué se muestra**
-
-Lecturas de humedad del suelo inferiores al rango recomendado y temperatura elevada.
-
-**Por qué importa**
-
-Confirma que las condiciones ambientales son compatibles con un escenario de estrés hídrico y justifican una intervención prioritaria.
+Se valida la hipótesis de estrés hídrico con una lectura de humedad del suelo inferior al umbral recomendado.
 
 **Datos asociados**
 
 - `fn-002` en `fieldNotebookMock.ts`
-- `EV-04` y `EV-05` en `prescriptiveReportMock.ts`
+- evidencia del reporte prescriptivo basada en el insight de zona
 
 ---
 
-## 5. Alertas activas
+## 5. Alerta
 
-**Qué se muestra**
-
-Alertas generadas automáticamente a partir del análisis de evidencia multifuente.
-
-Entre ellas:
-
-- Bajo vigor vegetal.
-- Estrés hídrico.
-- Estrés térmico.
+El sistema genera una alerta activa que resume la condición crítica de la zona.
 
 **Por qué importa**
 
-Permiten comunicar rápidamente el nivel de riesgo y priorizar la atención de la zona afectada.
-
-**Datos asociados**
-
-- Alertas generadas desde `alertGenerationService.ts`
-- `activeAlerts` en `prescriptiveReportMock.ts`
+Convierte la evidencia en una señal priorizada para la acción.
 
 ---
 
-## 6. Recomendación prescriptiva
+## 6. Recomendación
 
-**Qué se muestra**
-
-Una recomendación priorizada basada en la evidencia recopilada.
-
-**Por qué importa**
-
-Convierte el diagnóstico técnico en una acción concreta para el productor.
-
-**Acción recomendada**
-
-- Verificar la cobertura del sistema de riego.
-- Validar las condiciones de humedad del suelo.
-- Aplicar riego correctivo si se confirma déficit hídrico.
-- Programar una inspección de seguimiento.
+La recomendación prescriptiva orienta al usuario hacia una respuesta concreta, en este caso una intervención de riego y validación de seguimiento.
 
 **Datos asociados**
 
 - `recommendationsMock.ts`
-- `REC-01` en `prescriptiveReportMock.ts`
+- `prescriptiveReportService.ts`
 
 ---
 
-## 7. Cuaderno de campo
+## 7. Acción registrada en notebook
 
-**Qué se muestra**
+El cuaderno de campo documenta la secuencia de decisión:
 
-El historial operativo de la zona, incluyendo:
+- inspección visual inicial,
+- riego correctivo ejecutado,
+- seguimiento pendiente para validar recuperación.
 
-- inspección realizada;
-- riego de emergencia;
-- inspección técnica pendiente.
-
-**Por qué importa**
-
-Demuestra la trazabilidad entre la detección del problema y las acciones ejecutadas o planificadas.
+Esto convierte el flujo en una narrativa operativa y trazable.
 
 **Datos asociados**
 
@@ -143,52 +105,41 @@ Demuestra la trazabilidad entre la detección del problema y las acciones ejecut
 
 ---
 
-## 8. Relación con el reporte prescriptivo
+## 8. Reporte prescriptivo
 
-El reporte prescriptivo consolida toda la información proveniente de:
-
-- ZoneInsight;
-- evidencia multifuente;
-- alertas;
-- recomendaciones;
-- cuaderno de campo.
-
-Esto permite explicar claramente:
-
-- qué ocurrió;
-- por qué ocurrió;
-- qué evidencia respalda el diagnóstico;
-- qué acciones deben ejecutarse.
+El reporte consolidado toma la evidencia, la alerta, la recomendación y las acciones del notebook para permitir una explicación completa del caso.
 
 **Datos asociados**
 
 - `prescriptiveReportService.ts`
-- `prescriptiveReportMock.ts`
+- `FieldNotebookService`
 
 ---
 
-# Flujo oficial de la demo
+## Flujo oficial de la demo
 
-```
-ZoneInsight
+```text
+Zona crítica detectada
       ↓
-Evidence Fusion
+Evidencia visual
       ↓
-Alerts
+Evidencia satelital simulada
       ↓
-Recommendations
+Evidencia de sensor
       ↓
-Field Notebook
+Alerta
       ↓
-Prescriptive Field Report
+Recomendación
       ↓
-Dashboard
+Acción registrada en notebook
+      ↓
+Reporte prescriptivo
 ```
 
-La demostración sigue un único caso de principio a fin utilizando:
+La demostración utiliza:
 
 - `field-001`
 - `zone-03`
 - `ORANGE`
 
-garantizando que todas las pantallas, reportes y recomendaciones correspondan al mismo escenario y mantengan coherencia entre los distintos módulos del sistema.
+para mantener coherencia entre todas las pantallas y módulos del sistema.

@@ -7,18 +7,20 @@ export const fieldNotebookMock: FieldNotebookEntry[] = [
     zoneId: "zone-03",
     cropId: "crop-orange-01",
     activityType: "INSPECTION",
-    description: "Inspección visual inicial de la zona afectada.",
-    problemObserved: "Visual inspection confirmed dry canopy sections and chlorosis symptoms consistent with severe water stress.",
+    description:
+      "Inspección visual inicial en la zona crítica: se detectó clorosis y áreas secas en el dosel.",
+    problemObserved:
+      "Se observaron hojas con clorosis, pérdida de turgencia y sectores del dosel secos, compatibles con estrés hídrico severo.",
     actionTaken:
-      "Se documentó evidencia visual y se aisló el sector para revisión técnica inmediata.",
+      "Se registró la anomalía y se documentó evidencia visual para soportar la evaluación técnica de la zona.",
     responsibleUser: "Sofía Vega",
     evidence: [
       {
         id: "evid-fn-001",
         type: "image",
-        source: "Rover Camera",
+        source: "VISION",
         description:
-          "Imagen de campo con defoliación visible para la zona zone-03.",
+          "Fotografía de campo con clorosis visible y áreas secas en la zona zone-03.",
         url: "https://example.org/evidence/fn-001.jpg",
         capturedAt: "2026-06-29T16:00:00Z",
       },
@@ -31,18 +33,20 @@ export const fieldNotebookMock: FieldNotebookEntry[] = [
     zoneId: "zone-03",
     cropId: "crop-orange-01",
     activityType: "IRRIGATION",
-    description: "Riego de emergencia programado para el sector crítico.",
-    problemObserved: "Humedad del suelo por debajo del rango recomendado.",
+    description:
+      "Riego correctivo aplicado para mitigar el déficit hídrico detectado en la zona afectada.",
+    problemObserved:
+      "La humedad del suelo estaba por debajo del umbral recomendado y coincidía con la observación visual de estrés hídrico.",
     actionTaken:
-      "Se activó un riego suplementario en la zona para aliviar el estrés hídrico.",
+      "Se activó un riego suplementario de emergencia para recuperar la disponibilidad de agua en la zona radicular.",
     responsibleUser: "Julián León",
     evidence: [
       {
         id: "evid-fn-002",
         type: "sensor",
-        source: "Soil Moisture Sensor",
+        source: "SENSOR",
         description:
-          "Sensor de humedad del suelo con lectura inferior al umbral crítico.",
+          "Lectura de humedad del suelo inferior al umbral crítico para la zona zone-03.",
         capturedAt: "2026-06-29T17:00:00Z",
       },
     ],
@@ -55,22 +59,23 @@ export const fieldNotebookMock: FieldNotebookEntry[] = [
     cropId: "crop-orange-01",
     activityType: "INSPECTION",
     description:
-      "Revisión técnica pendiente para evaluar la posible plaga estructural.",
+      "Seguimiento pendiente para validar la recuperación y confirmar si la recomendación de inspección técnica sigue vigente.",
     problemObserved:
-      "Síntomas compatibles con plaga estructural y pérdida acelerada del vigor.",
+      "La respuesta al riego fue parcial y se debe revisar si persisten síntomas compatibles con plaga estructural o déficits de humedad.",
     actionTaken:
-      "Pendiente de asignación a la cuadrilla técnica y confirmación en laboratorio.",
+      "Pendiente: revisar la zona dentro de 24-48 horas y validar si se requiere intervención adicional o inspección de plagas.",
     responsibleUser: "Carla Mena",
     evidence: [
       {
         id: "evid-fn-003",
         type: "note",
-        source: "Technical Notebook",
+        source: "MANUAL",
         description:
-          "Nota de campo con observación pendiente de confirmación en laboratorio.",
+          "Nota de campo con seguimiento pendiente y próximos pasos para la zona zone-03.",
         capturedAt: "2026-06-30T08:00:00Z",
       },
     ],
+    followUpAt: "2026-07-01T08:00:00Z",
     createdAt: "2026-06-30T08:00:00Z",
   },
   {
@@ -89,7 +94,7 @@ export const fieldNotebookMock: FieldNotebookEntry[] = [
       {
         id: "evid-fn-004",
         type: "document",
-        source: "Field Log",
+        source: "HISTORY",
         description:
           "Registro de aplicación de fertilizante en lote adyacente.",
         capturedAt: "2026-07-01T10:15:00Z",
