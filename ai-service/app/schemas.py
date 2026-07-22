@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import List, Optional, Literal
 
-class VisionAnalizeRequest(BaseModel):
+class VisionAnalyzeRequest(BaseModel):
     
     #Solicitud para realizar un análisis visual preliminar.
     #En esta primera versión recibe la referenciade una imagen (ruta, nombre o identificador).

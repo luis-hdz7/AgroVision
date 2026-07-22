@@ -1,8 +1,8 @@
 from app.schemas import (
-    VisionAnalizeRequest,VisionAnalyzeResponse,VisionEvidence
+    VisionAnalyzeRequest,VisionAnalyzeResponse,VisionEvidence
 )
 
-def analyze_image(request: VisionAnalizeRequest) -> VisionAnalyzeResponse:
+def analyze_image(request: VisionAnalyzeRequest) -> VisionAnalyzeResponse:
     # Realiza un análisis visual preliminar basado enlógica simple.
     # Este módulo sirve como demostración de la arquitectura del AI Service.
     # No representa un modelo de inteligencia artificial entrenado.
@@ -44,4 +44,9 @@ def analyze_image(request: VisionAnalizeRequest) -> VisionAnalyzeResponse:
         confidence = 0.50
         explanation = "The image does not provide enough information for classification."
         recommendation = "Perform a manual field inspection."
-        
+
+    evidence = [
+        VisionEvidence(metric = "visual_pattern", value = prediction, explanation = explanation,)
+    ]
+
+    return VisionAnalyzeResponse(prediction = prediction, confidence = confidence, metrics = ["visual_pattern"], evidence = evidence, explanation = explanation, recommendation = recommendation,)
