@@ -616,9 +616,7 @@ AgroVision/
 │   ├── AGROVISION_DATA_CONTRACT.md
 │   └── AGROVISION_INTELLIGENCE_EXTENSION.md
 │
-├── docs/
-│
-└── design/
+└── docs/
 ```
 
 ---

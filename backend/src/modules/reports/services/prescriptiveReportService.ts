@@ -86,15 +86,14 @@ function adaptPendingActions(
   zoneEntries: ReturnType<typeof FieldNotebookService.getEntriesByZone>,
 ): PrescriptivePendingAction[] {
   return zoneEntries
-    .filter(
-      (entry) =>
-        /pendiente/i.test(entry.actionTaken) ||
-        /pendiente/i.test(entry.description),
-    )
+    .filter((entry) => {
+      const pendingText = `${entry.actionTaken ?? ""} ${entry.description ?? ""}`;
+      return /pendiente|pending/i.test(pendingText);
+    })
     .map((entry) => ({
       id: entry.id,
       description: entry.actionTaken || entry.description,
-      dueDate: entry.createdAt,
+      dueDate: entry.followUpAt ?? entry.createdAt,
       priority: "HIGH",
     }));
 }
