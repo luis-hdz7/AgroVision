@@ -56,7 +56,7 @@ const reportFallback: PrescriptiveReport = {
             unit: "%",
             status: "WARNING",
             explanation: "Humedad estimada por debajo del umbral operativo del cultivo.",
-            capturedAt: "2026-07-01T08:20:00.000Z",
+            capturedAt: "2026-07-01T08:20:00.000Z", 
         },
         {
             source: "VISION",

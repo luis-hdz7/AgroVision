@@ -19,30 +19,29 @@
  * - /alerts
  * - /recommendations
  * - /reports
- * 
-*/
+ *
+ */
 
-
-import { DashboardPage } from "../features/dashboard/pages/DashboardPage";
-import { CropsPage } from "../features/crops/pages/CropsPage";
-import { VisionAiPage } from "../features/vision-ai/pages/VisionAiPage";
-import { ReportsPage } from "../features/reports/pages/ReportsPage";
+import { DashboardPage } from '../features/dashboard/pages/DashboardPage';
+import { CropsPage } from '../features/crops/pages/CropsPage';
+import { VisionAiPage } from '../features/vision-ai/pages/VisionAiPage';
+import { ReportsPage } from '../features/reports/pages/ReportsPage';
+import { AlertsPage } from '../features/alerts/pages/AlertsPage';
 
 /** AppRouterPath  define las rutas permitidsas.
  * así se evita navegar por rutas no existentes de forma accidental.
-*/
+ */
 
-export type AppRoutePath = 
-  | "/dashboard"
-  | "/crops"
-  | "/alerts"
-  | "/recommendations"
-  | "/reports"
-  | "/vision-ai";
+export type AppRoutePath =
+  | '/dashboard'
+  | '/crops'
+  | '/alerts'
+  | '/recommendations'
+  | '/reports'
+  | '/vision-ai';
 
-
-/** RouteDefinition define cada ruta base del sistema. 
- * 
+/** RouteDefinition define cada ruta base del sistema.
+ *
  * * label:
  * Texto para el botón de navegación.
  *
@@ -51,133 +50,136 @@ export type AppRoutePath =
  *
  * * description:
  * Explica para qué servirá ese módulo.
-*/
+ */
 
 export interface RouteDefinition {
-    readonly path: AppRoutePath;
-    readonly label: string;
-    readonly title: string;
-    readonly description: string;
+  readonly path: AppRoutePath;
+  readonly label: string;
+  readonly title: string;
+  readonly description: string;
 }
 
-
-/** Ruta base/principal del sistema 
- * 
+/** Ruta base/principal del sistema
+ *
  * Si el usuario entra a "/" "/123" o un a ruta no valida, será redirigido a /dashboard
-*/
-export const DEFAULT_ROUTE = "/dashboard";
-
+ */
+export const DEFAULT_ROUTE = '/dashboard';
 
 /** Rutas principales del sistema */
-export const ROUTES : ReadonlyArray<RouteDefinition> = [
-    {
-        path: "/dashboard",
-        label: "Dashboard",
-        title: "Dashboard",
-        description: "Pantalla principal del sistema",
-    },
-    {
-        path: "/crops",
-        label: "Cultivos",
-        title: "Cultivos",
-        description: "Módulo para perfiles de cultivos estratégicos, riesgos principales y métricas importantes.",
-    },
-    {
-        path: "/alerts",
-        label: "Alertas",
-        title: "Alertas",
-        description: "Módulo para eventos criticos, evidencias, severidad, fuente y acciones recomendadas",
-    },
-    {
-        path: "/recommendations",
-        label: "Recomendaciones",
-        title: "Recomendaciones",
-        description: "Módulos para recomendaciones accionables inteligentes basadas en razón, urgencia e impacto esperado",
-    },
-    {
-        path: "/reports",
-        label: "Reportes",
-        title: "Reportes",
-        description: "Módulo para informes y reportes técnicos, productivos y ejecutivos basados en evidencias y trazabilidad",
-    },
-    {
-        path: "/vision-ai",
-        label: "Vision AI",
-        title: "Vision AI",
-        description:  "Módulo para análisis visual preliminar con predicción, confianza, métricas y explicación.",
-    }
+export const ROUTES: ReadonlyArray<RouteDefinition> = [
+  {
+    path: '/dashboard',
+    label: 'Dashboard',
+    title: 'Dashboard',
+    description: 'Pantalla principal del sistema',
+  },
+  {
+    path: '/crops',
+    label: 'Cultivos',
+    title: 'Cultivos',
+    description:
+      'Módulo para perfiles de cultivos estratégicos, riesgos principales y métricas importantes.',
+  },
+  {
+    path: '/alerts',
+    label: 'Alertas',
+    title: 'Alertas',
+    description:
+      'Módulo para eventos criticos, evidencias, severidad, fuente y acciones recomendadas',
+  },
+  {
+    path: '/recommendations',
+    label: 'Recomendaciones',
+    title: 'Recomendaciones',
+    description:
+      'Módulos para recomendaciones accionables inteligentes basadas en razón, urgencia e impacto esperado',
+  },
+  {
+    path: '/reports',
+    label: 'Reportes',
+    title: 'Reportes',
+    description:
+      'Módulo para informes y reportes técnicos, productivos y ejecutivos basados en evidencias y trazabilidad',
+  },
+  {
+    path: '/vision-ai',
+    label: 'Vision AI',
+    title: 'Vision AI',
+    description:
+      'Módulo para análisis visual preliminar con predicción, confianza, métricas y explicación.',
+  },
 ];
 
 interface AppRouterProps {
-    readonly activePath: AppRoutePath;
+  readonly activePath: AppRoutePath;
 }
 
 // Renderiza la página correspondiente.
 // Si la ruta aún no tiene feature, renderiza placeholder.
-export function AppRouter({activePath } : AppRouterProps) {
-    
-    if (activePath === "/dashboard") {
-        return <DashboardPage />;
-    }
+export function AppRouter({ activePath }: AppRouterProps) {
+  if (activePath === '/dashboard') {
+    return <DashboardPage />;
+  }
 
-    if (activePath === "/crops") {
-        return <CropsPage />;
-    }
+  if (activePath === '/crops') {
+    return <CropsPage />;
+  }
 
-    if (activePath === "/vision-ai") {
-        return <VisionAiPage />;
-    }
+  if (activePath === '/vision-ai') {
+    return <VisionAiPage />;
+  }
 
-    // if (activePath === "/recommendations") {
-    //     return <RecommendationsPage />;
-    // }
-    if (activePath === "/reports") {
-        return <ReportsPage />;
-    }
+  if (activePath === '/alerts') {
+    return <AlertsPage />;
+  }
 
-    const activeRoute = getRouteDefinition(activePath);
+  // if (activePath === "/recommendations") {
+  //     return <RecommendationsPage />;
+  // }
+  if (activePath === '/reports') {
+    return <ReportsPage />;
+  }
 
-    return (
-        <RoutePlaceholder
-        title={activeRoute.title}
-        description={activeRoute.description}/>
-    );
+  const activeRoute = getRouteDefinition(activePath);
+
+  return (
+    <RoutePlaceholder
+      title={activeRoute.title}
+      description={activeRoute.description}
+    />
+  );
 }
 
 interface RoutePlaceholderProps {
-    readonly title: string;
-    readonly description: string;
+  readonly title: string;
+  readonly description: string;
 }
-
 
 /**  Placeholder temporal para módulos pendientes.
-**   No inventa pantallas finales todavía.
-*/
+ **   No inventa pantallas finales todavía.
+ */
 function RoutePlaceholder({ title, description }: RoutePlaceholderProps) {
-    return (
-            <section className="routePlaceholder">
-            <p className="routePlaceholder__eyebrow">Módulo en preparación</p>
-            <h1>{title}</h1>
-            <span>{description}</span>
-        </section>
-    );
+  return (
+    <section className="routePlaceholder">
+      <p className="routePlaceholder__eyebrow">Módulo en preparación</p>
+      <h1>{title}</h1>
+      <span>{description}</span>
+    </section>
+  );
 }
 
-
 /**  Convierte window.location.pathname en ruta válida.
-**  Si no existe, regresa /dashboard.
-*/
+ **  Si no existe, regresa /dashboard.
+ */
 export function getRouteFromPathname(pathname: string): AppRoutePath {
-    if (ROUTES.some((route) => route.path === pathname)) {
-        return pathname as AppRoutePath;
-    }
+  if (ROUTES.some((route) => route.path === pathname)) {
+    return pathname as AppRoutePath;
+  }
 
-    return DEFAULT_ROUTE;
+  return DEFAULT_ROUTE;
 }
 
 // Busca definición completa de ruta.
 function getRouteDefinition(path: AppRoutePath): RouteDefinition {
-    return ROUTES.find((route) => route.path === path) ?? ROUTES[0];
-}    
-
-
+  return ROUTES.find((route) => route.path === path) ?? ROUTES[0];
+}
