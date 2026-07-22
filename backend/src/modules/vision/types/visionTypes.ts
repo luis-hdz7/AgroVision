@@ -11,7 +11,7 @@ export interface VisionAnalyzeRequest {
 
 export interface VisionAnalyzeResponse {
     readonly prediction: string;
-    readonly confidence: string;
+    readonly confidence: number;
     readonly metrics: string[];
     readonly evidence: EvidenceItem[];
     readonly explanation: string;
