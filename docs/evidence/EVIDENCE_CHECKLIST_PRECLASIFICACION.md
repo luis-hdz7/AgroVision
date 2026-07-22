@@ -1,86 +1,39 @@
-# Checklist de Evidencias - Preclasificación
+# Checklist de Evidencias — Preclasificación
 
-## Objetivo
+**Caso oficial de demo:** `field-001` · `zone-03` · `ORANGE` · riesgo `HIGH`
+**Fecha de entrega:** 21/jul/2026
+**Estado general:** listo para demo, con incidencias históricas resueltas y registradas.
 
-Verificar que todas las capas de evidencia estén presentes, validadas y correctamente vinculadas antes de generar y presentar el reporte prescriptivo en demo.
+## Pantallas y flujo funcional
 
-El flujo que se valida es:
-**Evidencia → Riesgo → Alerta → Recomendación → Acción → Reporte**
+| Capa                 | Estado   | Validación crítica                                                                                                         |
+| -------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Dashboard            | Alineado | Expone `field-001`, zona crítica `zone-03`, cultivo `ORANGE`, health score 35, NDVI 0.24, humedad 28% y temperatura 38 °C. |
+| Alertas              | Alineado | Las alertas activas pertenecen a `zone-03` y contienen evidencia y acción recomendada.                                     |
+| Recomendaciones      | Alineado | La recomendación prioritaria se relaciona con la alerta y con la evidencia multifuente del mismo caso.                     |
+| Reporte prescriptivo | Alineado | Consolida caso, alertas, recomendaciones, evidencia y acciones del notebook.                                               |
+| Notebook             | Alineado | `fn-001`, `fn-002` y `fn-003` cubren inspección, riego y seguimiento para `field-001` / `zone-03`.                         |
 
----
+## Endpoints de demo
 
-## 1. Evidencia visual
+| Endpoint                                | Estado | Evidencia crítica                                                                  |
+| --------------------------------------- | ------ | ---------------------------------------------------------------------------------- |
+| `GET /api/dashboard/summary`            |        | Devuelve la zona crítica y resumen prescriptivo de `field-001` / `zone-03`.        |
+| `GET /api/alerts`                       |        | Alertas activas de la zona con evidencia multifuente.                              |
+| `GET /api/recommendations`              |        | Recomendación de riego para el caso demo.                                          |
+| `GET /api/reports/prescriptive/zone-03` |        | Incluye acciones tomadas y pendientes con responsable, fecha y evidencia asociada. |
+| `GET /api/field-notebook/zone/zone-03`  |        | Devuelve los eventos de notebook con responsable, fecha, acción y evidencia.       |
 
-- [x] Se registró una inspección visual clara para la zona `zone-03`
-- [x] Se documentaron síntomas compatibles con estrés hídrico y clorosis
-- [x] La evidencia está vinculada al notebook (`fn-001`)
-- [x] La evidencia tiene fecha, responsable y descripción
+## Trazabilidad de acciones
 
----
+- [x] `fn-001`: inspección visual tomada; responsable, fecha y fotografía asociada.
+- [x] `fn-002`: riego correctivo tomado; responsable, fecha y lectura de sensor asociada.
+- [x] `fn-003`: seguimiento pendiente; responsable, fecha objetivo y nota de campo asociada.
+- [x] El reporte conserva esas acciones y su evidencia, sin inventar acciones fuera del notebook.
 
-## 2. Evidencia satelital simulada
+## Control de inconsistencias
 
-- [x] Se incorporó una referencia de pérdida de vigor para la demo
-- [x] La evidencia se puede relacionar con el análisis del reporte prescriptivo
-- [ ] Se puede visualizar en una pantalla de demo si se desea profundizar el contexto
-
----
-
-## 3. Evidencia de sensor
-
-- [x] Se registró una lectura de humedad del suelo para la zona crítica
-- [x] La lectura apoya la causa raíz de estrés hídrico
-- [x] La evidencia está vinculada al notebook (`fn-002`)
-
----
-
-## 4. Notebook con narrativa de decisión
-
-- [x] `zone-03` tiene al menos 3 eventos
-- [x] Hay una inspección visual inicial
-- [x] Hay una acción correctiva de riego
-- [x] Hay un seguimiento pendiente claro
-- [x] Cada evento tiene evidencia, responsable y fecha
-
----
-
-## 5. Recomendación y alerta
-
-- [x] Existe una alerta activa asociada al caso de demo
-- [x] Existe una recomendación prescriptiva asociada al problema
-- [x] La recomendación se relaciona con la evidencia y el notebook
-
----
-
-## 6. Reporte prescriptivo
-
-- [x] El reporte incluye acciones tomadas desde el notebook
-- [x] El reporte incluye acciones pendientes desde el notebook
-- [x] El reporte refleja la narrativa de inspección → riego → seguimiento
-- [x] El reporte se basa en la información derivada del insight de zona y del notebook
-
----
-
-## 7. Flujo de demo
-
-- [x] **Paso 1:** Zona crítica detectada
-- [x] **Paso 2:** Evidencia visual
-- [x] **Paso 3:** Evidencia satelital simulada
-- [x] **Paso 4:** Evidencia de sensor
-- [x] **Paso 5:** Alerta
-- [x] **Paso 6:** Recomendación
-- [x] **Paso 7:** Acción registrada en notebook
-- [x] **Paso 8:** Reporte prescriptivo
-
----
-
-## 8. Validación final
-
-- [x] No hay inconsistencias mayores entre mock, notebook y reporte
-- [x] La cadena de decisión es comprensible para usuario técnico y no técnico
-- [x] La demo puede explicarse como una secuencia lógica de hechos
-
----
-
-**Última actualización:** 2026-07-21
-**Estado:** Listo para demo / alineado con la implementación actual
+- [x] Las métricas antiguas del Dashboard y el identificador de finca fueron revisados: `farm-001` identifica la finca y no reemplaza `field-001`.
+- [x] El ejemplo de estructura de reportes usa el caso oficial de demo.
+- [x] El contrato frontend/backend de reporte conserva los campos de acciones y su evidencia.
+- [x] Las incidencias y responsables están registradas en [DEMO_INCONSISTENCIES.md](DEMO_INCONSISTENCIES.md).

@@ -33,7 +33,7 @@ export interface PrescriptiveEvidenceSummary {
     unit?: string | null;
     status: string;      // NORMAL | WATCH | WARNING | CRITICAL
     explanation: string;
-    date: string;          // ISO — derivado de ZoneInsight.generatedAt
+    capturedAt: string;    // ISO — derivado de ZoneInsight.generatedAt
 }
 
 // ================================
@@ -48,7 +48,12 @@ export interface PrescriptiveEvidenceSummary {
 export interface PrescriptiveRecommendationSummary {
     id: string;
     zoneId: string;
-    recommendation: string;            // Recommendation.reason + " → " + Recommendation.suggestedAction
+    reason: string;
+    suggestedAction: string;
+    expectedImpact: {
+        impactArea: string;
+        description: string;
+    };
     priority: RecommendationPriority;   // reusa el enum real de Jorge (incluye URGENT)
     relatedEvidenceIds: string[];        // ids de PrescriptiveEvidenceSummary que la sustentan
 }
@@ -64,9 +69,21 @@ export interface PrescriptiveRecommendationSummary {
 // hemos visto.
 export interface PrescriptiveActionLog {
     id: string;
-    actionTaken: string;
+    title: string;
+    description: string;
+    status: "DONE";
     responsible: string;
-    executionDate: string; // ISO
+    registeredAt: string; // ISO
+    evidence: PrescriptiveActionEvidence[];
+}
+
+export interface PrescriptiveActionEvidence {
+    id: string;
+    type: string;
+    source: string;
+    description: string;
+    url?: string;
+    capturedAt: string;
 }
 
 // ================================
@@ -81,7 +98,11 @@ export interface PrescriptiveAlertSummary {
     id: string;
     zoneId: string;
     severity: RiskLevel;   // mismo tipo que AgriculturalAlert.severity
-    message: string;        // = AgriculturalAlert.title (a confirmar)
+    type: string;
+    title: string;
+    message: string;
+    recommendedAction: string;
+    createdAt: string;
 }
 
 // ================================
@@ -92,9 +113,14 @@ export interface PrescriptiveAlertSummary {
 // hasta confirmar el tipo real del cuaderno de campo.
 export interface PrescriptivePendingAction {
     id: string;
+    title: string;
     description: string;
+    status: "PENDING";
+    responsible: string;
+    registeredAt: string;
     dueDate: string | null; // ISO o null
     priority: RecommendationPriority;
+    evidence: PrescriptiveActionEvidence[];
 }
 
 // ================================
@@ -105,12 +131,14 @@ export interface PrescriptivePendingAction {
 // fuente real de Jorge se deriva, para que quede trazable en
 // prescriptive-traceability-v0.md.
 export interface PrescriptiveFieldReport {
+    reportId: string;
     fieldId: string;          // = ZoneInsight.fieldId
     zoneId: string;            // = ZoneInsight.zoneId
     cropType: string;           // = ZoneInsight.cropType
     healthScore: number;         // = ZoneInsight.healthScore
     finalRiskLevel: RiskLevel;    // = ZoneInsight.finalRiskLevel
     mainCause: string;             // = ZoneInsight.mainCause
+    summary: string;
     evidence: PrescriptiveEvidenceSummary[];        // adaptado de ZoneInsight.evidence[]
     activeAlerts: PrescriptiveAlertSummary[];         // adaptado de AgriculturalAlert[]
     recommendations: PrescriptiveRecommendationSummary[]; // adaptado de Recommendation[]

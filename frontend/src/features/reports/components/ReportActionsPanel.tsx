@@ -60,6 +60,11 @@ function ActionColumn({ title, actions }: ActionColumnProps) {
                         Responsible: {action.responsible ?? "Unassigned"} ·{" "}
                         {formatShortDate(action.registeredAt)}
                     </small>
+                    <small>
+                        Evidence: {action.evidence.length === 0
+                            ? "No associated evidence"
+                            : action.evidence.map((item) => item.description).join(" · ")}
+                    </small>
                 </article>
             ))}
             </div>

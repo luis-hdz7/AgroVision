@@ -31,7 +31,7 @@ function adaptEvidence(insight: ZoneInsight): PrescriptiveEvidenceSummary[] {
     unit: item.unit ?? null,
     status: item.status,
     explanation: item.explanation,
-    date: insight.generatedAt,
+    capturedAt: insight.generatedAt,
   }));
 }
 
@@ -40,7 +40,11 @@ function adaptAlerts(alerts: AgriculturalAlert[]): PrescriptiveAlertSummary[] {
     id: alert.id,
     zoneId: alert.zoneId ?? "",
     severity: toRiskLevel(alert.severity),
-    message: alert.title,
+    type: alert.type,
+    title: alert.title,
+    message: alert.message,
+    recommendedAction: alert.recommendedAction,
+    createdAt: alert.createdAt,
   }));
 }
 
@@ -60,7 +64,9 @@ function adaptRecommendations(
     return {
       id: recommendation.id,
       zoneId: recommendation.zoneId ?? "",
-      recommendation: `${recommendation.reason} → ${recommendation.suggestedAction}`,
+      reason: recommendation.reason,
+      suggestedAction: recommendation.suggestedAction,
+      expectedImpact: recommendation.expectedImpact,
       priority: recommendation.priority as RecommendationPriority,
       relatedEvidenceIds,
     };
@@ -76,9 +82,12 @@ function adaptActionsTaken(
     )
     .map((entry) => ({
       id: entry.id,
-      actionTaken: entry.actionTaken,
+      title: entry.activityType,
+      description: entry.actionTaken,
+      status: "DONE",
       responsible: entry.responsibleUser,
-      executionDate: entry.createdAt,
+      registeredAt: entry.createdAt,
+      evidence: entry.evidence ?? [],
     }));
 }
 
@@ -92,9 +101,14 @@ function adaptPendingActions(
     })
     .map((entry) => ({
       id: entry.id,
+      title: "Seguimiento pendiente",
       description: entry.actionTaken || entry.description,
+      status: "PENDING",
+      responsible: entry.responsibleUser,
+      registeredAt: entry.createdAt,
       dueDate: entry.followUpAt ?? entry.createdAt,
       priority: "HIGH",
+      evidence: entry.evidence ?? [],
     }));
 }
 
@@ -125,6 +139,7 @@ export function getPrescriptiveReportByZone(
   });
 
   return {
+    reportId: `report-${insight.zoneId}-001`,
     fieldId: insight.fieldId,
     zoneId: insight.zoneId,
     cropType: insight.cropType,
@@ -133,6 +148,7 @@ export function getPrescriptiveReportByZone(
       ? "HIGH"
       : insight.finalRiskLevel) as RiskLevel,
     mainCause: insight.mainCause,
+    summary: `${insight.mainCause} Las acciones se trazan desde el notebook de campo.`,
     evidence,
     activeAlerts: adaptAlerts(alerts),
     recommendations: adaptRecommendations(recommendations, evidenceLookup),

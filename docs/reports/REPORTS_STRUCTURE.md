@@ -140,9 +140,9 @@ Estas estructuras se construyen a partir de las entradas del cuaderno de campo d
 
 ```json
 {
-  "fieldId": "field-002",
+  "fieldId": "field-001",
   "zoneId": "zone-03",
-  "cropType": "corn",
+  "cropType": "ORANGE",
   "healthScore": 42,
   "finalRiskLevel": "HIGH",
   "mainCause": "Estrés hídrico severo combinado con baja defensa y posible inicio de plagas estructurales",
