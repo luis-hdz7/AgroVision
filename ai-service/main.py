@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.schemas import VisionAnalizeRequest, VisionAnalyzeResponse
+from app.schemas import VisionAnalyzeRequest, VisionAnalyzeResponse
 from app.visionAnalyser import analyze_image
 
 app = FastAPI()
@@ -13,6 +13,6 @@ def check_health():
 
 #lo que llega al body se convierte en un objeto visionanalyzerequest
 @app.post("/vision/analyze", response_model = VisionAnalyzeResponse)
-def analyze(request: VisionAnalizeRequest):
+def analyze(request: VisionAnalyzeRequest):
     return analyze_image(request)
 
