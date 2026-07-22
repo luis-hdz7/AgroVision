@@ -11,37 +11,37 @@ def analyze_image(request: VisionAnalyzeRequest) -> VisionAnalyzeResponse:
 
     if "dry" in image_name:
         prediction = "DRY_AREA"
-        confidence = 0.91
+        confidence = 0.81
         explanation = "Visual patterns compatible with dry areas were detected."
         recommendation = "Inspect irrigation coverage and verify soil moisture."
 
     elif "chlorosis" in image_name:
         prediction = "CHLOROSIS"
-        confidence = 0.89
+        confidence = 0.79
         explanation = "Yellowing patterns compatible with chlorosis were detected."
         recommendation = "Evaluate nutrient availability and inspect affected plants."
 
     elif "spot" in image_name:
         prediction = "LEAF_SPOT"
-        confidence = 0.86
+        confidence = 0.76
         explanation = "Leaf spot patterns were identified during visual inspection."
         recommendation = "Perform field inspection and evaluate disease presence."
 
     elif "water" in image_name:
         prediction = "WATER_STRESS"
-        confidence = 0.93
+        confidence = 0.83
         explanation = "Visual indicators suggest possible water stress."
         recommendation = "Increase irrigation and monitor vegetation health."
 
     elif "healthy" in image_name:
         prediction = "HEALTHY"
-        confidence = 0.97
+        confidence = 0.84
         explanation = "No significant visual anomalies were detected."
         recommendation = "Continue regular monitoring."
 
     else:
         prediction = "UNKNOWN"
-        confidence = 0.50
+        confidence = 0.62
         explanation = "The image does not provide enough information for classification."
         recommendation = "Perform a manual field inspection."
 
