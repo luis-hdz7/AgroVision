@@ -7,7 +7,7 @@ export class VisionService {
     public static analyzeImage(request: VisionAnalyzeRequest,): VisionAnalyzeResponse {
         return {
             prediction: "WATER_STRESS",
-            confidence: 0.93,
+            confidence: 0.83,
             metrics: ["visual_pattern"],
             evidence: [
                 {
