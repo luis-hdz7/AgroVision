@@ -14,6 +14,9 @@ export const fieldNotebookMock: FieldNotebookEntry[] = [
     actionTaken:
       "Se registró la anomalía y se documentó evidencia visual para soportar la evaluación técnica de la zona.",
     responsibleUser: "Sofía Vega",
+    alertId: "alert-zone03-visual_anomaly",
+    recommendationId: "rec-zone03-visual_anomaly",
+    reportId: "report-zone003-001",
     evidence: [
       {
         id: "evid-fn-001",

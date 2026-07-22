@@ -1,19 +1,19 @@
-import { FieldActivityType } from './fieldActivityTypes';
+import { FieldActivityType } from "./fieldActivityTypes";
 
 export type FieldNotebookEvidenceSource =
-  | 'VISION'
-  | 'SENSOR'
-  | 'WEATHER'
-  | 'HISTORY'
-  | 'SIMULATION'
-  | 'MANUAL';
+  | "VISION"
+  | "SENSOR"
+  | "WEATHER"
+  | "HISTORY"
+  | "SIMULATION"
+  | "MANUAL";
 
 export type FieldNotebookEvidenceType =
-  | 'image'
-  | 'video'
-  | 'note'
-  | 'sensor'
-  | 'document';
+  | "image"
+  | "video"
+  | "note"
+  | "sensor"
+  | "document";
 
 // Esta carpeta contiene los tipos de datos relacionados con el field notebook.
 // Su función es definir la estructura de los datos que se manejan en el field notebook, como las entradas, actividades, problemas observados y acciones tomadas.
@@ -36,6 +36,9 @@ export interface FieldNotebookEntry {
   problemObserved: string;
   actionTaken: string;
   responsibleUser: string;
+  alertId?: string;
+  recommendationId?: string;
+  reportId?: string;
   evidence?: FieldNotebookEvidence[];
   followUpAt?: string;
   createdAt: string;

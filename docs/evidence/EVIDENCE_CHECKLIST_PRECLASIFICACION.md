@@ -1,7 +1,7 @@
 # Checklist de Evidencias — Preclasificación
 
 **Caso oficial de demo:** `field-001` · `zone-03` · `ORANGE` · riesgo `HIGH`
-**Fecha de entrega:** 21/jul/2026
+**Fecha de entrega:** 22/jul/2026
 **Estado general:** listo para demo, con incidencias históricas resueltas y registradas.
 
 ## Pantallas y flujo funcional
@@ -23,6 +23,21 @@
 | `GET /api/recommendations`              |        | Recomendación de riego para el caso demo.                                          |
 | `GET /api/reports/prescriptive/zone-03` |        | Incluye acciones tomadas y pendientes con responsable, fecha y evidencia asociada. |
 | `GET /api/field-notebook/zone/zone-03`  |        | Devuelve los eventos de notebook con responsable, fecha, acción y evidencia.       |
+
+## Vision AI — Evidencia visual (`zone-03`, `ORANGE`)
+
+| Campo                  | Detalle                                                                                                                                                                                                                                                                                                                                                    |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Pantalla**           | Notebook de campo (`fn-001`) y Reporte prescriptivo (`/reports/prescriptive/zone-03`), donde se muestra la evidencia con `source: "VISION"`.                                                                                                                                                                                                               |
+| **Endpoint/mock**      | `zoneInsightMock.ts` (`ins-003`) → evidencia `VISION` (`visualAnomaly`, `dryAreaDetected`, `chlorosisDetected`). `fieldNotebookMock.ts` (`fn-001`) → evidencia visual + relación con `alertId` / `recommendationId` / `reportId`. `GET /api/reports/prescriptive/zone-03` → consolida la evidencia en el reporte.                                          |
+| **Captura**            | Fotografía de campo con clorosis y áreas secas (`evid-fn-001`, `url: https://example.org/evidence/fn-001.jpg`).                                                                                                                                                                                                                                            |
+| **Limitación técnica** | La evidencia Vision AI en `ZoneInsight` es simulada (mock); no proviene de un modelo de visión real conectado en este momento. El reporte prescriptivo enlaza el notebook por `zoneId`, no por `alertId`/`recommendationId` de forma directa — ajuste pendiente si se requiere trazabilidad estricta por ID (ver nota en `ideathon-demo-evidence-map.md`). |
+
+- [x] Vision AI identificado como entrada visual del flujo (no pantalla aislada).
+- [x] Evidencia `source: "VISION"` presente en `ZoneInsight` y en `fieldNotebookMock`.
+- [x] Relación con alerta (`alert-zone-03-visual_anomaly`) documentada en `fn-001`.
+- [x] Relación con recomendación (`rec-zone-03-visual_anomaly`) documentada en `fn-001`.
+- [x] Relación con reporte (`report-zone-03-001`) documentada en `fn-001`.
 
 ## Trazabilidad de acciones
 

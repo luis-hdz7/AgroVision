@@ -544,19 +544,21 @@ Recommendations
 
 # Resumen de Endpoints
 
-| Método | Endpoint | Módulo |
-| ------- | -------- | ------- |
-| GET | `/api/health` | Shared |
-| GET | `/api/vegetation/indices?fieldId=field-001` | Vegetation |
-| GET | `/api/analysis/zone/:zoneId` | Analysis |
-| GET | `/api/risk/field/:fieldId` | Risk |
-| GET | `/api/alerts` | Alerts |
-| GET | `/api/recommendations` | Recommendations |
-| GET | `/api/reports/prescriptive/:zoneId` | Reports |
-| GET | `/api/field-notebook` | Field Notebook |
-| GET | `/api/field-notebook/zone/:zoneId` | Field Notebook |
-| GET | `/api/field-notebook/field/:fieldId` | Field Notebook |
-| GET | `/api/dashboard/summary` | Dashboard |
+| Método | Endpoint                                    | Módulo               |
+| ------ | ------------------------------------------- | -------------------- |
+| GET    | `/api/health`                               | Shared               |
+| GET    | `/api/vegetation/indices?fieldId=field-001` | Vegetation           |
+| GET    | `/api/analysis/zone/:zoneId`                | Analysis             |
+| GET    | `/api/risk/field/:fieldId`                  | Risk                 |
+| GET    | `/api/alerts`                               | Alerts               |
+| GET    | `/api/recommendations`                      | Recommendations      |
+| GET    | `/api/reports/prescriptive/:zoneId`         | Reports              |
+| GET    | `/api/field-notebook`                       | Field Notebook       |
+| GET    | `/api/field-notebook/zone/:zoneId`          | Field Notebook       |
+| GET    | `/api/field-notebook/field/:fieldId`        | Field Notebook       |
+| GET    | `/api/dashboard/summary`                    | Dashboard            |
+| POST   | `/vision/analyze`                           | Vision AI Service    |
+| POST   | `/api/vision/analyze`                       | Vision Backend Proxy |
 
 ---
 
@@ -947,6 +949,115 @@ Permite:
 ### Módulo
 
 Dashboard
+
+---
+
+# Vision AI Service
+
+## POST /vision/analyze
+
+### Descripción
+
+Realiza un análisis visual preliminar utilizando el AI Service desarrollado con FastAPI.
+
+El servicio implementa una lógica ligera de preclasificación para demostrar la arquitectura de análisis visual. No corresponde a un modelo de inteligencia artificial entrenado.
+
+### Request Body
+
+```json
+{
+  "image": "water_stress_field.jpg"
+}
+```
+
+### Response
+
+```json
+{
+  "prediction": "WATER_STRESS",
+  "confidence": 0.93,
+  "metrics": [
+    "visual_pattern"
+  ],
+  "evidence": [
+    {
+      "metric": "visual_pattern",
+      "value": "WATER_STRESS",
+      "explanation": "Visual indicators suggest possible water stress."
+    }
+  ],
+  "explanation": "Visual indicators suggest possible water stress.",
+  "recommendation": "Increase irrigation and monitor vegetation health."
+}
+```
+
+### Predicciones soportadas
+
+- HEALTHY
+- WATER_STRESS
+- CHLOROSIS
+- DRY_AREA
+- LEAF_SPOT
+- UNKNOWN
+
+### Uso
+
+Este servicio realiza una clasificación visual preliminar para demostrar la arquitectura desacoplada del AI Service.
+
+---
+
+# Vision Backend Proxy
+
+## POST /api/vision/analyze
+
+### Descripción
+
+Endpoint del backend que actúa como proxy para el AI Service.
+
+Actualmente devuelve una respuesta compatible con el frontend y deja preparada la integración futura con el servicio FastAPI.
+
+### Request Body
+
+```json
+{
+  "image": "water_stress_field.jpg"
+}
+```
+
+### Response
+
+```json
+{
+  "success": true,
+  "data": {
+    "prediction": "WATER_STRESS",
+    "confidence": 0.93,
+    "metrics": [
+      "visual_pattern"
+    ],
+    "evidence": [
+      {
+        "metric": "visual_pattern",
+        "value": "WATER_STRESS",
+        "explanation": "Visual indicators suggest possible water stress."
+      }
+    ],
+    "explanation": "Visual indicators suggest possible water stress.",
+    "recommendation": "Increase irrigation and monitor vegetation health."
+  },
+  "message": "Vision analysis completed successfully",
+  "error": null,
+  "timestamp": "2026-07-20T12:00:00.000Z"
+}
+```
+
+### Uso en frontend
+
+Permite que el frontend consuma un único endpoint (`/api/vision/analyze`) sin depender directamente del AI Service, facilitando futuras integraciones y cambios internos sin modificar la aplicación cliente.
+
+### Módulo
+
+Vision
 
 ---
 

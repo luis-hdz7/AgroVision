@@ -19,8 +19,10 @@ import alertRoutes from "./modules/alerts/routes/alertRoutes";
 //*modulos de recommendations
 import recommendationsRoutes from "./modules/recommendations/routes/recommendationRoutes";
 //modulo dashboard
-
 import dashboardRoutes from "./modules/dashboard/routes/dashboardRoutes";
+//modulo de vision
+import visionRoutes from "./modules/vision/routes/visionRoutes";
+
 // Middlewares globales
 app.use(express.json());
 
@@ -47,6 +49,9 @@ app.use("/api/vegetation", vegetationRoutes);
 app.use("/api/analysis", zoneAnalysisRouter);
 
 //vinculacion del modulo dashboard
-app.use("/api/dashboard", dashboardRoutes)
+app.use("/api/dashboard", dashboardRoutes);
+
+//vinculacon de modulo vision
+app.use("/api/vision", visionRoutes);
 
 export default app;
