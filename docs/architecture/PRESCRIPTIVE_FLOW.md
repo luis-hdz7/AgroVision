@@ -15,30 +15,46 @@ El objetivo principal es convertir:
 # Arquitectura General
 
 ```text
-RiskEngine
-        ↓
-CropHealthAnalysis
-        ↓
-EvidenceFusionService
-        ↓
-EvidenceItem[]
-        ↓
-EvidenceRiskService
-        ↓
-RiskAssessment
-        ↓
-ZoneInsightService
-        ↓
-ZoneInsight
-        ├──────────────► AlertGenerationService
-        │                      ↓
-        │               AgriculturalAlert[]
-        │
-        └──────────────► RecommendationGenerationService
-                               ↓
-                        Recommendation[]
-                               ↓
-                           Dashboard
+                  SENSOR
+                     │
+                  WEATHER
+                     │
+                 SATELLITE
+                     │
+                  HISTORY
+                     │
+                  MAPPING
+                     │
+                   IMAGE
+                     │
+               Vision AI Service
+                     │
+              Visual Prediction
+                     │
+              EvidenceItem(VISION)
+                     │
+────────────────────────────────────────
+                     │
+          EvidenceFusionService
+                     │
+              EvidenceItem[]
+                     │
+          EvidenceRiskService
+                     │
+             RiskAssessment
+                     │
+            ZoneInsightService
+                     │
+                ZoneInsight
+                ├────────────► AlertGenerationService
+                │                    ↓
+                │             AgriculturalAlert[]
+                │
+                └────────────► RecommendationGenerationService
+                                     ↓
+                              Recommendation[]
+                                     ↓
+                                 Dashboard
 ```
 
 ---
@@ -118,6 +134,22 @@ Objetivo:
 - Reforzar la evidencia obtenida por sensores e imágenes satelitales.
 
 ---
+## Integración del AI Service
+
+El AI Service recibe una imagen y genera una clasificación visual preliminar basada en reglas heurísticas.
+
+La respuesta incluye:
+
+- categoría detectada;
+- nivel de confianza;
+- explicación;
+- recomendación;
+- evidencia visual.
+
+Posteriormente, esta información se transforma en un `EvidenceItem` con origen `VISION`, el cual es integrado por `EvidenceFusionService` junto con el resto de las fuentes disponibles.
+
+Esta evidencia no representa un diagnóstico definitivo y únicamente complementa el análisis prescriptivo realizado por el sistema.
+---
 
 ## HISTORY
 
@@ -163,6 +195,15 @@ Ejemplo:
   "value": 0.24,
   "status": "CRITICAL",
   "explanation": "Very low vegetation vigor detected."
+}
+```
+```
+{
+  "source": "VISION",
+  "metric": "water_stress_signal",
+  "value": "WATER_STRESS",
+  "status": "WARNING",
+  "explanation": "Visual signals compatible with water stress were detected. Field validation is recommended."
 }
 ```
 
@@ -379,3 +420,24 @@ Cada evaluación debe proporcionar:
 6. Recomendaciones accionables.
 
 De esta manera AgroVision transforma datos agrícolas provenientes de múltiples fuentes en decisiones operativas comprensibles, trazables y defendibles.
+```
+Imagen
+      ↓
+AI Service
+      ↓
+Predicción Visual
+      ↓
+EvidenceItem (VISION)
+      ↓
+EvidenceFusionService
+      ↓
+RiskAssessment
+      ↓
+ZoneInsight
+      ↓
+Alertas
+      ↓
+Recomendaciones
+      ↓
+Dashboard / Reportes
+```
