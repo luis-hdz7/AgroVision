@@ -134,7 +134,7 @@ export function generateAlerts(
             createAlert(
                 insight,
                 "LOW_VIGOR",
-                "Reduced vegetation vigor",
+                "Reduced vegetation vigor associated with water stress",
                 `Multiple vegetation indicators suggest reduced crop vigor in ${cropName}. Technical field verification is recommended to identify the underlying cause.`
             )
         );
@@ -182,7 +182,7 @@ export function generateAlerts(
             createAlert(
                 insight,
                 "HEAT_STRESS",
-                "Potential heat stress",
+                "Elevated temperature may aggravate the existing water stress.",
                 "Elevated air temperature may increase crop stress and reduce vegetation performance. Continue monitoring environmental conditions and perform field verification if required."
             )
         );

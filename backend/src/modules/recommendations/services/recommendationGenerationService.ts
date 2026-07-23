@@ -115,7 +115,7 @@ function resolveSuggestedAction(
  * mantener consistencia entre riesgo, alertas y recomendaciones.
  */
 function buildReason(insight: ZoneInsight,_alert: AgriculturalAlert): string {
-    return `${insight.mainCause} ${insight.summary}`;
+    return `${insight.mainCause} Field verification is recommended before applying corrective actions.`;
 }
 
 /*
