@@ -47,11 +47,6 @@ const reportFallback: PrescriptiveReport = {
             metric: "soilMoisturePercentage",
             value: 28,
             unit: "%",
-<<<<<<< HEAD
-            status: "CRITICAL",
-            explanation: "Critical soil moisture deficit detected.",
-            capturedAt: "2026-07-03T12:10:00.000Z",
-=======
             status: "WARNING",
             explanation: "Humedad estimada por debajo del umbral operativo del cultivo.",
             capturedAt: "2026-07-01T08:20:00.000Z", 
@@ -64,7 +59,6 @@ const reportFallback: PrescriptiveReport = {
             status: "WARNING",
             explanation: "Análisis visual preliminar compatible con estrés hídrico.",
             capturedAt: "2026-07-01T08:25:00.000Z",
->>>>>>> 0bb6fe978eb3e20a901bcf5f661b7b9acf249cca
         },
         {
             source: "WEATHER",
