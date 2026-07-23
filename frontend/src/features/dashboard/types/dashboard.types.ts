@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ======================
  * Dahsboard types
  * ======================
@@ -99,7 +99,7 @@ export interface DashboardIntelligence {
 }
 
 // Resumen de alertas para el dashboard.
-// No reemplaza Alert completa; solo resume lo crítico.
+// No reemplaza Alert completa; solo suma lo crítico.
 export interface DashboardAlertSummary {
   readonly active: number;
   readonly critical: number;
@@ -171,12 +171,16 @@ export interface DashboardVegetationSummary {
 
 // DashboardSummary actualizado para frontend.
 // Agrupa lo necesario para comunicar inteligencia agrícola.
+// Alineado con el caso demo oficial: field-001 / zone-03 / ORANGE / HIGH
 export interface DashboardSummary {
   readonly farm: {
     readonly id: string;
     readonly name: string;
     readonly totalAreaSquareMeters: number;
   };
+
+  readonly fieldId: string;
+  readonly cropType: string;
 
   readonly crops: {
     readonly total: number;

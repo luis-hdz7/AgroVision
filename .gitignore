@@ -17,3 +17,6 @@ backend/src/generated/
 
 .DS_Store
 .vscode/
+
+ai-service/.venv/
+

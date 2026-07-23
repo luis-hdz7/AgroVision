@@ -12,12 +12,14 @@ Actualmente el backend expone un único reporte prescriptivo para una zona, con 
 
 ```typescript
 interface PrescriptiveFieldReport {
+  reportId: string;
   fieldId: string;
   zoneId: string;
   cropType: string;
   healthScore: number;
   finalRiskLevel: RiskLevel;
   mainCause: string;
+  summary: string;
   evidence: PrescriptiveEvidenceSummary[];
   activeAlerts: PrescriptiveAlertSummary[];
   recommendations: PrescriptiveRecommendationSummary[];
@@ -27,16 +29,15 @@ interface PrescriptiveFieldReport {
 }
 ```
 
+> **Corrección respecto a versiones anteriores de este documento:** `reportId` **sí existe** en la implementación actual (formato `report-${zoneId}-001`) y `summary` también forma parte del reporte. Ambos habían quedado fuera por error en la versión previa de esta documentación.
+
 ### Campos que no forman parte del modelo actual
 
 No existen en la implementación actual los siguientes campos:
 
-- `reportId`
 - `reportType`
 - `generatedAt`
-- `suggestedAction`
 - `actionPriority`
-- `expectedImpact`
 - `estimatedCost`
 - `estimatedDaysToRecover`
 - `createdBy`
@@ -58,20 +59,24 @@ interface PrescriptiveEvidenceSummary {
   unit?: string | null;
   status: string;
   explanation: string;
-  date: string;
+  capturedAt: string;
 }
 ```
+
+> **Corrección:** el campo de fecha se llama `capturedAt`, no `date`.
 
 ### Significado de cada campo
 
 - `id`: identificador de la evidencia, por ejemplo `ev-001`.
-- `source`: fuente original de la evidencia, por ejemplo `SATELLITE` o `ROVER_CAMERA`.
-- `metric`: métrica asociada, como `ndvi`, `temperature` o `soil_moisture`.
+- `source`: fuente original de la evidencia, tomada de `ZoneInsight.evidence[].source` — por ejemplo `SATELLITE`, `SENSOR`, `WEATHER`, `HISTORY` o `VISION`.
+- `metric`: métrica asociada, como `ndvi`, `soilMoisturePercentage`, `temperatureCelsius`, o métricas visuales como `visualAnomaly`, `dryAreaDetected`, `chlorosisDetected`.
 - `value`: valor medido o inferido.
 - `unit`: unidad del valor si aplica.
 - `status`: estado de la evidencia, por ejemplo `NORMAL`, `WATCH`, `WARNING` o `CRITICAL`.
 - `explanation`: descripción breve de por qué esa evidencia es relevante.
-- `date`: fecha de referencia del reporte, tomada desde la fuente de insight.
+- `capturedAt`: fecha de referencia del reporte, derivada de `ZoneInsight.generatedAt`.
+
+> **Evidencia visual preliminar:** el reporte puede contener evidencia con `source: "VISION"` proveniente directamente del análisis de `ZoneInsight`, generada antes de una inspección de campo formal (por ejemplo `visualAnomaly`, `dryAreaDetected`, `chlorosisDetected`). Esta evidencia respalda alertas de tipo `VISUAL_ANOMALY` y sus recomendaciones asociadas, y puede confirmarse o ampliarse posteriormente mediante el Notebook de campo (ver `PrescriptiveActionLog.evidence` en la sección 5).
 
 ---
 
@@ -82,13 +87,19 @@ interface PrescriptiveAlertSummary {
   id: string;
   zoneId: string;
   severity: RiskLevel;
+  type: string;
+  title: string;
   message: string;
+  recommendedAction: string;
+  createdAt: string;
 }
 ```
 
+> **Corrección:** la estructura real incluye también `type`, `title`, `recommendedAction` y `createdAt`, no solo `id`, `zoneId`, `severity` y `message`.
+
 ### Observación importante
 
-La implementación actual usa `activeAlerts`, no `alerts`.
+La implementación actual usa `activeAlerts`, no `alerts`, como propiedad del reporte.
 
 ---
 
@@ -98,17 +109,26 @@ La implementación actual usa `activeAlerts`, no `alerts`.
 interface PrescriptiveRecommendationSummary {
   id: string;
   zoneId: string;
-  recommendation: string;
+  reason: string;
+  suggestedAction: string;
+  expectedImpact: {
+    impactArea: string;
+    description: string;
+  };
   priority: RecommendationPriority;
   relatedEvidenceIds: string[];
 }
 ```
 
+> **Corrección:** no existe un campo único `recommendation` con texto combinado. La implementación real separa `reason` (el "por qué"), `suggestedAction` (la acción concreta) y `expectedImpact` (objeto con `impactArea` y `description`).
+
 ### Significado de cada campo
 
-- `recommendation`: texto resultante que combina la razón y la acción sugerida.
-- `priority`: prioridad de la recomendación.
-- `relatedEvidenceIds`: lista de IDs de evidencias que sustentan la recomendación.
+- `reason`: causa/justificación de la recomendación, derivada de `ZoneInsight.mainCause` + `summary`.
+- `suggestedAction`: acción concreta sugerida (puede venir de un `CropProfile` o de `ZoneInsight.recommendedAction`).
+- `expectedImpact`: impacto esperado de aplicar la recomendación, con área (`WATER_SAVING`, `CROP_HEALTH`, `YIELD_PROTECTION`, `DISEASE_PREVENTION`) y descripción.
+- `priority`: prioridad de la recomendación (incluye `URGENT`).
+- `relatedEvidenceIds`: lista de IDs de evidencias (`PrescriptiveEvidenceSummary.id`) que la sustentan.
 
 ---
 
@@ -117,22 +137,39 @@ interface PrescriptiveRecommendationSummary {
 ```typescript
 interface PrescriptiveActionLog {
   id: string;
-  actionTaken: string;
+  title: string;
+  description: string;
+  status: "DONE";
   responsible: string;
-  executionDate: string;
+  registeredAt: string;
+  evidence: PrescriptiveActionEvidence[];
 }
-```
 
-```typescript
 interface PrescriptivePendingAction {
   id: string;
+  title: string;
   description: string;
+  status: "PENDING";
+  responsible: string;
+  registeredAt: string;
   dueDate: string | null;
   priority: RecommendationPriority;
+  evidence: PrescriptiveActionEvidence[];
+}
+
+interface PrescriptiveActionEvidence {
+  id: string;
+  type: string;
+  source: string;
+  description: string;
+  url?: string;
+  capturedAt: string;
 }
 ```
 
-Estas estructuras se construyen a partir de las entradas del cuaderno de campo del módulo correspondiente.
+> **Corrección:** las estructuras reales no son `{id, actionTaken, responsible, executionDate}` ni `{id, description, dueDate, priority}`. Ambas incluyen `title`, `status` (`"DONE"` / `"PENDING"` respectivamente), `registeredAt`, y un arreglo `evidence[]` con la evidencia asociada del Notebook de campo (incluye evidencia visual cuando `source: "VISION"`).
+
+Estas estructuras se construyen a partir de las entradas del Notebook de campo, filtrando por si el texto de la acción contiene o no la palabra "pendiente"/"pending".
 
 ---
 
@@ -140,58 +177,93 @@ Estas estructuras se construyen a partir de las entradas del cuaderno de campo d
 
 ```json
 {
-  "fieldId": "field-002",
+  "reportId": "report-zone-03-001",
+  "fieldId": "field-001",
   "zoneId": "zone-03",
-  "cropType": "corn",
-  "healthScore": 42,
+  "cropType": "ORANGE",
+  "healthScore": 35,
   "finalRiskLevel": "HIGH",
-  "mainCause": "Estrés hídrico severo combinado con baja defensa y posible inicio de plagas estructurales",
+  "mainCause": "Multiple evidence sources indicate severe vegetation deterioration associated with water stress and reduced canopy vigor.",
+  "summary": "Multiple evidence sources indicate severe vegetation deterioration associated with water stress and reduced canopy vigor. Las acciones se trazan desde el notebook de campo.",
   "evidence": [
     {
-      "id": "ev-001",
-      "source": "ROVER_CAMERA",
-      "metric": "visual",
-      "value": null,
+      "id": "ev-006",
+      "source": "VISION",
+      "metric": "chlorosisDetected",
+      "value": true,
       "unit": null,
       "status": "WARNING",
-      "explanation": "Clorosis moteada en hojas, defoliación parcial visible",
-      "date": "2026-07-05T14:30:22Z"
+      "explanation": "Visual signs compatible with chlorosis were detected.",
+      "capturedAt": "2026-07-03T12:10:00Z"
     }
   ],
   "activeAlerts": [
     {
-      "id": "AL-01",
+      "id": "alert-zone-03-visual_anomaly",
       "zoneId": "zone-03",
       "severity": "HIGH",
-      "message": "Estrés hídrico severo detectado"
+      "type": "VISUAL_ANOMALY",
+      "title": "Visual anomaly detected (ORANGE)",
+      "message": "Visual inspection detected anomalies compatible with vegetation stress in ORANGE. Field verification is recommended before applying corrective measures.",
+      "recommendedAction": "Inspect irrigation coverage and verify soil moisture conditions.",
+      "createdAt": "2026-07-03T12:10:00Z"
     }
   ],
   "recommendations": [
     {
-      "id": "REC-01",
+      "id": "rec-zone-03-visual_anomaly",
       "zoneId": "zone-03",
-      "recommendation": "Riego urgente → Aplicar riego de emergencia",
-      "priority": "URGENT",
-      "relatedEvidenceIds": ["ev-001"]
+      "reason": "Multiple evidence sources indicate severe vegetation deterioration associated with water stress and reduced canopy vigor. Multiple evidence sources consistently indicate severe vegetation deterioration associated with water stress.",
+      "suggestedAction": "Inspect irrigation coverage and verify soil moisture conditions.",
+      "expectedImpact": {
+        "impactArea": "DISEASE_PREVENTION",
+        "description": "Allows early validation of visual anomalies before they progress."
+      },
+      "priority": "HIGH",
+      "relatedEvidenceIds": ["ev-006"]
     }
   ],
   "actionsTaken": [
     {
-      "id": "entry-001",
-      "actionTaken": "Se aplicó riego preventivo",
-      "responsible": "field-operator",
-      "executionDate": "2026-07-05T14:30:22Z"
+      "id": "fn-002",
+      "title": "IRRIGATION",
+      "description": "Se activó un riego suplementario de emergencia para recuperar la disponibilidad de agua en la zona radicular.",
+      "status": "DONE",
+      "responsible": "Julián León",
+      "registeredAt": "2026-06-29T17:00:00Z",
+      "evidence": [
+        {
+          "id": "evid-fn-002",
+          "type": "sensor",
+          "source": "SENSOR",
+          "description": "Lectura de humedad del suelo inferior al umbral crítico para la zona zone-03.",
+          "capturedAt": "2026-06-29T17:00:00Z"
+        }
+      ]
     }
   ],
   "pendingActions": [
     {
-      "id": "entry-002",
-      "description": "Pendiente inspección técnica",
-      "dueDate": "2026-07-05T14:30:22Z",
-      "priority": "HIGH"
+      "id": "fn-003",
+      "title": "Seguimiento pendiente",
+      "description": "Pendiente: revisar la zona dentro de 24-48 horas y validar si se requiere intervención adicional o inspección de plagas.",
+      "status": "PENDING",
+      "responsible": "Carla Mena",
+      "registeredAt": "2026-06-30T08:00:00Z",
+      "dueDate": "2026-07-01T08:00:00Z",
+      "priority": "HIGH",
+      "evidence": [
+        {
+          "id": "evid-fn-003",
+          "type": "note",
+          "source": "MANUAL",
+          "description": "Nota de campo con seguimiento pendiente y próximos pasos para la zona zone-03.",
+          "capturedAt": "2026-06-30T08:00:00Z"
+        }
+      ]
     }
   ],
-  "createdAt": "2026-07-05T14:30:22Z"
+  "createdAt": "2026-07-03T12:10:00Z"
 }
 ```
 
@@ -202,13 +274,13 @@ Estas estructuras se construyen a partir de las entradas del cuaderno de campo d
 ```text
 Insight de zona
   ↓
-Adaptar evidencias
+Adaptar evidencias (incluye evidencia visual preliminar, source: VISION)
   ↓
 Generar alertas activas
   ↓
 Generar recomendaciones
   ↓
-Integrar acciones tomadas y pendientes
+Integrar acciones tomadas y pendientes (desde el Notebook de campo)
   ↓
 Responder el reporte prescriptivo
 ```
@@ -229,10 +301,13 @@ Esta ruta devuelve el reporte prescriptivo generado para una zona específica.
 
 La documentación anterior hablaba de un modelo más amplio con campos de auditoría y resumen ejecutivo. Ese modelo ya no coincide con la implementación actual del backend. Por eso este documento se limita a la estructura realmente expuesta por los tipos y el servicio de reportes.
 
+**Nota de trazabilidad (Vision AI):** actualmente `getPrescriptiveReportByZone` enlaza el Notebook de campo al reporte por `zoneId`, no por relación directa de `alertId`/`recommendationId`. El Notebook de campo (`fieldNotebookMock.ts`) sí registra estos identificadores en cada entrada para trazabilidad documental, pero el servicio de reportes aún no los consume para hacer el cruce explícito. Ajuste sugerido a Jorge/Leo si se requiere trazabilidad estricta por ID.
+
 ---
 
 ## 10. Versionado
 
+- **v2.1** (2026-07-22): Corrección de `reportId` y `summary` (sí existen en el modelo real); corrección de estructuras de `PrescriptiveAlertSummary`, `PrescriptiveRecommendationSummary`, `PrescriptiveActionLog` y `PrescriptivePendingAction` para reflejar los campos reales; se documenta evidencia visual preliminar (`source: "VISION"`).
 - **v2.0** (2026-07-20): Documentación alineada con la estructura real del backend actual.
 
-**Última actualización:** 2026-07-20
+**Última actualización:** 2026-07-22

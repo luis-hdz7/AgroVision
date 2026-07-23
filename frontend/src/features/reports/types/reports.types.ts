@@ -107,6 +107,16 @@ export interface ReportAction {
     readonly status: ReportActionStatus;
     readonly responsible?: string | null;
     readonly registeredAt: string;
+    readonly evidence: ReadonlyArray<ReportActionEvidence>;
+}
+
+export interface ReportActionEvidence {
+    readonly id: string;
+    readonly type: string;
+    readonly source: EvidenceSource;
+    readonly description: string;
+    readonly url?: string;
+    readonly capturedAt: string;
 }
 
 export interface PrescriptiveReport {

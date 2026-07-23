@@ -1,4 +1,4 @@
-/**
+﻿/**
 * =========================================
 *  Dashboard Mock
 * =========================================
@@ -6,6 +6,9 @@
 * Mock prescriptivo del Dashboard.
 * Simula una zona con bajo vigor, NDVI reducido,
 * humedad baja y recomendación accionable.
+*
+* Caso demo oficial: field-001 / zone-03 / ORANGE / HIGH
+* Alineado con los valores del backend (zoneInsightMock, alertsMock, recommendationsMock).
 *
 * Regla:
 * Este mock no debe vivir dentro de DashboardPage.
@@ -23,6 +26,9 @@ export const dashboardMock: DashboardData = {
       totalAreaSquareMeters: 42000,
     },
 
+    fieldId: "field-001",
+    cropType: "ORANGE",
+
     crops: {
       total: 6,
       healthy: 3,
@@ -30,24 +36,24 @@ export const dashboardMock: DashboardData = {
       critical: 1,
     },
 
-    healthScore: 64,
+    healthScore: 35,
 
     intelligence: {
       dominantRisk: "WATER_STRESS",
       mostAffectedZoneId: "zone-03",
       prescriptiveSummary:
-        "Zona 03 presenta bajo vigor vegetal, humedad reducida y señales visuales compatibles con estrés hídrico. Priorice inspección de riego hoy y registre nueva medición en 24 horas.",
+        "La zona 03 del cultivo de naranjo presenta deterioro severo por estrés hídrico. Múltiples fuentes de evidencia (sensor, satélite, visión) indican humedad crítica, NDVI muy bajo y clorosis. Priorice revisión de riego inmediata y seguimiento en 24 horas.",
       satelliteLayerStatus: "SIMULATED",
     },
 
     vegetation: {
       source: "SIMULATION",
-      ndvi: 0.42,
+      ndvi: 0.24,
       vigorLevel: "LOW",
       anomalyDetected: true,
       explanation:
-        "La capa satelital simulada muestra bajo vigor vegetal concentrado en la zona 03.",
-      capturedAt: "2026-06-28T08:40:00.000Z",
+        "La capa satelital simulada muestra vigor vegetal muy bajo (NDVI 0.24) en la zona 03, compatible con estrés hídrico severo.",
+      capturedAt: "2026-07-03T12:10:00.000Z",
     },
 
     vision: {
@@ -55,8 +61,8 @@ export const dashboardMock: DashboardData = {
       lastPrediction: "WATER_STRESS",
       confidence: 0.87,
       explanation:
-        "El análisis visual preliminar detecta reducción de cobertura verde y presencia moderada de áreas secas.",
-      lastAnalyzedAt: "2026-06-28T08:45:00.000Z",
+        "El análisis visual detecta clorosis, áreas secas y deficiencia de vigor en el dosel del naranjo de la zona 03.",
+      lastAnalyzedAt: "2026-07-03T12:10:00.000Z",
     },
 
     alerts: {
@@ -65,28 +71,28 @@ export const dashboardMock: DashboardData = {
       warning: 2,
       criticalAlerts: [
         {
-          id: "alert-001",
+          id: "alert-zone-03-water_stress",
           title: "Riesgo alto de estrés hídrico en zona 03",
           severity: "HIGH",
           zoneId: "zone-03",
           evidence: [
             {
-              source: "SATELLITE",
-              metric: "ndvi",
-              value: 0.42,
-              unit: "index",
-              status: "WARNING",
-              explanation:
-                "NDVI simulado por debajo del rango esperado para vigor estable.",
-            },
-            {
               source: "SENSOR",
               metric: "soilMoisturePercentage",
-              value: 34,
+              value: 28,
               unit: "%",
-              status: "WARNING",
+              status: "CRITICAL",
               explanation:
-                "Humedad estimada por debajo del umbral operativo del cultivo.",
+                "Humedad del suelo crítica (28%), por debajo del umbral operativo del cultivo de naranjo.",
+            },
+            {
+              source: "SATELLITE",
+              metric: "ndvi",
+              value: 0.24,
+              unit: "index",
+              status: "CRITICAL",
+              explanation:
+                "NDVI muy bajo (0.24), indica vigor vegetal severamente reducido.",
             },
             {
               source: "VISION",
@@ -95,12 +101,12 @@ export const dashboardMock: DashboardData = {
               unit: null,
               status: "WARNING",
               explanation:
-                "La imagen analizada presenta señales compatibles con estrés hídrico.",
+                "Análisis visual compatible con estrés hídrico: clorosis y áreas secas detectadas.",
             },
           ],
           recommendedAction:
-            "Revisar riego en zona 03, verificar presión del sistema y repetir inspección visual en 24 horas.",
-          createdAt: "2026-06-28T09:00:00.000Z",
+            "Revisar riego en zona 03, verificar presión del sistema y aplicar riego correctivo de emergencia.",
+          createdAt: "2026-07-03T12:10:00.000Z",
         },
       ],
     },
@@ -109,12 +115,12 @@ export const dashboardMock: DashboardData = {
       urgent: 1,
       highPriority: 2,
       mainRecommendation: {
-        id: "recommendation-001",
+        id: "rec-zone-03-water_stress",
         priority: "URGENT",
         reason:
-          "La zona 03 combina bajo vigor vegetal, humedad reducida y evidencia visual de estrés.",
+          "Multiple evidence sources indicate severe vegetation deterioration associated with water stress and reduced canopy vigor.",
         suggestedAction:
-          "Priorizar revisión del sistema de riego en zona 03 y aplicar riego correctivo si la inspección confirma déficit.",
+          "Estrés hídrico detectado en periodo crítico de floración del Naranjo. Activar riego controlado inmediato.",
         expectedImpact: {
           impactArea: "YIELD_PROTECTION",
           description:
@@ -123,27 +129,27 @@ export const dashboardMock: DashboardData = {
         evidence: [
           {
             source: "SATELLITE",
-            metric: "vigorLevel",
-            value: "LOW",
-            unit: null,
-            status: "WARNING",
+            metric: "ndvi",
+            value: 0.24,
+            unit: "index",
+            status: "CRITICAL",
             explanation:
-              "La simulación satelital identifica bajo vigor en el área crítica.",
+              "NDVI muy bajo (0.24), vigor vegetativo severamente reducido.",
           },
           {
             source: "WEATHER",
             metric: "temperatureCelsius",
-            value: 33,
+            value: 38,
             unit: "°C",
-            status: "WATCH",
+            status: "WARNING",
             explanation:
-              "Temperatura elevada aumenta demanda hídrica del cultivo durante el día.",
+              "Temperatura elevada (38°C) aumenta la demanda hídrica del cultivo durante el día.",
           },
         ],
-        createdAt: "2026-06-28T09:05:00.000Z",
+        createdAt: "2026-07-03T12:10:00.000Z",
       },
     },
 
-    lastUpdatedAt: "2026-06-28T09:10:00.000Z",
+    lastUpdatedAt: "2026-07-03T12:10:00.000Z",
   },
 }
