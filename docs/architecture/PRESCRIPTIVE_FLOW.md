@@ -8,7 +8,7 @@ Describir el flujo utilizado por AgroVision para transformar datos agrícolas he
 
 El objetivo principal es convertir:
 
-**Evidencia → Evaluación de Riesgo → ZoneInsight → Alertas → Recomendaciones**
+**Fuentes de Evidencia → EvidenceFusionService → RiskAssessment → ZoneInsight → AlertGenerationService → RecommendationGenerationService → FieldNotebook → PrescriptiveReportService → Dashboard**
 
 ---
 
@@ -339,7 +339,7 @@ Resultado esperado:
 
 ```json
 {
-  "fieldId": "field-002",
+  "fieldId": "field-001",
   "zoneId": "zone-03",
   "cropType": "ORANGE",
   "riskLevel": "HIGH",
@@ -360,7 +360,7 @@ Resultado esperado:
   "finalRiskLevel": "HIGH",
   "healthScore": 35,
   "mainCause": "WATER_STRESS",
-  "summary": "Multiple evidence sources suggest conditions compatible with water stress.",
+  "summary": "Multiple evidence sources indicate severe vegetation deterioration associated with water stress and reduced canopy vigor.",
   "recommendedAction": "Inspect irrigation coverage and verify soil moisture conditions."
 }
 ```
@@ -422,22 +422,37 @@ Cada evaluación debe proporcionar:
 De esta manera AgroVision transforma datos agrícolas provenientes de múltiples fuentes en decisiones operativas comprensibles, trazables y defendibles.
 ```
 Imagen
-      ↓
+↓
+
 AI Service
-      ↓
+↓
+
 Predicción Visual
-      ↓
+↓
+
 EvidenceItem (VISION)
-      ↓
+↓
+
 EvidenceFusionService
-      ↓
+↓
+
 RiskAssessment
-      ↓
+↓
+
 ZoneInsight
-      ↓
+↓
+
 Alertas
-      ↓
+↓
+
 Recomendaciones
-      ↓
-Dashboard / Reportes
+↓
+
+Field Notebook
+↓
+
+Reporte Prescriptivo
+↓
+
+Dashboard
 ```
