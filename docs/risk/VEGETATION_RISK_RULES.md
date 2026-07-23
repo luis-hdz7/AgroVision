@@ -87,7 +87,7 @@ Cuando este índice presenta valores reducidos junto con NDVI y NDWI bajos, refu
 
 # Interpretación de Vigor Vegetal
 
-## LOW
+## HIGH
 
 Condiciones compatibles con deterioro significativo del cultivo.
 
@@ -97,9 +97,7 @@ Condiciones compatibles con deterioro significativo del cultivo.
 * GNDVI bajo.
 * Presencia de clorosis.
 * Tendencia negativa persistente.
-### Acción
 
-Inspección técnica prioritaria.
 ### Riesgo
 
 HIGH
@@ -130,7 +128,7 @@ Monitoreo reforzado y validación en campo.
 
 ---
 
-## HIGH
+## LOW
 
 Vegetación saludable y estable.
 
@@ -159,7 +157,6 @@ Información insuficiente para determinar el estado vegetativo.
 Solicitar nueva captura satelital o actualización de datos.
 
 ---
-
 # Reglas de Evidencia Multifuente
 
 ## Estrés Hídrico Potencial
