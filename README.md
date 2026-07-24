@@ -2,7 +2,7 @@
   <img src="frontend/src/assets/logos/imagotipo-V-clara.svg" alt="AgroVision Intelligence Logo" width="180" />
 </p>
 
-<h1 align="center">🌱 AgroVision Intelligence</h1>
+<h1 align="center"> AgroVision Intelligence</h1>
 
 <h3 align="center">
   Plataforma prescriptiva de inteligencia agrícola multifuente para cultivos estratégicos de Nicaragua.
