@@ -115,7 +115,17 @@ function resolveSuggestedAction(
  * mantener consistencia entre riesgo, alertas y recomendaciones.
  */
 function buildReason(insight: ZoneInsight,_alert: AgriculturalAlert): string {
-    return `${insight.mainCause} Field verification is recommended before applying corrective actions.`;
+    switch (insight.finalRiskLevel) {
+        case "LOW":
+            return `${insight.mainCause} Continue routine monitoring to confirm that crop conditions remain stable.`;
+        case "MEDIUM":
+            return `${insight.mainCause} Preventive field verification is recommended before applying corrective actions.`;
+        case "HIGH":
+        case "CRITICAL":
+            return `${insight.mainCause} Immediate field verification is recommended to confirm the detected conditions and prioritize corrective actions.`;
+        default:
+            return insight.mainCause;
+    }
 }
 
 /*

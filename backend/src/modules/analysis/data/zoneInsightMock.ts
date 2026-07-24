@@ -101,14 +101,14 @@ export const zoneInsightMock: ZoneInsight[] = [
             metric: "vegetationTrend",
             value: -15,
             unit: "%",
-            status: "NORMAL",
-            explanation: "Vegetation trend remains stable."
+            status: "WATCH",
+            explanation: "Moderate negative vegetation trend detected."
         }
     ],
     mainCause:"Evidence suggests moderate reduction in vegetation performance.",
     summary:"Vegetation indices indicate reduced vigor compared to expected crop conditions. Further inspection is recommended.",
     recommendedAction:
-    "Immediately inspect irrigation coverage, validate soil moisture in the affected zone and apply corrective irrigation if water deficit is confirmed. Schedule a follow-up inspection after corrective actions.",
+    "Schedule a preventive field inspection, verify soil moisture conditions and monitor irrigation performance. Reassess the affected zone after the next monitoring cycle.",
     generatedAt: "2026-07-03T12:05:00Z"
     },
     {
