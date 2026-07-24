@@ -195,7 +195,7 @@ export const zoneInsightMock: ZoneInsight[] = [
     ],
     mainCause:"Multiple evidence sources indicate severe vegetation deterioration associated with water stress and reduced canopy vigor.",
     summary:"Multiple evidence sources consistently indicate severe vegetation deterioration associated with water stress. Immediate field inspection and corrective irrigation assessment are recommended to prevent further crop decline.",
-    recommendedAction:"Inspect irrigation coverage and verify soil moisture conditions.",
+    recommendedAction:"Immediately inspect the affected zone, verify irrigation system performance, confirm soil moisture conditions and prioritize corrective irrigation to reduce further crop deterioration.",
     generatedAt: "2026-07-03T12:10:00Z"
 }
 ];

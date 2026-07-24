@@ -321,7 +321,7 @@ Resultado esperado:
 
 - Riesgo MEDIUM
 - Reducción moderada del vigor vegetal
-- Seguimiento reforzado
+- Inspección preventiva y seguimiento reforzado.
 
 ---
 
@@ -331,7 +331,7 @@ Resultado esperado:
 
 - Riesgo HIGH
 - Evidencia multifuente compatible con estrés hídrico
-- Inspección prioritaria en campo
+- Inspección técnica prioritaria y validación inmediata de la evidencia multifuente.
 
 ---
 
@@ -346,7 +346,8 @@ Resultado esperado:
   "riskScore": 35,
   "healthScore": 35,
   "mainCause": "WATER_STRESS",
-  "recommendedAction": "Inspect irrigation coverage and verify soil moisture conditions."
+  "recommendedAction":
+  "Immediately inspect the affected zone, verify irrigation performance, confirm soil moisture conditions and prioritize corrective irrigation to reduce further crop deterioration."
 }
 ```
 
@@ -420,39 +421,3 @@ Cada evaluación debe proporcionar:
 6. Recomendaciones accionables.
 
 De esta manera AgroVision transforma datos agrícolas provenientes de múltiples fuentes en decisiones operativas comprensibles, trazables y defendibles.
-```
-Imagen
-↓
-
-AI Service
-↓
-
-Predicción Visual
-↓
-
-EvidenceItem (VISION)
-↓
-
-EvidenceFusionService
-↓
-
-RiskAssessment
-↓
-
-ZoneInsight
-↓
-
-Alertas
-↓
-
-Recomendaciones
-↓
-
-Field Notebook
-↓
-
-Reporte Prescriptivo
-↓
-
-Dashboard
-```
