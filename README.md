@@ -748,5 +748,5 @@ git push -u origin feat/nombre-del-cambio
 <h3 align="center">🌱 AgroVision Intelligence</h3>
 
 <p align="center">
-  <strong>No es solo un dashboard agrícola. Es una plataforma prescriptiva que convierte evidencia multifuente en decisiones agrícolas accionables.</strong>
+  <strong>No se trata solo un dashboard agrícola genérico. Es una plataforma prescriptiva que convierte evidencia multifuente tangibles en decisiones agrícolas accionables, con valor real y resultados medibles.</strong>
 </p>
