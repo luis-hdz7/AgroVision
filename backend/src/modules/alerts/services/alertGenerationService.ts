@@ -59,13 +59,27 @@ function hasEvidence(
 function hasWaterStressEvidence(
     insight: ZoneInsight
 ): boolean {
-
     return (
         hasEvidence(insight, "soilMoisturePercentage") ||
         hasEvidence(insight, "ndwi")
     );
-
 }
+
+function buildLowVigorMessage(insight: ZoneInsight): string {
+    const cropName = getCropDisplayName(insight.cropType);
+    switch (insight.finalRiskLevel) {
+        case "LOW":
+            return `Vegetation indicators remain generally stable in ${cropName}. Continue routine monitoring to confirm normal crop development.`;
+        case "MEDIUM":
+            return `Multiple vegetation indicators suggest reduced crop vigor in ${cropName}. Preventive field inspection is recommended to identify the underlying cause.`;
+        case "HIGH":
+        case "CRITICAL":
+            return `Multiple vegetation indicators indicate significant reduction in crop vigor in ${cropName}. Immediate field inspection is recommended to determine the underlying cause and prioritize corrective actions.`;
+        default:
+            return `Crop monitoring is recommended.`;
+    }
+}
+
 
 /*
  * HELPER: Riesgo compatible con estrés térmico.
@@ -135,7 +149,7 @@ export function generateAlerts(
                 insight,
                 "LOW_VIGOR",
                 "Reduced vegetation vigor associated with water stress",
-                `Multiple vegetation indicators suggest reduced crop vigor in ${cropName}. Technical field verification is recommended to identify the underlying cause.`
+                buildLowVigorMessage(insight)
             )
         );
 
