@@ -104,13 +104,17 @@ HIGH
 
 ### Acción
 
-Inspección técnica prioritaria.
+Priorizar inspección técnica en campo y validar las condiciones detectadas antes de aplicar medidas correctivas.
 
 ---
 
 ## MEDIUM
 
 Condiciones compatibles con estrés moderado.
+
+### Acción
+
+Realizar inspección preventiva y reforzar el monitoreo durante los siguientes ciclos de observación.
 
 ### Evidencia Típica
 
