@@ -101,14 +101,14 @@ export const zoneInsightMock: ZoneInsight[] = [
             metric: "vegetationTrend",
             value: -15,
             unit: "%",
-            status: "NORMAL",
-            explanation: "Vegetation trend remains stable."
+            status: "WATCH",
+            explanation: "Moderate negative vegetation trend detected."
         }
     ],
     mainCause:"Evidence suggests moderate reduction in vegetation performance.",
     summary:"Vegetation indices indicate reduced vigor compared to expected crop conditions. Further inspection is recommended.",
     recommendedAction:
-    "Immediately inspect irrigation coverage, validate soil moisture in the affected zone and apply corrective irrigation if water deficit is confirmed. Schedule a follow-up inspection after corrective actions.",
+    "Schedule a preventive field inspection, verify soil moisture conditions and monitor irrigation performance. Reassess the affected zone after the next monitoring cycle.",
     generatedAt: "2026-07-03T12:05:00Z"
     },
     {
@@ -195,7 +195,7 @@ export const zoneInsightMock: ZoneInsight[] = [
     ],
     mainCause:"Multiple evidence sources indicate severe vegetation deterioration associated with water stress and reduced canopy vigor.",
     summary:"Multiple evidence sources consistently indicate severe vegetation deterioration associated with water stress. Immediate field inspection and corrective irrigation assessment are recommended to prevent further crop decline.",
-    recommendedAction:"Inspect irrigation coverage and verify soil moisture conditions.",
+    recommendedAction:"Immediately inspect the affected zone, verify irrigation system performance, confirm soil moisture conditions and prioritize corrective irrigation to reduce further crop deterioration.",
     generatedAt: "2026-07-03T12:10:00Z"
 }
 ];
