@@ -738,7 +738,7 @@ git push -u origin feat/nombre-del-cambio
 | **Leonardo Antonio Tellería Trujillo** | Developer | Backend, servicios, endpoints, estructura API, integración técnica | [@LeonardoTelleria](https://github.com/LeonardoTelleria) |
 | **Jorge Luis Antón Henández** | Developer | Backend, frontend, repositorio principal, módulos técnicos, lógica de análisis y soporte de integración | [@luis-hdz7](https://github.com/luis-hdz7) |
 | **Marvin Osvaldo Solís Hernández** | Comunicador | Comunicación estratégica, pitch, narrativa, validación del problema y defensa ante jurado | [@OsvaldoZzz](https://github.com/OsvaldoZzz) |
-| **Haryli Marina Téllez Valle** | Mercadóloga | Investigación de mercado, propuesta de valor, estrategia de comercialización y defensa del modelo de negocio | [@haryliTellez08](https://github.com/OsvaldoZzz) |
+| **Haryli Marina Téllez Valle** | Mercadóloga | Investigación de mercado, propuesta de valor, estrategia de comercialización y defensa del modelo de negocio | [@haryliTellez08](https://github.com/haryliTellez08) |
 
 
 ---
@@ -755,7 +755,7 @@ git push -u origin feat/nombre-del-cambio
 
 ---
 
-<h3 align="center">AgroVision Intelligence</h3>
+<h3 align="center">🌱 AgroVision Intelligence</h3>
 
 <p align="center">
   <strong>No es solo un dashboard agrícola. Es una plataforma prescriptiva que convierte evidencia multifuente en decisiones agrícolas accionables.</strong>
