@@ -1,0 +1,331 @@
+/* =========================================
+   Recommendations Page
+   ========================================= */
+
+.recommendationsPage {
+  display: grid;
+  gap: 24px;
+}
+
+.recommendationsHero {
+  min-height: 320px;
+  display: grid;
+  align-content: end;
+
+  padding: clamp(28px, 5vw, 56px);
+  overflow: hidden;
+
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 78% 18%, rgba(183, 255, 23, 0.18), transparent 34%),
+    radial-gradient(circle at 22% 24%, rgba(145, 231, 255, 0.11), transparent 32%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025)),
+    rgba(18, 24, 20, 0.86);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+}
+
+.recommendationsHero__eyebrow {
+  width: max-content;
+  margin: 0 0 14px;
+  padding: 8px 12px;
+
+  color: #b7ff17;
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+
+  border: 1px solid rgba(183, 255, 23, 0.28);
+  border-radius: 999px;
+  background: rgba(183, 255, 23, 0.08);
+}
+
+.recommendationsHero h1 {
+  max-width: 980px;
+  margin: 0;
+
+  color: #f4f7ef;
+  font-size: clamp(3rem, 7vw, 7rem);
+  line-height: 0.86;
+  font-weight: 950;
+  letter-spacing: -0.085em;
+  text-transform: uppercase;
+}
+
+.recommendationsHero span {
+  display: block;
+  max-width: 740px;
+  margin-top: 18px;
+
+  color: #c8d0c4;
+  line-height: 1.65;
+}
+
+.recommendationsSummaryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.recommendationsSummaryGrid article {
+  display: grid;
+  gap: 10px;
+
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.105);
+  border-radius: 24px;
+  background: rgba(18, 24, 20, 0.82);
+}
+
+.recommendationsSummaryGrid span {
+  color: #8d988d;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.recommendationsSummaryGrid strong {
+  color: #f4f7ef;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 950;
+  letter-spacing: -0.06em;
+}
+
+.recommendationsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.recommendationCard {
+  display: grid;
+  gap: 18px;
+
+  padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.105);
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.03)),
+    rgba(18, 24, 20, 0.82);
+  box-shadow: 0 18px 54px rgba(0, 0, 0, 0.26);
+}
+
+.recommendationCard--main {
+  border-color: rgba(183, 255, 23, 0.32);
+  background:
+    radial-gradient(circle at 82% 16%, rgba(183, 255, 23, 0.16), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.035)),
+    rgba(18, 24, 20, 0.88);
+}
+
+.recommendationCard__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.recommendationCard__header p {
+  width: max-content;
+  margin: 0 0 8px;
+  padding: 6px 10px;
+
+  color: #081006;
+  font-size: 0.68rem;
+  font-weight: 950;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+
+  border-radius: 999px;
+  background: #b7ff17;
+}
+
+.recommendationCard__header h2 {
+  margin: 0;
+
+  color: #f4f7ef;
+  font-size: clamp(1.55rem, 2vw, 2.2rem);
+  line-height: 0.95;
+  font-weight: 950;
+  letter-spacing: -0.06em;
+}
+
+.recommendationCard__header span {
+  display: block;
+  max-width: 760px;
+  margin-top: 10px;
+
+  color: #c8d0c4;
+  line-height: 1.55;
+}
+
+.recommendationCard__header strong {
+  height: max-content;
+
+  padding: 8px 12px;
+  color: #b7ff17;
+  font-size: 0.76rem;
+  font-weight: 950;
+
+  border: 1px solid rgba(183, 255, 23, 0.22);
+  border-radius: 999px;
+  background: rgba(183, 255, 23, 0.07);
+}
+
+.recommendationCard__action {
+  display: grid;
+  gap: 8px;
+
+  padding: 18px;
+  border: 1px solid rgba(183, 255, 23, 0.18);
+  border-radius: 20px;
+  background: rgba(183, 255, 23, 0.055);
+}
+
+.recommendationCard__action small,
+.expectedImpactBadge small {
+  color: #b7ff17;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.recommendationCard__action p {
+  margin: 0;
+
+  color: #f4f7ef;
+  font-size: 1.04rem;
+  line-height: 1.55;
+}
+
+.expectedImpactBadge {
+  display: grid;
+  gap: 8px;
+
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.expectedImpactBadge strong {
+  color: #f4f7ef;
+  font-size: 1rem;
+  font-weight: 950;
+}
+
+.expectedImpactBadge p {
+  margin: 0;
+
+  color: #c8d0c4;
+  line-height: 1.55;
+}
+
+.recommendationCard__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.recommendationCard__meta span {
+  padding: 7px 10px;
+
+  color: #c8d0c4;
+  font-size: 0.78rem;
+  font-weight: 750;
+
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.recommendationCard__evidence {
+  display: grid;
+  gap: 10px;
+}
+
+.recommendationCard__evidence h3 {
+  margin: 0;
+
+  color: #b7ff17;
+  font-size: 0.82rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.recommendationEvidenceList {
+  display: grid;
+  gap: 10px;
+}
+
+.recommendationEvidenceItem {
+  display: grid;
+  gap: 6px;
+
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.recommendationEvidenceItem strong {
+  color: #b7ff17;
+  font-size: 0.76rem;
+  font-weight: 950;
+}
+
+.recommendationEvidenceItem span {
+  color: #f4f7ef;
+  font-weight: 850;
+}
+
+.recommendationEvidenceItem small {
+  color: #8d988d;
+  line-height: 1.45;
+}
+
+.recommendationEvidenceItem--warning {
+  border-color: rgba(255, 184, 77, 0.28);
+}
+
+.recommendationEvidenceItem--critical {
+  border-color: rgba(255, 95, 95, 0.32);
+}
+
+.recommendationEvidenceList__empty {
+  margin: 0;
+  color: #8d988d;
+}
+
+.recommendationsState {
+  display: grid;
+  place-items: center;
+  min-height: 220px;
+
+  color: #c8d0c4;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 28px;
+  background: rgba(18, 24, 20, 0.82);
+}
+
+.recommendationsState--error {
+  color: #ffb84d;
+  border-color: rgba(255, 184, 77, 0.32);
+}
+
+@media (max-width: 1040px) {
+  .recommendationsSummaryGrid,
+  .recommendationsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .recommendationCard__header {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 720px) {
+  .recommendationsHero {
+    border-radius: 26px;
+  }
+}
