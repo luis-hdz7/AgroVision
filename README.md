@@ -702,16 +702,6 @@ npm run build:backend
 npm run build:frontend
 ```
 
-No debe subirse:
-
-```text
-node_modules/
-dist/
-.env
-.venv/
-__pycache__/
-```
-
 Flujo recomendado:
 
 ```bash
