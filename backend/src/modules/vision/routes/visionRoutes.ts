@@ -7,6 +7,6 @@ const router = Router();
  * Recibe una solicitud de análisis visual y devuelve
  * una predicción compatible con el AI Service.
  */
-router.get("/analyze", VisionController.analyzeImage);
+router.post("/analyze", VisionController.analyzeImage);
 
 export default router;
