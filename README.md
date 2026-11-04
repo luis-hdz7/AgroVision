@@ -45,6 +45,7 @@
 - [Flujo Prescriptivo](#-flujo-prescriptivo-del-sistema)
 - [Stack Tecnológico](#-stack-tecnológico)
 - [Guía deInstalación](#-guía-de-instalación)
+- [Despliegue en Azure](#-)
 - [Endpoints principales](#-cómo-probar-el-mvp-en-2-minutos)
 - [Arquitectura](#-arquitectura-de-carpetas)
 - [Contrato de respuesta API](#-contrato-de-respuesta-api)
@@ -500,6 +501,48 @@ http://localhost:8000
 | `npm run start:backend` | Ejecuta backend compilado |
 | `npm run dev:frontend` | Ejecuta frontend Vite |
 | `npm run build:frontend` | Compila frontend para producción |
+
+---
+
+## Despliegue en Azure
+
+AgroVision se encuentra desplegado en una máquina virtual de Microsoft Azure, desde la cual se publica la aplicación para permitir el acceso remoto desde navegadores y dispositivos con conexión a Internet.
+
+La infraestructura utiliza una IP pública y Nginx como servidor web para atender las solicitudes HTTP.
+
+#### Arquitectura del despliegue
+
+El acceso a la plataforma sigue este flujo general:
+
+* El usuario accede a la aplicación desde un navegador web.
+* La solicitud llega a la IP pública de la máquina virtual de Azure mediante el puerto 8080.
+* El Network Security Group (NSG) de Azure permite el tráfico entrante TCP por dicho puerto.
+* El firewall interno del servidor permite el tráfico correspondiente.
+* Nginx escucha las solicitudes en el puerto 8080, tanto en IPv4 como en IPv6, y las gestiona según la configuración activa del proyecto.
+
+#### Acceso público
+
+La aplicación está disponible en la siguiente dirección:
+
+URL: `http://158.23.56.161:8080`
+
+El puerto 8080 debe especificarse en la URL porque es el puerto configurado para el acceso HTTP público.
+
+#### Configuración de red
+
+Para habilitar el acceso externo, se realizaron los siguientes ajustes:
+
+* **Azure NSG:** se agregó una regla de entrada para permitir tráfico TCP por el puerto 8080.
+
+* **Nginx:** se modificó la configuración activa del sitio agrovision para escuchar en el puerto 8080 en IPv4 e IPv6.
+
+* **Firewall del servidor:** se habilitó el tráfico entrante por el puerto 8080 mediante UFW.
+
+Estos ajustes permiten que las solicitudes externas alcancen el servidor web a través del puerto configurado.
+
+Actualización y sincronización del despliegue
+
+El código fuente de la aplicación desplegada debe mantenerse sincronizado con la rama principal del repositorio de GitHub.
 
 ---
 

@@ -23,9 +23,7 @@ export function Panel({
         </div>
       </header>
 
-      <div className="avPanel__body">
-        {children}
-      </div>
+      <div className="avPanel__body">{children}</div>
     </section>
   );
 }

@@ -1,45 +1,46 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-import { MetricCard } from '../../../shared/components/ui/MetricCard';
-import { Panel } from '../../../shared/components/ui/Panel';
-import { StatusBadge } from '../../../shared/components/ui/StatusBadge';
+import { MetricCard } from "../../../shared/components/ui/MetricCard";
+import { Panel } from "../../../shared/components/ui/Panel";
+import { StatusBadge } from "../../../shared/components/ui/StatusBadge";
 
-import { getDashboardData } from '../services/dashboardService';
-import type { DashboardData } from '../types/dashboard.types';
+import { getDashboardData } from "../services/dashboardService";
+import type { DashboardData } from "../types/dashboard.types";
 
-import '../dashboard.css';
+import "../dashboard.css";
 
-import warningAlertIcon from '../../../assets/icons/warning-icon.svg';
-import bugIcon from '../../../assets/icons/bug-icon.svg';
-import hidricStressIcon from '../../../assets/icons/hidric-stress-icon.svg';
-import nitrogenIcon from '../../../assets/icons/nitrogen-icon.svg';
-import irrigationIcon from '../../../assets/icons/water-icon.svg';
-import protectionIcon from '../../../assets/icons/protection-icon.svg';
-import infoIcon from '../../../assets/icons/info-icon2.svg';
-import arrowRightIcon from '../../../assets/icons/arrow-icon.png';
-import arrow2RightIcon from '../../../assets/icons/arrow2-icon.png';
-import img1 from '../../../assets/images/image-mock-plant1.jfif';
-import img2 from '../../../assets/images/image-mock-plant2.jpg';
-import img3 from '../../../assets/images/image-mock-plant3.png';
-import img4 from '../../../assets/images/image-mock-plant4.png';
-import aiRecomIcon from '../../../assets/icons/ai-recommendation-icon.svg';
-import newEvidenceIcon from '../../../assets/icons/new-evidence-icon.svg';
-import alertDiamIcon from '../../../assets/icons/alert-diamond-icon.svg';
-import newSourceIcon from '../../../assets/icons/new-source-icon.svg';
-import waterIcon from '../../../assets/icons/water-icon.svg';
+import warningAlertIcon from "../../../assets/icons/warning-icon.svg";
+import bugIcon from "../../../assets/icons/bug-icon.svg";
+import hidricStressIcon from "../../../assets/icons/hidric-stress-icon.svg";
+import nitrogenIcon from "../../../assets/icons/nitrogen-icon.svg";
+import irrigationIcon from "../../../assets/icons/water-icon.svg";
+import protectionIcon from "../../../assets/icons/protection-icon.svg";
+import infoIcon from "../../../assets/icons/info-icon2.svg";
+import arrowRightIcon from "../../../assets/icons/arrow-icon.png";
+import arrow2RightIcon from "../../../assets/icons/arrow2-icon.png";
+import img1 from "../../../assets/images/image-mock-plant1.jfif";
+import img2 from "../../../assets/images/image-mock-plant2.jpg";
+import img3 from "../../../assets/images/image-mock-plant3.png";
+import img4 from "../../../assets/images/image-mock-plant4.png";
+import aiRecomIcon from "../../../assets/icons/ai-recommendation-icon.svg";
+import newEvidenceIcon from "../../../assets/icons/new-evidence-icon.svg";
+import alertDiamIcon from "../../../assets/icons/alert-diamond-icon.svg";
+import newSourceIcon from "../../../assets/icons/new-source-icon.svg";
+import waterIcon from "../../../assets/icons/water-icon.svg";
+import plantaImg from "../../../assets/icons/plantaDs.png";
 
 // librerias de recharts
-import { Area, AreaChart, Pie, PieChart, ResponsiveContainer } from 'recharts';
+import { Area, AreaChart, Pie, PieChart, ResponsiveContainer } from "recharts";
 // Compartimos el mapa GIS utilizado por MappingPage.
-import { MappingGIS } from '../../mapping/components/MappingGIS';
+import { MappingGIS } from "../../mapping/components/MappingGIS";
 // Utilizamos la iconografía compartida del mapa.
-import { GisIcon } from '../../mapping/components/GisIcon';
+import { GisIcon } from "../../mapping/components/GisIcon";
 // Tipamos la información recibida al seleccionar una zona.
-import type { SelectedZoneData } from '../../mapping/layers/interactionLayer';
+import type { SelectedZoneData } from "../../mapping/layers/interactionLayer";
 
 export function DashboardPage() {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(
-    null
+    null,
   );
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -54,7 +55,7 @@ export function DashboardPage() {
         setDashboardData(data);
         setErrorMessage(null);
       } catch {
-        setErrorMessage('No fue posible cargar Dashboard.');
+        setErrorMessage("No fue posible cargar Dashboard.");
       } finally {
         setIsLoading(false);
       }
@@ -84,21 +85,21 @@ export function DashboardPage() {
   const { summary } = dashboardData;
   const mainAlert = summary.alerts.criticalAlerts; // [0] si solo quiero mostrar una sola alerta
   const recommendation = summary.recommendations.mainRecommendation;
-  const zoneId = summary.intelligence.mostAffectedZoneId ?? 'zone-03';
+  const zoneId = summary.intelligence.mostAffectedZoneId ?? "zone-03";
 
   /* Datos de prueba para Salud general. */
   const saludDetails = [
-    { label: 'Excelente', value: '18%', color: '#22c55e' },
-    { label: 'Buena', value: '60%', color: '#a3e635' },
-    { label: 'Regular', value: '16%', color: '#eab308' },
-    { label: 'Mala', value: '6%', color: '#ef4444' },
+    { label: "Excelente", value: "18%", color: "#22c55e" },
+    { label: "Buena", value: "60%", color: "#a3e635" },
+    { label: "Regular", value: "16%", color: "#eab308" },
+    { label: "Mala", value: "6%", color: "#ef4444" },
   ];
 
   /* Datos de prueba para Alertas activas. */
   const alertasDetails = [
-    { label: 'Críticas', value: 2, color: '#ef4444' },
-    { label: 'Altas', value: 3, color: '#f97316' },
-    { label: 'Medias', value: 2, color: '#eab308' },
+    { label: "Críticas", value: 2, color: "#ef4444" },
+    { label: "Altas", value: 3, color: "#f97316" },
+    { label: "Medias", value: 2, color: "#eab308" },
   ];
 
   /*
@@ -113,21 +114,21 @@ export function DashboardPage() {
   }> = [
     {
       icon: bugIcon, // Alta presión de plaga
-      circleClass: 'alertIconCircle alertIconCircle--bug',
-      subtitle: 'Lote 12A • Maíz',
-      timeLabel: 'Hoy, 08:15',
+      circleClass: "alertIconCircle alertIconCircle--bug",
+      subtitle: "Lote 12A • Maíz",
+      timeLabel: "Hoy, 08:15",
     },
     {
       icon: hidricStressIcon, // Estrés hídrico severo
-      circleClass: 'alertIconCircle alertIconCircle--water',
-      subtitle: 'Lote 7B • Soja',
-      timeLabel: 'Hoy, 07:40',
+      circleClass: "alertIconCircle alertIconCircle--water",
+      subtitle: "Lote 7B • Soja",
+      timeLabel: "Hoy, 07:40",
     },
     {
       icon: warningAlertIcon, // Riesgo de enfermedad
-      circleClass: 'alertIconCircle alertIconCircle--warning',
-      subtitle: 'Lote 3C • Trigo',
-      timeLabel: 'Ayer, 18:30',
+      circleClass: "alertIconCircle alertIconCircle--warning",
+      subtitle: "Lote 3C • Trigo",
+      timeLabel: "Ayer, 18:30",
     },
     {
     icon: hidricStressIcon, // Cambia aquí el icono
@@ -179,7 +180,7 @@ const criticalAlerts = [
           details={saludDetails}
           subBadge={
             <span>
-              vs. semana anterior <b style={{ color: '#22c55e' }}>↑ 6%</b>
+              vs. semana anterior <b style={{ color: "#22c55e" }}>↑ 6%</b>
             </span>
           }
         />
@@ -199,7 +200,14 @@ const criticalAlerts = [
           description="pendientes"
           tone="TEAL"
           progress={90}
-          icon={<span style={{ fontSize: '4.3rem' }}>🌱</span>}
+          icon={
+            <img
+              src={plantaImg}
+              alt=""
+              aria-hidden="true"
+              style={{ width: "4.3rem", height: "4.3rem", objectFit: "contain" }}
+            />
+          }
           actionLabel="Ver recomendaciones"
         />
       </section>
@@ -235,13 +243,13 @@ const criticalAlerts = [
             <footer className="dashboardGisPanel__footer">
               <span>
                 <strong>
-                  {selectedMapZone?.properties.name ?? 'Explora tus zonas'}
+                  {selectedMapZone?.properties.name ?? "Explora tus zonas"}
                 </strong>
 
                 <small>
                   {selectedMapZone
-                    ? 'Zona seleccionada en el mapa'
-                    : 'Selecciona una zona para ver su análisis'}
+                    ? "Zona seleccionada en el mapa"
+                    : "Selecciona una zona para ver su análisis"}
                 </small>
               </span>
 
@@ -282,7 +290,10 @@ const criticalAlerts = [
                 <span className="avFooterMetaText">
                   Sentinel-2 • 18 May 2025
                 </span>
-                <button className="dashboardActionButton avActionButton" type="button">
+                <button
+                  className="dashboardActionButton avActionButton"
+                  type="button"
+                >
                   <span>Ver detalles</span>
                   <img
                     src={arrow2RightIcon}
@@ -317,9 +328,12 @@ const criticalAlerts = [
               </div>
               <footer
                 className="dashboardPanelFooter justify-end"
-                style={{ marginTop: '12px' }}
+                style={{ marginTop: "12px" }}
               >
-                <button className="dashboardActionButton avActionButton" type="button">
+                <button
+                  className="dashboardActionButton avActionButton"
+                  type="button"
+                >
                   <span>Ver insights</span>
                   <img
                     src={arrow2RightIcon}
@@ -374,12 +388,12 @@ const criticalAlerts = [
                         // Forzamos el uso de tu imagen local importada. Si no existe, aplica el gradiente.
                         backgroundImage: currentImage
                           ? `url(${currentImage})`
-                          : 'linear-gradient(135deg, #15803d 0%, #166534 100%)',
+                          : "linear-gradient(135deg, #15803d 0%, #166534 100%)",
                       }}
                       title={
                         evidenceData
                           ? `${evidenceData.source}: ${evidenceData.metric}`
-                          : 'Evidencia de campo'
+                          : "Evidencia de campo"
                       }
                     />
                   );
@@ -388,9 +402,12 @@ const criticalAlerts = [
 
               <footer
                 className="dashboardPanelFooter justify-end"
-                style={{ marginTop: '12px' }}
+                style={{ marginTop: "12px" }}
               >
-                <button className="dashboardActionButton avActionButton" type="button">
+                <button
+                  className="dashboardActionButton avActionButton"
+                  type="button"
+                >
                   <span>Ver todas</span>
                   <img
                     src={arrow2RightIcon}
@@ -448,11 +465,11 @@ const criticalAlerts = [
             title={
               <div
                 style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  width: '100%',
-                  gap: '12px',
-                  alignItems: 'center',
+                  display: "flex",
+                  justifyContent: "space-between",
+                  width: "100%",
+                  gap: "12px",
+                  alignItems: "center",
                 }}
               >
                 <span>Resumen prescriptivo</span>
@@ -538,17 +555,20 @@ const criticalAlerts = [
             title={
               <div
                 style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  width: '100%',
-                  gap: '12px',
-                  alignItems: 'center',
+                  display: "flex",
+                  justifyContent: "space-between",
+                  width: "100%",
+                  gap: "12px",
+                  alignItems: "center",
                 }}
               >
                 <span>Alertas críticas</span>
-          
+
                 {/* <button type="button" className="avPanelHeaderAction">Ver todas</button> */}
-                <button className="dashboardActionButton avActionButton" type="button">
+                <button
+                  className="dashboardActionButton avActionButton"
+                  type="button"
+                >
                   <span>Ver todas</span>
                   <img
                     src={arrow2RightIcon}
@@ -599,7 +619,6 @@ const criticalAlerts = [
       <section className="dashboardFigma__bottom">
         <Panel title="Actividad reciente">
           <div className="dashboardTimeline">
-            
             {mainAlert &&
               mainAlert
                 .slice(0, 3)
@@ -786,10 +805,10 @@ function SatelliteMetric({
   const chartData = metricHistory[label];
 
   const hasRealChart =
-    label === 'NDVI' ||
-    label === 'NDWI' ||
-    label === 'GNDVI' ||
-    label === 'SAVI';
+    label === "NDVI" ||
+    label === "NDWI" ||
+    label === "GNDVI" ||
+    label === "SAVI";
 
   return (
     <article className="satelliteMetric">
@@ -864,14 +883,14 @@ function ZoneInsightDonut({
 
   const donutData = [
     {
-      name: 'Zonas críticas',
+      name: "Zonas críticas",
       value: safeCritical,
-      fill: '#a7d91e',
+      fill: "#a7d91e",
     },
     {
-      name: 'Otras zonas',
+      name: "Otras zonas",
       value: stableZones,
-      fill: '#d4ded8',
+      fill: "#d4ded8",
     },
   ];
 
@@ -922,10 +941,10 @@ function InfoRow({
   return (
     <div
       className="figmaInfoRow"
-      style={{ display: 'flex', justifyContent: 'flex-start' }}
+      style={{ display: "flex", justifyContent: "flex-start" }}
     >
       <span>{label}</span>
-      <strong className={highlight ? 'is-highlighted' : ''}>{value}</strong>
+      <strong className={highlight ? "is-highlighted" : ""}>{value}</strong>
     </div>
   );
 }
@@ -934,7 +953,7 @@ function InfoRow({
    COMPONENTE — TIMELINE
    =========================================================== */
 
-type TimelineIconTone = 'DANGER' | 'INFO' | 'LIME' | 'SUCCESS';
+type TimelineIconTone = "DANGER" | "INFO" | "LIME" | "SUCCESS";
 
 function TimelineItem({
   time,
@@ -947,7 +966,7 @@ function TimelineItem({
   readonly time: string;
   readonly text: string;
   readonly status: string;
-  readonly tone: 'DANGER' | 'LIME' | 'INFO' | 'SUCCESS';
+  readonly tone: "DANGER" | "LIME" | "INFO" | "SUCCESS";
   readonly icon: string;
   readonly iconTone: TimelineIconTone;
 }) {
@@ -974,7 +993,7 @@ function TimelineItem({
    COMPONENTE — PRÓXIMA ACCIÓN
    =========================================================== */
 
-type NextActionIconTone = 'GREEN' | 'BLUE' | 'AMBER' | 'TEAL';
+type NextActionIconTone = "GREEN" | "BLUE" | "AMBER" | "TEAL";
 
 function NextAction({
   text,
@@ -985,7 +1004,7 @@ function NextAction({
 }: {
   readonly text: string;
   readonly date: string;
-  readonly priority: 'Alta' | 'Media' | 'Baja';
+  readonly priority: "Alta" | "Media" | "Baja";
   readonly icon: string;
   readonly iconTone: NextActionIconTone;
 }) {
@@ -1005,11 +1024,11 @@ function NextAction({
 
       <StatusBadge
         tone={
-          priority === 'Alta'
-            ? 'DANGER'
-            : priority === 'Media'
-              ? 'WARNING'
-              : 'SUCCESS'
+          priority === "Alta"
+            ? "DANGER"
+            : priority === "Media"
+              ? "WARNING"
+              : "SUCCESS"
         }
       >
         {priority}
@@ -1025,8 +1044,8 @@ function NextAction({
    =========================================================== */
 
 function formatTime(value: string): string {
-  return new Intl.DateTimeFormat('es-NI', {
-    hour: '2-digit',
-    minute: '2-digit',
+  return new Intl.DateTimeFormat("es-NI", {
+    hour: "2-digit",
+    minute: "2-digit",
   }).format(new Date(value));
 }
