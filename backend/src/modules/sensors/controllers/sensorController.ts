@@ -1,30 +1,22 @@
 import type { Request, Response } from "express";
 import { ZodError } from "zod";
-import { Prisma } from "../../../generated/prisma/client";
+import { classifyRegistrationError } from "../../../shared/errors/registrationErrors";
 import { SensorService } from "../services/sensorService";
 import { createSensorSchema, updateSensorSchema, sensorIdParamSchema, fieldIdParamSchema } from "../schemas/sensorSchemas";
 import { ok, fail } from "../../../shared/responses/apiResponses";
 
 function respondError(res: Response, error: unknown): void {
   if (error instanceof ZodError) {
-    res.status(400).json(fail("Invalid sensor parameters or data"));
+    res.status(400).json(fail("Parámetros o datos de sensor inválidos."));
     return;
   }
-  if (error instanceof Prisma.PrismaClientKnownRequestError) {
-    if (error.code === "P2025") {
-      res.status(404).json(fail("Sensor not found"));
-      return;
-    }
-    if (error.code === "P2003") {
-      res.status(400).json(fail("Field does not exist"));
-      return;
-    }
-    if (error.code === "P2002") {
-      res.status(409).json(fail("Sensor conflicts with an existing record"));
-      return;
-    }
-  }
-  res.status(500).json(fail("Failed to process sensor request"));
+
+  const result = classifyRegistrationError(
+    error,
+    "Sensor no encontrado.",
+    "No fue posible procesar la solicitud de sensor.",
+  );
+  res.status(result.status).json(fail(result.message));
 }
 
 export class SensorController {

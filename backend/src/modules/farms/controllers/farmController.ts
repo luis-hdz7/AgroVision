@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { ZodError } from "zod";
 import { FarmService } from "../service/farmService";
 import {
   createFarmSchema,
@@ -6,6 +7,21 @@ import {
   farmIdParamSchema,
 } from "../schemas/farmSchemas";
 import { ok, fail } from "../../../shared/responses/apiResponses";
+import { classifyRegistrationError } from "../../../shared/errors/registrationErrors";
+
+function respondError(res: Response, error: unknown): void {
+  if (error instanceof ZodError) {
+    res.status(400).json(fail("Parámetros o datos de finca inválidos."));
+    return;
+  }
+
+  const result = classifyRegistrationError(
+    error,
+    "Finca no encontrada.",
+    "No fue posible procesar la solicitud de finca.",
+  );
+  res.status(result.status).json(fail(result.message));
+}
 
 export class FarmController {
   private farmService = new FarmService();
@@ -20,10 +36,8 @@ export class FarmController {
       res
         .status(200)
         .json(ok(farms, "Farms loaded successfully"));
-    } catch (error) {
-      res
-        .status(500)
-        .json(fail("Failed to load farms"));
+    } catch (error: unknown) {
+      respondError(res, error);
     }
   };
 
@@ -39,10 +53,8 @@ export class FarmController {
       res
         .status(200)
         .json(ok(farm, "Farm loaded successfully"));
-    } catch (error) {
-      res
-        .status(404)
-        .json(fail("Farm not found"));
+    } catch (error: unknown) {
+      respondError(res, error);
     }
   };
 
@@ -58,10 +70,8 @@ export class FarmController {
       res
         .status(201)
         .json(ok(farm, "Farm created successfully"));
-    } catch (error) {
-      res
-        .status(400)
-        .json(fail("Invalid farm data"));
+    } catch (error: unknown) {
+      respondError(res, error);
     }
   };
 
@@ -78,10 +88,8 @@ export class FarmController {
       res
         .status(200)
         .json(ok(farm, "Farm updated successfully"));
-    } catch (error) {
-      res
-        .status(400)
-        .json(fail("Failed to update farm"));
+    } catch (error: unknown) {
+      respondError(res, error);
     }
   };
 

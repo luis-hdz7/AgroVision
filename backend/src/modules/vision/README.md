@@ -20,7 +20,8 @@ Campos:
 
 ```text
 Route -> multipart middleware -> Controller -> Zod -> Service
-      -> AI_SERVICE_URL/vision/analyze -> normalización -> ApiResponse
+      -> AI_SERVICE_URL/vision/analyze -> normalización
+      -> vision_analysis_records -> ApiResponse
 ```
 
 El backend no analiza píxeles ni decide cómo cargar el futuro modelo. Esa responsabilidad pertenece al AI Service.
@@ -40,6 +41,8 @@ La propiedad `data` de `ApiResponse` contiene `inspectionId`, contexto de Field/
 
 Todos los errores generados por este módulo utilizan `fail()` y nunca devuelven HTML.
 
-## Pendiente
+## Registro
 
-La persistencia Prisma y el pipeline de inferencia/transfer learning se implementarán en fases posteriores. Hasta entonces `fieldId` conserva el identificador utilizado por la interfaz demo.
+Cada respuesta exitosa se guarda en `vision_analysis_records` (migración `20261015190000_vision_analysis_records`) con el contrato completo, cultivo, campo, zona, nombre de archivo y SHA-256 de la imagen. No se almacena la fotografía. Si falla el guardado, la API responde 503 en vez de afirmar que el análisis quedó registrado. `fieldId` conserva el identificador de la interfaz demo; este registro no modifica la tabla agronómica `vision_inspections`.
+
+El AI Service requiere estar activo en `AI_SERVICE_URL`. La disponibilidad de pesos por cultivo se consulta en `/models/status`; un cultivo sin modelo real devuelve 503, no una predicción simulada.

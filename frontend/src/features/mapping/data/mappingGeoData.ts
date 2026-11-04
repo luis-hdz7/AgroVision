@@ -40,6 +40,7 @@
 
 // Importamos los contratos GIS.
 import type { FarmFeature, FieldFeature, ZoneFeature, FarmFeatureCollection, FieldFeatureCollection, ZoneFeatureCollection } from "../types/mappingGeo.types";
+import { relocateDemoPolygon } from "./demoLocation";
 
 /**
  * =========================================
@@ -432,6 +433,16 @@ export const agroVisionZone06: ZoneFeature = {
         status: "ACTIVE",
     },
 };
+
+// Todas las entidades demo se mueven juntas; también la zona 06, copiada del lote 03.
+for (const feature of [
+    agroVisionFarm,
+    agroVisionField01, agroVisionField02, agroVisionField03,
+    agroVisionZone01, agroVisionZone02, agroVisionZone03,
+    agroVisionZone04, agroVisionZone05, agroVisionZone06,
+]) {
+    feature.geometry.coordinates = relocateDemoPolygon(feature.geometry.coordinates);
+}
 
 /**
  * =========================================

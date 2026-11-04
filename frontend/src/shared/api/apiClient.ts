@@ -22,6 +22,31 @@ export interface ApiResponse<T> {
   timestamp: string;
 }
 
+export type ApiGetErrorCode =
+  | "TIMEOUT"
+  | "CANCELLED"
+  | "NETWORK"
+  | "HTTP"
+  | "INVALID_JSON"
+  | "INVALID_CONTRACT";
+
+export class ApiGetError extends Error {
+  public readonly code: ApiGetErrorCode;
+
+  public constructor(
+    code: ApiGetErrorCode,
+    message: string
+  ) {
+    super(message);
+    this.name = "ApiGetError";
+    this.code = code;
+  }
+}
+
+interface ApiGetOptions {
+  readonly timeoutMs?: number;
+}
+
 function isApiResponse(
   value: unknown
 ): value is ApiResponse<unknown> {
@@ -33,52 +58,73 @@ function isApiResponse(
 
   return (
     typeof record.success === "boolean" &&
-    "data" in record
+    "data" in record &&
+    typeof record.message === "string" &&
+    (typeof record.error === "string" || record.error === null) &&
+    typeof record.timestamp === "string"
   );
 }
 
 export async function apiGet<T>(
   endpoint: string,
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  options: ApiGetOptions = {}
 ): Promise<T> {
-  const response = await fetch(endpoint, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-    },
-    cache: "no-store",
-    signal,
-  });
+  if (signal?.aborted) {
+    throw new ApiGetError("CANCELLED", "La consulta fue cancelada.");
+  }
 
-  let payload: unknown;
+  const controller = new AbortController();
+  let timedOut = false;
+  let cancelledExternally = false;
+  const cancelFromCaller = () => {
+    cancelledExternally = true;
+    controller.abort(signal?.reason);
+  };
+  const timeout = setTimeout(() => {
+    timedOut = true;
+    controller.abort(new DOMException("Tiempo de espera agotado.", "TimeoutError"));
+  }, options.timeoutMs ?? 15_000);
+
+  signal?.addEventListener("abort", cancelFromCaller, { once: true });
 
   try {
-    payload = await response.json();
-  } catch {
-    throw new Error(
-      `El endpoint ${endpoint} no devolvió JSON válido.`
-    );
+    const response = await fetch(endpoint, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+      cache: "no-store",
+      signal: controller.signal,
+    });
+
+    let payload: unknown;
+    try {
+      payload = await response.json();
+    } catch {
+      throw new ApiGetError("INVALID_JSON", "La API no devolvió JSON válido.");
+    }
+
+    if (!response.ok) {
+      throw new ApiGetError("HTTP", `La consulta falló con HTTP ${response.status}.`);
+    }
+
+    if (!isApiResponse(payload) || !payload.success || payload.data === null) {
+      throw new ApiGetError("INVALID_CONTRACT", "La API devolvió un contrato inválido.");
+    }
+
+    return payload.data as T;
+  } catch (cause: unknown) {
+    if (timedOut) {
+      throw new ApiGetError("TIMEOUT", "La consulta excedió el tiempo máximo de espera.");
+    }
+    if (cancelledExternally || signal?.aborted) {
+      throw new ApiGetError("CANCELLED", "La consulta fue cancelada.");
+    }
+    if (cause instanceof ApiGetError) throw cause;
+    throw new ApiGetError("NETWORK", "No fue posible conectar con la API.");
+  } finally {
+    clearTimeout(timeout);
+    signal?.removeEventListener("abort", cancelFromCaller);
   }
-
-  if (!response.ok) {
-    const detail =
-      isApiResponse(payload) &&
-      typeof payload.error === "string"
-        ? payload.error
-        : `HTTP ${response.status}`;
-
-    throw new Error(detail);
-  }
-
-  if (!isApiResponse(payload)) {
-    throw new Error("Contrato de API inválido.");
-  }
-
-  if (!payload.success || payload.data === null) {
-    throw new Error(
-      payload.error ?? "No fue posible obtener los datos."
-    );
-  }
-
-  return payload.data as T;
 }

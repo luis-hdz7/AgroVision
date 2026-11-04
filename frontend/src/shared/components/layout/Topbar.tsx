@@ -789,9 +789,15 @@ export function Topbar({ activeLabel }: TopbarProps) {
 
               {/* Estado de carga */}
 
-              {fieldsLoading && (
+              {fieldsLoading && fields.length === 0 && (
                 <span role="status">
                   Cargando parcelas...
+                </span>
+              )}
+
+              {fieldsLoading && fields.length > 0 && (
+                <span role="status">
+                  Actualizando parcelas...
                 </span>
               )}
 
@@ -800,7 +806,9 @@ export function Topbar({ activeLabel }: TopbarProps) {
               {fieldsError && (
                 <>
                   <span role="alert">
-                    No se pudieron cargar las parcelas:
+                    {fields.length > 0
+                      ? "No se pudieron actualizar las parcelas. Mostrando el último listado disponible:"
+                      : "No se pudieron cargar las parcelas:"}
                     {" "}{fieldsError}
                   </span>
 
@@ -808,7 +816,7 @@ export function Topbar({ activeLabel }: TopbarProps) {
                     type="button"
                     onClick={reloadFields}
                   >
-                    Reintentar
+                    {fields.length > 0 ? "Actualizar" : "Reintentar"}
                   </button>
                 </>
               )}
@@ -825,9 +833,7 @@ export function Topbar({ activeLabel }: TopbarProps) {
 
               {/* Parcelas reales de PostgreSQL */}
 
-              {!fieldsLoading &&
-                !fieldsError &&
-                fields.map((field) => (
+              {fields.map((field) => (
                   <button
                     key={field.id}
                     type="button"
@@ -845,6 +851,12 @@ export function Topbar({ activeLabel }: TopbarProps) {
                     </small>
                   </button>
                 ))}
+
+              {!fieldsLoading && !fieldsError && (
+                <button type="button" onClick={reloadFields}>
+                  Actualizar parcelas
+                </button>
+              )}
 
             </div>
           )}

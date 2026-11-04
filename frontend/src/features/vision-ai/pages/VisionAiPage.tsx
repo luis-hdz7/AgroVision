@@ -30,12 +30,7 @@
  * =========================================
  */
 
-import {
-  useEffect,
-  useState,
-  type ChangeEvent,
-} from "react";
-
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import {
   Area,
   AreaChart,
@@ -69,6 +64,10 @@ import type {
   VisionAnalysisStatus,
   VisionInspection,
 } from "../types/visionAI.types";
+import { formatVisionFinding } from "../utils/visionLabels";
+
+// Consumimos las parcelas y la selección que ya comparte la barra superior.
+import { useFields } from "../../fields/context/useFields";
 
 import "../vision-ai.css";
 
@@ -80,8 +79,14 @@ import "../vision-ai.css";
 /**
  * Caso oficial utilizado actualmente por la demo.
  */
-const DEFAULT_FIELD_ID = "field-001";
+
 const DEFAULT_ZONE_ID = "zone-03";
+
+// Contexto de la demo para los dos cultivos que tienen pesos reales instalados.
+const TRAINED_CROP_CONTEXT: Partial<Record<CropType, { fieldId: string; zones: readonly string[] }>> = {
+  ORANGE: { fieldId: "field-001", zones: ["zone-03", "zone-02", "zone-01"] },
+  CORN: { fieldId: "field-002", zones: ["zone-04", "zone-05"] },
+};
 
 const MAX_IMAGE_BYTES =
   10 * 1024 * 1024;
@@ -115,7 +120,28 @@ interface VisionTimelinePoint {
    PÁGINA PRINCIPAL
    =========================================================== */
 
+/** Asigna una identidad independiente al espacio de análisis de cada parcela. */
 export function VisionAiPage() {
+  const { selectedField } = useFields();
+
+  // Cambiar la parcela reinicia los estados locales del espacio de análisis.
+  return <VisionAiWorkspace key={selectedField?.id ?? "no-field"} />;
+}
+
+/** Contiene los controles, estados y operaciones del análisis visual. */
+function VisionAiWorkspace() {
+    // Leemos la misma selección de parcela utilizada por el resto de la aplicación.
+  const { selectedField, isLoading: areFieldsLoading, error: fieldsError } = useFields();
+
+  // selectedField pertenece al listado de parcelas obtenido desde el backend.
+  const selectedFieldId = selectedField?.id ?? null;
+
+  // Conservamos el formato GIS admitido por el servicio de Vision.
+  const selectedFieldCode = selectedFieldId === null
+    ? null
+    : `field-${String(selectedFieldId).padStart(3, "0")}`;
+  // Descarta respuestas antiguas si cambia la imagen, el cultivo o la zona.
+  const analysisRequestId = useRef(0);
   /* -----------------------------------------
      Perfiles agrícolas
      ----------------------------------------- */
@@ -135,6 +161,12 @@ export function VisionAiPage() {
   ] =
     useState(DEFAULT_ZONE_ID);
 
+    // Este catálogo mantiene la configuración existente de los modelos de la demo.
+  const selectedCropContext = TRAINED_CROP_CONTEXT[selectedCropType];
+
+    // Ofrecemos las zonas de referencia únicamente para la parcela configurada.
+    // Otras parcelas podrán analizarse sin asignarles una zona de la demo.
+  const availableZoneIds = selectedCropContext && selectedCropContext.fieldId === selectedFieldCode ? selectedCropContext.zones : [];
 
   /* -----------------------------------------
      Imagen
@@ -312,10 +344,10 @@ export function VisionAiPage() {
      EJECUTAR ANÁLISIS
      ========================================================= */
 
-  async function runAnalysis(
-    file: File,
-    fileName: string,
-  ) {
+    async function runAnalysis(file: File, fileName: string): Promise<void> {
+    // Cada ejecución recibe una identidad que permite descartar respuestas antiguas.
+    const requestId = ++analysisRequestId.current;
+
     /**
      * Limpiamos el resultado anterior para que
      * durante un nuevo análisis nunca aparezcan
@@ -326,69 +358,72 @@ export function VisionAiPage() {
     setAnalysisProgress(8);
 
     setAnalysisTimeline([
-      {
-        sample: 0,
-        value: 3,
-      },
-      {
-        sample: 1,
-        value: 8,
-      },
+      { sample: 0, value: 3 },
+      { sample: 1, value: 8 },
     ]);
 
     setAnalysisStatus("ANALYZING");
-
     setFeedbackMessage(null);
-
     setIsInspectorOpen(true);
 
     try {
-      const result =
-        await analyzeVisionImage({
-          cropType:
-            selectedCropType,
+      // Esperamos a disponer del contexto real de parcelas.
+      if (areFieldsLoading) {
+        throw new VisionRequestError("Espera a que termine la carga de parcelas.");
+      }
 
-          fieldId:
-            DEFAULT_FIELD_ID,
+      if (fieldsError !== null) {
+        throw new VisionRequestError("No fue posible cargar las parcelas. Actualiza su listado e inténtalo de nuevo.");
+      }
 
-          zoneId:
-            selectedZoneId,
+      // Una selección global de todos los campos no identifica una parcela concreta.
+      if (selectedFieldCode === null) {
+        throw new VisionRequestError("Selecciona una parcela en la barra superior antes de analizar una imagen.");
+      }
 
-          imageFileName:
-            fileName,
+      // Conservamos los modelos habilitados actualmente en esta pantalla.
+      if (!selectedCropContext) {
+        throw new VisionRequestError("El cultivo seleccionado no tiene un modelo configurado en esta pantalla.");
+      }
 
-          imageFile:
-            file,
-        });
+      // Enviamos una zona únicamente cuando pertenece al contexto de referencia disponible.
+      const zoneId = availableZoneIds.includes(selectedZoneId) ? selectedZoneId : null;
+
+      const result = await analyzeVisionImage({
+        cropType: selectedCropType,
+        fieldId: selectedFieldCode,
+        zoneId,
+        imageFileName: fileName,
+        imageFile: file,
+      });
+
+      // Un cambio de imagen, cultivo, zona o parcela invalida la presentación anterior.
+      if (requestId !== analysisRequestId.current) return;
 
       setAnalysisResult(result);
-
       setAnalysisProgress(100);
 
-      setAnalysisTimeline(
-        (currentTimeline) => [
-          ...currentTimeline,
-          {
-            sample:
-              currentTimeline.length,
-            value: 100,
-          },
-        ].slice(-22),
-      );
+      setAnalysisTimeline((currentTimeline) => [
+        ...currentTimeline,
+        { sample: currentTimeline.length, value: 100 },
+      ].slice(-22));
 
       setAnalysisStatus("RESULT");
     } catch (error: unknown) {
+      // Una solicitud anterior tampoco debe sobrescribir el estado con un error tardío.
+      if (requestId !== analysisRequestId.current) return;
+
       setAnalysisStatus("ERROR");
+      setAnalysisProgress(0);
+      setAnalysisTimeline([{ sample: 0, value: 0 }]);
 
       setFeedbackMessage(
-        error instanceof
-          VisionRequestError
+        error instanceof VisionRequestError
           ? error.message
           : "No fue posible completar el análisis visual.",
       );
     }
   }
-
 
   /* =========================================================
      SELECCIÓN DE IMAGEN
@@ -402,6 +437,12 @@ export function VisionAiPage() {
       event.target.files?.[0];
 
     if (!file) return;
+
+    // Permite volver a analizar el mismo archivo después de un error.
+    event.target.value = "";
+    ++analysisRequestId.current;
+    setImagePreviewUrl(null);
+    setAnalysisProgress(0);
 
 
     /* ---------------------------------------
@@ -486,9 +527,9 @@ export function VisionAiPage() {
     event:
       ChangeEvent<HTMLSelectElement>,
   ) {
-    setSelectedCropType(
-      event.target.value as CropType,
-    );
+    const cropType = event.target.value as CropType;
+    setSelectedCropType(cropType);
+    setSelectedZoneId(TRAINED_CROP_CONTEXT[cropType]?.zones[0] ?? DEFAULT_ZONE_ID);
 
     resetAnalysis();
   }
@@ -514,31 +555,34 @@ export function VisionAiPage() {
      RESET VISUAL
      ========================================================= */
 
-  function resetAnalysis() {
+  // Reiniciamos la presentación e invalidamos las respuestas de solicitudes anteriores.
+  function resetAnalysis(): void {
+    ++analysisRequestId.current;
+
     setAnalysisResult(null);
-
+    setImagePreviewUrl(null);
     setAnalysisStatus("IDLE");
-
     setAnalysisProgress(0);
-
-    setAnalysisTimeline([
-      {
-        sample: 0,
-        value: 0,
-      },
-    ]);
-
+    setAnalysisTimeline([{ sample: 0, value: 0 }]);
     setFeedbackMessage(null);
   }
 
+  // Invalidamos las respuestas pendientes cuando se desmonta este espacio de análisis.
+  useEffect(() => {
+    const requestTracker = analysisRequestId;
+
+    return () => {
+      // La petición puede terminar en el servidor, pero su respuesta queda descartada aquí.
+      ++requestTracker.current;
+    };
+  }, []);
 
   /* =========================================================
      DATOS DERIVADOS
      ========================================================= */
 
-  const inspection =
-    analysisResult?.inspection ??
-    null;
+    // Presentamos únicamente un resultado correspondiente a la parcela seleccionada.
+  const inspection = analysisResult?.inspection.fieldId === selectedFieldCode ? analysisResult.inspection : null;
 
   const confidencePercentage =
     inspection
@@ -627,7 +671,7 @@ export function VisionAiPage() {
         <MetricCard
           title="Nivel de confianza"
           value={`${confidencePercentage}%`}
-          description="Confianza de la predicción"
+          description="Predicción"
           progress={
             confidencePercentage
           }
@@ -741,10 +785,12 @@ export function VisionAiPage() {
                           value={
                             profile.cropType
                           }
+                          disabled={!TRAINED_CROP_CONTEXT[profile.cropType]}
                         >
                           {
                             profile.displayName
                           }
+                          {!TRAINED_CROP_CONTEXT[profile.cropType] && " (sin modelo)"}
                         </option>
                       ),
                     )}
@@ -755,34 +801,26 @@ export function VisionAiPage() {
 
 
                 <label>
-
-                  <span>
-                    Zona
-                  </span>
+                  <span>Zona</span>
 
                   <select
-                    value={
-                      selectedZoneId
-                    }
-                    onChange={
-                      handleZoneChange
-                    }
+                    value={availableZoneIds.includes(selectedZoneId) ? selectedZoneId : ""}
+                    onChange={handleZoneChange}
+                    disabled={availableZoneIds.length === 0}
                   >
-                    <option value="zone-03">
-                      Zona 03
-                    </option>
+                    {/* Indicamos que esta parcela no dispone de zonas configuradas en la pantalla. */}
+                    {availableZoneIds.length === 0 && (
+                      <option value="">Sin zona configurada</option>
+                    )}
 
-                    <option value="zone-02">
-                      Zona 02
-                    </option>
-
-                    <option value="zone-01">
-                      Zona 01
-                    </option>
+                    {/* Conservamos las zonas de referencia del contexto correspondiente. */}
+                    {availableZoneIds.map((zoneId) => (
+                      <option key={zoneId} value={zoneId}>
+                        Zona {zoneId.slice(-2)}
+                      </option>
+                    ))}
                   </select>
-
                 </label>
-
 
                 <label className="visionUploadButton">
 
@@ -794,18 +832,26 @@ export function VisionAiPage() {
                   </span>
 
                   <strong>
-                    {analysisStatus ===
-                    "ANALYZING"
+                    {analysisStatus === "ANALYZING"
                       ? "Analizando..."
-                      : "Subir imagen"}
+                      : areFieldsLoading
+                        ? "Cargando parcelas..."
+                        : fieldsError !== null
+                          ? "Parcelas no disponibles"
+                          : selectedFieldCode === null
+                            ? "Elige una parcela"
+                            : "Subir imagen"}
                   </strong>
 
                   <input
                     type="file"
                     accept="image/jpeg,image/png,image/webp"
+                    // La carga requiere una parcela concreta y un contexto disponible.
                     disabled={
-                      analysisStatus ===
-                      "ANALYZING"
+                      analysisStatus === "ANALYZING"
+                      || areFieldsLoading
+                      || fieldsError !== null
+                      || selectedFieldCode === null
                     }
                     onChange={
                       handleImageChange
@@ -813,52 +859,6 @@ export function VisionAiPage() {
                   />
 
                 </label>
-
-              </div>
-
-
-              {/* ===========================================
-                  ESTADO DEL MOTOR
-                  =========================================== */}
-
-              <div
-                className={[
-                  "visionEngineStatus",
-                  `visionEngineStatus--${analysisStatus.toLowerCase()}`,
-                ].join(" ")}
-              >
-
-                <span className="visionEngineStatus__icon">
-
-                  {analysisStatus ===
-                  "ANALYZING" ? (
-                    <VisionSpinner />
-                  ) : (
-                    <ScanIcon />
-                  )}
-
-                </span>
-
-                <div>
-
-                  <small>
-                    MOTOR VISUAL
-                  </small>
-
-                  <strong>
-                    {analysisStage}
-                  </strong>
-
-                </div>
-
-                <b>
-                  {analysisStatus ===
-                  "ANALYZING"
-                    ? `${analysisProgress}%`
-                    : inspection
-                      ? "Listo"
-                      : "En espera"}
-                </b>
 
               </div>
 
@@ -876,9 +876,7 @@ export function VisionAiPage() {
                   label="Predicción"
                   value={
                     inspection
-                      ? formatPrediction(
-                          inspection.prediction,
-                        )
+                      ? formatVisionFinding(inspection)
                       : analysisStatus ===
                           "ANALYZING"
                         ? "Procesando"
@@ -1276,9 +1274,7 @@ export function VisionAiPage() {
                   </td>
 
                   <td className="visionHistoryPrediction">
-                    {formatPrediction(
-                      inspection.prediction,
-                    )}
+                    {formatVisionFinding(inspection)}
                   </td>
 
                   <td>
@@ -1573,9 +1569,7 @@ function VisionImagePreview({
 
       {inspection && (
         <span className="visionImagePreview__file">
-          {formatPrediction(
-            inspection.prediction,
-          )}
+          {formatVisionFinding(inspection)}
         </span>
       )}
 
@@ -1912,7 +1906,7 @@ function VisionResultPlaceholder({
           ------------------------------------- */}
 
       <Panel
-        title="Métricas visuales"
+        title="Resultados del análisis"
         showInfo={false}
       >
 
@@ -1925,11 +1919,11 @@ function VisionResultPlaceholder({
             </span>
 
             <strong>
-              Extrayendo señales visuales
+              Procesando imagen
             </strong>
 
             <p>
-              Analizando cobertura, áreas secas y patrones de estrés.
+              Clasificando la hoja y calculando puntuaciones del modelo.
             </p>
 
             <div className="visionMetricsAnalyzing__progress">
@@ -1955,11 +1949,11 @@ function VisionResultPlaceholder({
             <ScanIcon />
 
             <strong>
-              Sin métricas todavía
+              {status === "ERROR" ? "Métricas no disponibles" : "Sin métricas todavía"}
             </strong>
 
             <span>
-              Esperando análisis visual.
+              {status === "ERROR" ? "El análisis no terminó; revisa el aviso inferior." : "Esperando análisis visual."}
             </span>
 
           </div>
@@ -2365,24 +2359,6 @@ function normalizeConfidence(
       ? value * 100
       : value,
   );
-}
-
-
-function formatPrediction(
-  value:
-    string,
-): string {
-  return value
-    .replaceAll(
-      "_",
-      " ",
-    )
-    .toLowerCase()
-    .replace(
-      /^\w/,
-      (character) =>
-        character.toUpperCase(),
-    );
 }
 
 

@@ -34,6 +34,7 @@ import type {
   VisionInspection,
   VisionPrediction,
 } from "../types/visionAI.types";
+import { formatVisionClassName, formatVisionFinding } from "../utils/visionLabels";
 
 
 /* ===========================================================
@@ -75,6 +76,10 @@ export function VisionResultCard({
       result.prediction,
     );
 
+  const hasVisualMetrics = Object.values(result.visualMetrics).some(
+    (value) => value !== null && value !== undefined,
+  );
+
 
   return (
     <>
@@ -94,15 +99,18 @@ export function VisionResultCard({
 
           <ResultRow
             label="Predicción"
-            value={formatPrediction(
-              result.prediction,
-            )}
+            value={formatVisionFinding(result)}
           />
 
 
           <ResultRow
             label="Confianza"
             value={`${confidencePercentage}%`}
+          />
+
+          <ResultRow
+            label="Clase detectada"
+            value={formatVisionClassName(result.detectedClass)}
           />
 
 
@@ -168,65 +176,82 @@ export function VisionResultCard({
       </Panel>
 
 
-      {/* =====================================================
-          MÉTRICAS VISUALES
-          ===================================================== */}
+      {/* Solo se muestran métricas calculadas realmente para esta imagen. */}
 
       <Panel
-        title="Métricas visuales"
+        title={hasVisualMetrics ? "Métricas visuales" : "Resultados del modelo"}
         showInfo={false}
       >
         <div
           className="visionMetricRows"
           aria-label="Métricas obtenidas del análisis visual"
         >
+          {!hasVisualMetrics && (
+            <>
+              {result.topClasses.map((item) => (
+                <MetricRow
+                  key={item.className}
+                  label={formatVisionClassName(item.className)}
+                  value={item.score * 100}
+                  unit="%"
+                />
+              ))}
+              <p className="visionMetricRows__note">
+                Puntuaciones softmax de esta imagen; no son precisión estadística ni probabilidades calibradas. La cobertura y las lesiones no se miden con este clasificador.
+              </p>
+            </>
+          )}
 
-          <MetricRow
+          {hasVisualMetrics && (
+            <>
+          {result.visualMetrics.greenCoveragePercentage != null && <MetricRow
             label="Cobertura verde"
             value={
               result.visualMetrics
                 .greenCoveragePercentage
             }
             unit="%"
-          />
+          />}
 
 
-          <MetricRow
+          {result.visualMetrics.dryAreaPercentage != null && <MetricRow
             label="Área seca"
             value={
               result.visualMetrics
                 .dryAreaPercentage
             }
             unit="%"
-          />
+          />}
 
 
-          <BooleanMetricRow
+          {result.visualMetrics.chlorosisSuspected != null && <BooleanMetricRow
             label="Clorosis sospechada"
             value={
               result.visualMetrics
                 .chlorosisSuspected
             }
-          />
+          />}
 
 
-          <BooleanMetricRow
+          {result.visualMetrics.leafSpotSuspected != null && <BooleanMetricRow
             label="Manchas foliares"
             value={
               result.visualMetrics
                 .leafSpotSuspected
             }
-          />
+          />}
 
 
-          <BooleanMetricRow
+          {result.visualMetrics.stressPatternDetected != null && <BooleanMetricRow
             label="Patrón de estrés"
             value={
               result.visualMetrics
                 .stressPatternDetected
             }
             emphasized
-          />
+          />}
+            </>
+          )}
 
         </div>
       </Panel>
@@ -566,66 +591,6 @@ function formatBooleanMetric(
   return value
     ? "Sí"
     : "No";
-}
-
-
-/* ===========================================================
-   HELPERS — PREDICCIÓN
-   ===========================================================
-   Se usa Record<string, string> de forma deliberada.
-   
-   De esta manera, si el contrato local incorpora una nueva
-   predicción como VISUAL_ANOMALY, TypeScript no rompe
-   todo el componente por faltar una propiedad del Record.
-   =========================================================== */
-
-function formatPrediction(
-  value: VisionPrediction,
-): string {
-  const labels: Record<string, string> = {
-    HEALTHY:
-      "Cultivo saludable",
-
-    WATER_STRESS:
-      "Estrés hídrico",
-
-    CHLOROSIS:
-      "Clorosis",
-
-    DRY_AREA:
-      "Área seca",
-
-    LEAF_SPOT:
-      "Mancha foliar",
-
-    VISUAL_ANOMALY:
-      "Anomalía visual",
-
-    UNKNOWN:
-      "Resultado no concluyente",
-  };
-
-
-  const knownLabel =
-    labels[String(value)];
-
-  if (knownLabel) {
-    return knownLabel;
-  }
-
-
-  /**
-   * Fallback seguro para futuras clases
-   * que pueda incorporar el modelo.
-   */
-  return String(value)
-    .replaceAll("_", " ")
-    .toLowerCase()
-    .replace(
-      /^\w/,
-      (character) =>
-        character.toUpperCase(),
-    );
 }
 
 

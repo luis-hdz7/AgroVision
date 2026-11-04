@@ -1257,7 +1257,7 @@ aside.sidebar nav.sidebar__nav button.sidebar__link.is-active .sidebar__icon {
 .weatherModal__headerIdentity strong {
   overflow: hidden;
   color: #ffffff;
-  font-size: 0.75rem;
+  font-size: 0.9rem;
   font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1266,20 +1266,20 @@ aside.sidebar nav.sidebar__nav button.sidebar__link.is-active .sidebar__icon {
 .weatherModal__headerIdentity span {
   margin-top: 3px;
   color: var(--weather-soft);
-  font-size: 0.58rem;
+  font-size: 0.8rem;
 }
 
 .weatherModal__headerIdentity small {
   margin-top: 2px;
   color: var(--weather-muted);
-  font-size: 0.49rem;
+  font-size: 0.8rem;
 }
 
 .weatherModal__title {
   margin: 0;
   color: rgba(255, 255, 255, 0.5);
   font-family: var(--av-font-heading);
-  font-size: 0.63rem;
+  font-size: 1.1rem;
   font-weight: 600;
   letter-spacing: 0.02em;
 }
@@ -1382,21 +1382,15 @@ aside.sidebar nav.sidebar__nav button.sidebar__link.is-active .sidebar__icon {
 
 .weatherModal__currentBadge {
   width: fit-content;
-
   display: flex;
   align-items: center;
-
   gap: 6px;
-  padding: 5px 8px;
-
+  padding: 5px 12px 5px 10px;
   color: rgba(255, 255, 255, 0.65);
-
-  font-size: 0.51rem;
+  font-size: 0.7rem;
   font-weight: 600;
-
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 999px;
-
   background: rgba(0, 0, 0, 0.12);
 }
 
@@ -1483,16 +1477,13 @@ aside.sidebar nav.sidebar__nav button.sidebar__link.is-active .sidebar__icon {
 .weatherModal__weatherArtwork img {
   width: 100%;
   height: 100%;
-
   display: block;
-
   object-fit: contain;
-
   overflow: visible;
-
   user-select: none;
   pointer-events: none;
 
+  padding-bottom: 70px;
   filter:
     drop-shadow(
       0 16px 22px
@@ -1550,19 +1541,16 @@ aside.sidebar nav.sidebar__nav button.sidebar__link.is-active .sidebar__icon {
 .weatherModal__forecastIcon {
   width: 40px;
   height: 40px;
-
   display: grid;
   place-items: center;
-
   overflow: visible;
-
   font-size: 0;
 }
 
 
 .weatherModal__forecastIcon img {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
 
   display: block;
 
@@ -1800,7 +1788,7 @@ aside.sidebar nav.sidebar__nav button.sidebar__link.is-active .sidebar__icon {
 
 .weatherModal__widgetTitle > span {
   color: var(--weather-muted);
-  font-size: 0.47rem;
+  font-size: 0.9rem;
 }
 
 .weatherModal__mapCanvas {
@@ -1857,12 +1845,12 @@ aside.sidebar nav.sidebar__nav button.sidebar__link.is-active .sidebar__icon {
 
 .weatherModal__mapLocation strong {
   color: #ffffff;
-  font-size: 0.55rem;
+  font-size: 0.6rem;
 }
 
 .weatherModal__mapLocation small {
   color: rgba(255, 255, 255, 0.36);
-  font-size: 0.44rem;
+  font-size: 0.5rem;
 }
 
 /* =========================================
@@ -1907,11 +1895,11 @@ aside.sidebar nav.sidebar__nav button.sidebar__link.is-active .sidebar__icon {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
   transform: translateY(7px);
 }
 
 .weatherModal__chartCenter--uv strong {
+  margin-top: 18px;
   color: #ffffff;
   font-size: 0.92rem;
   font-weight: 700;
@@ -1920,7 +1908,7 @@ aside.sidebar nav.sidebar__nav button.sidebar__link.is-active .sidebar__icon {
 .weatherModal__chartCenter--uv span {
   margin-top: 2px;
   color: rgba(255, 255, 255, 0.45);
-  font-size: 0.48rem;
+  font-size: 0.9rem;
 }
 
 .weatherModal__chartCenter--sun {
@@ -1933,7 +1921,7 @@ aside.sidebar nav.sidebar__nav button.sidebar__link.is-active .sidebar__icon {
 
 .weatherModal__chartCenter--sun span {
   color: rgba(255, 255, 255, 0.46);
-  font-size: 0.45rem;
+  font-size: 0.9rem;
 }
 
 /* =========================================
@@ -1965,7 +1953,7 @@ aside.sidebar nav.sidebar__nav button.sidebar__link.is-active .sidebar__icon {
 
 .weatherModal__forecastHeader span {
   color: var(--weather-muted);
-  font-size: 0.46rem;
+  font-size: 0.9rem;
 }
 
 .weatherModal__forecastList {
@@ -2005,10 +1993,11 @@ aside.sidebar nav.sidebar__nav button.sidebar__link.is-active .sidebar__icon {
 .weatherModal__forecastCondition {
   overflow: hidden;
   color: rgba(255, 255, 255, 0.38);
-  font-size:0.8rem;
+  font-size:0.9rem;
   line-height: 1.1;
   text-overflow: ellipsis;
   white-space: nowrap;
+  margin-left: 10px;
 }
 
 .weatherModal__forecastTemperature {
@@ -2031,7 +2020,7 @@ aside.sidebar nav.sidebar__nav button.sidebar__link.is-active .sidebar__icon {
 
 .weatherModal__forecastRain {
   color: rgba(101, 190, 222, 0.67);
-  font-size: 0.8rem;
+  font-size: 1rem;
   text-align: right;
 }
 
@@ -2041,9 +2030,9 @@ aside.sidebar nav.sidebar__nav button.sidebar__link.is-active .sidebar__icon {
   align-items: center;
   justify-content: space-between;
   gap: 15px;
-  padding: 2px 4px 0;
+  padding: 3px 5px 0;
   color: rgba(255, 255, 255, 0.25);
-  font-size: 0.43rem;
+  font-size: 1rem;
 }
 
 .weatherModal__footer > div {
@@ -2055,11 +2044,12 @@ aside.sidebar nav.sidebar__nav button.sidebar__link.is-active .sidebar__icon {
 .weatherModal__footer strong {
   color: rgba(255, 255, 255, 0.43);
   font-weight: 600;
+  font-size: 1rem;
 }
 
 .weatherModal__sourceDot {
-  width: 6px;
-  height: 6px;
+  width: 14px;
+  height: 10px;
   flex: 0 0 6px;
   border-radius: 50%;
   background: var(--weather-green);

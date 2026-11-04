@@ -32,6 +32,7 @@ import type {
   ZoneFeature,
   ZoneFeatureCollection,
 } from "../types/mappingGeo.types";
+import { relocateDemoRing } from "./demoLocation";
 
 type Ring = number[][];
 
@@ -54,7 +55,7 @@ function createField(
     id: fieldId(id),
     geometry: {
       type: "Polygon",
-      coordinates: [ring],
+      coordinates: [relocateDemoRing(ring)],
     },
     properties: {
       farmId: "farm-001",
@@ -76,7 +77,7 @@ function createZone(
     id: zoneId(id),
     geometry: {
       type: "Polygon",
-      coordinates: [ring],
+      coordinates: [relocateDemoRing(ring)],
     },
     properties: {
       zoneId: zoneId(id),
@@ -171,8 +172,8 @@ export const agroVisionZone13 = createZone(
 /**
  * Catálogos extendidos.
  *
- * Los tres lotes y seis zonas originales
- * conservan sus coordenadas.
+ * Todos los lotes y zonas se desplazan juntos hacia
+ * la ubicación rural aproximada del demo.
  */
 
 export const expandedAgroVisionFields:

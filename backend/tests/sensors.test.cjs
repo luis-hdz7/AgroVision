@@ -10,6 +10,11 @@ test('Sensors: cinco rutas, persistencia, validación y errores', async () => {
   const row = { id: 1, fieldId: 2, type: 'SOIL_MOISTURE', name: 'Sensor norte', status: 'ACTIVE', installedAt: new Date('2026-10-08T00:00:00Z') };
   const input = { ...row, installedAt: row.installedAt.toISOString() }; delete input.id;
   const calls = []; let failure = null; const originals = {};
+  const originalFieldFindUnique = prisma.field.findUnique;
+  prisma.field.findUnique = async ({where}) => {
+    if (failure) throw failure;
+    return where.id === 99 ? null : {id:where.id};
+  };
   for (const method of ['findMany', 'findUnique', 'create', 'update']) {
     originals[method] = prisma.sensor[method];
     prisma.sensor[method] = async args => {
@@ -39,6 +44,7 @@ test('Sensors: cinco rutas, persistencia, validación y errores', async () => {
     assert.equal((await request('/99')).status,404);
     result=await request('','POST',input);assert.equal(result.status,201);assert.equal(result.body.success,true);
     assert.equal(calls.at(-1).method,'create');assert.ok(calls.at(-1).args.data.installedAt instanceof Date);
+    assert.equal((await request('','POST',{...input,fieldId:99})).status,400);
     result=await request('/1','PATCH',{status:'MAINTENANCE'});assert.equal(result.status,200);assert.equal(result.body.data.status,'MAINTENANCE');
     assert.deepEqual(calls.at(-1),{method:'update',args:{where:{id:1},data:{status:'MAINTENANCE'}}});
     for (const patch of [{name:'Nuevo nombre'},{type:'TEMPERATURE'},{status:'INACTIVE'}]) {
@@ -61,6 +67,7 @@ test('Sensors: cinco rutas, persistencia, validación y errores', async () => {
   } finally {
     await new Promise(resolve=>server.close(resolve));
     for(const [method,original] of Object.entries(originals)) prisma.sensor[method]=original;
+    prisma.field.findUnique=originalFieldFindUnique;
     await prisma.$disconnect();
   }
 });

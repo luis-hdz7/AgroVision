@@ -15,6 +15,7 @@
 
 // Consumimos el contrato GIS centralizado de las geometrías lineales.
 import type { MapLineFeature } from "../types/mappingGeo.types";
+import { relocateDemoPosition } from "./demoLocation";
 
 // Trayectoria histórica simulada del rover.
 export const agroVisionRoverTrajectory: MapLineFeature = {
@@ -48,7 +49,7 @@ export const agroVisionRoverTrajectory: MapLineFeature = {
             [-87.1237, 12.6252],
             // Último tramo.
             [-87.1227, 12.6250],
-        ],
+        ].map(relocateDemoPosition),
     },
     // Propiedades GIS de la trayectoria.
     properties: {
@@ -73,8 +74,8 @@ export const agroVisionRoverTrajectory: MapLineFeature = {
  * =========================================
  *
  * Origen:
- * La trayectoria se extrae de trajectoryLayer.ts conservando
- * las diez posiciones originales y su orden.
+ * La trayectoria conserva las diez posiciones relativas y su orden;
+ * se desplaza junto con las parcelas de demostración.
  *
  * Contrato:
  * MapLineFeature representa el recorrido como LineString.

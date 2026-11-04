@@ -2,6 +2,8 @@
 
 import { randomUUID } from "node:crypto";
 import { basename } from "node:path";
+// Utilizamos el cliente compartido para comprobar el contexto agrícola.
+import prisma from "../../../shared/database/prisma";
 
 import type { EvidenceStatus } from "../../analysis/types/evidenceTypes";
 import { aiVisionAnalyzeResponseSchema } from "../schemas/visionSchemas";
@@ -28,6 +30,9 @@ export class VisionService {
   public static async analyzeImage(
     request: VisionAnalyzeRequest,
   ): Promise<VisionAnalyzeResponse> {
+    // Comprobamos la parcela y su cultivo antes de solicitar la inferencia.
+    await validateVisionContext(request);
+
     const aiResult = await requestAiAnalysis(request);
     if (aiResult.cropType !== request.cropType) {
       throw new VisionServiceError(
@@ -61,6 +66,44 @@ export class VisionService {
       })),
       createdAt: new Date().toISOString(),
     };
+  }
+}
+
+/**
+ * Comprueba la existencia de la parcela y la asociación del cultivo específico.
+ * Conserva el identificador recibido para el registro histórico del análisis.
+ */
+async function validateVisionContext(request: VisionAnalyzeRequest): Promise<void> {
+  // Admitimos el ID numérico como texto y el formato GIS utilizado por el frontend.
+  const match = /^(?:field-)?(\d+)$/.exec(request.fieldId);
+  const databaseFieldId = Number(match?.[1]);
+
+  // Field.id utiliza un entero positivo de PostgreSQL de hasta 32 bits.
+  if (!match || !Number.isSafeInteger(databaseFieldId) || databaseFieldId < 1 || databaseFieldId > 2_147_483_647) {
+    throw new VisionServiceError("El identificador de la parcela no es válido.", 400);
+  }
+
+  // Consultamos la parcela y una coincidencia del cultivo solicitado.
+  const field = await prisma.field.findUnique({
+    where: { id: databaseFieldId },
+    select: {
+      id: true,
+      crops: {
+        where: { cropType: request.cropType },
+        select: { id: true },
+        take: 1,
+      },
+    },
+  });
+
+  // Una parcela inexistente impide continuar con la inferencia.
+  if (!field) {
+    throw new VisionServiceError("La parcela indicada no existe en la base de datos.", 422);
+  }
+
+  // GENERAL conserva el análisis genérico; los cultivos específicos deben estar asociados.
+  if (request.cropType !== "GENERAL" && field.crops.length === 0) {
+    throw new VisionServiceError("El cultivo solicitado no está registrado en la parcela indicada.", 422);
   }
 }
 

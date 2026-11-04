@@ -19,6 +19,30 @@ import { apiGet } from "../../../shared/api/apiClient";
 import { API_ENDPOINTS } from "../../../shared/api/endpoints";
 import type { Field } from "../types/field.types.ts"
 
+const MAX_POSTGRES_INT = 2147483647;
+const MAX_DECIMAL_AREA = 9999999999.99;
+
+function isValidId(value: unknown): value is number {
+  return typeof value === "number"
+    && Number.isInteger(value)
+    && value >= 1
+    && value <= MAX_POSTGRES_INT;
+}
+
+function isIsoDate(value: unknown): value is string {
+  return typeof value === "string"
+    && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(value)
+    && new Date(value).toISOString() === value;
+}
+
+function isValidArea(value: unknown): value is number {
+  return typeof value === "number"
+    && Number.isFinite(value)
+    && value > 0
+    && value <= MAX_DECIMAL_AREA
+    && Number(value.toFixed(2)) === value;
+}
+
 function isField(value: unknown): value is Field {
   if (
     typeof value !== "object" ||
@@ -31,17 +55,15 @@ function isField(value: unknown): value is Field {
   const field = value as Record<string, unknown>;
 
   return (
-    typeof field.id === "number" &&
-    Number.isInteger(field.id) &&
-    typeof field.farmId === "number" &&
-    Number.isInteger(field.farmId) &&
+    isValidId(field.id) &&
+    isValidId(field.farmId) &&
     typeof field.name === "string" &&
-    typeof field.areaSquareMeters === "number" &&
-    Number.isFinite(field.areaSquareMeters) &&
+    field.name.trim().length > 0 &&
+    isValidArea(field.areaSquareMeters) &&
     typeof field.soilType === "string" &&
     typeof field.irrigationType === "string" &&
     typeof field.status === "string" &&
-    typeof field.createdAt === "string"
+    isIsoDate(field.createdAt)
   );
 }
 
@@ -55,12 +77,17 @@ function validateFields(value: unknown): Field[] {
     );
   }
 
+  const ids = new Set(value.map((field) => field.id));
+  if (ids.size !== value.length) {
+    throw new Error("El backend devolvió parcelas con IDs duplicados.");
+  }
+
   return value;
 }
 
 function validateId(id: number): void {
-  if (!Number.isInteger(id) || id <= 0) {
-    throw new Error("El ID debe ser un entero positivo.");
+  if (!isValidId(id)) {
+    throw new Error("El ID debe ser un entero PostgreSQL válido.");
   }
 }
 

@@ -1,10 +1,17 @@
 const assert = require('node:assert/strict');
-const { afterEach, test } = require('node:test');
+const { after, afterEach, beforeEach, test } = require('node:test');
 
+// Aislamos las pruebas de la conexión habitual antes de cargar Prisma.
+// Las consultas utilizadas por estos casos se sustituyen más abajo.
+process.env.DATABASE_URL = 'postgresql://test:test@127.0.0.1:1/test';
+
+const prisma = require('../dist/shared/database/prisma.js').default;
 const { aiVisionAnalyzeResponseSchema } = require('../dist/modules/vision/schemas/visionSchemas.js');
 const { VisionService, VisionServiceError } = require('../dist/modules/vision/services/visionService.js');
 
+// Conservamos las implementaciones originales para restaurarlas después de cada caso.
 const originalFetch = globalThis.fetch;
+const originalFindField = prisma.field.findUnique;
 
 const aiPayload = {
   prediction: 'VISUAL_ANOMALY',
@@ -40,7 +47,8 @@ const aiPayload = {
 
 const request = {
   cropType: 'CORN',
-  fieldId: 'field-test',
+  // Utilizamos un identificador válido; su existencia se simula en la prueba.
+  fieldId: 'field-002',
   zoneId: 'zone-test',
   image: {
     buffer: Buffer.from('image'),
@@ -50,8 +58,24 @@ const request = {
   },
 };
 
+beforeEach(() => {
+  // Simulamos una parcela existente con el cultivo solicitado.
+  // Así cada prueba puede alcanzar el comportamiento de IA que desea verificar.
+  prisma.field.findUnique = async () => ({
+    id: 2,
+    crops: [{ id: 2 }],
+  });
+});
+
 afterEach(() => {
+  // Evitamos que las sustituciones de un caso afecten al siguiente.
   globalThis.fetch = originalFetch;
+  prisma.field.findUnique = originalFindField;
+});
+
+after(async () => {
+  // Liberamos el cliente al finalizar el archivo de pruebas.
+  await prisma.$disconnect();
 });
 
 test('Vision: Zod acepta el contrato neuronal y rechaza métricas inventadas', () => {

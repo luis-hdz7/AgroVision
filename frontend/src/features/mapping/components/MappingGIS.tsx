@@ -445,7 +445,7 @@ export function MappingGIS({
       <div className="mappingGis__map">
         <AgroMap
           interactive={interactive}
-          showNavigationControl={false}
+          showNavigationControl={true}
           showScaleControl={showControls}
           onMapReady={handleMapReady}
           onMapError={reportError}

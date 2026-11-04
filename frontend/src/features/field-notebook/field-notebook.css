@@ -51,7 +51,7 @@
 
 .fieldNotebookField > span {
   color: var(--av-text-secondary);
-  font-size: 0.49rem;
+  font-size: 0.9rem;
   font-weight: 600;
 }
 
@@ -61,7 +61,7 @@
   width: 100%;
   min-width: 0;
   color: var(--av-text-secondary);
-  font-size: 0.55rem;
+  font-size: 0.8rem;
   border: 1px solid var(--av-border);
   border-radius: 5px;
   outline: 0;
@@ -118,8 +118,8 @@
 }
 
 .fieldNotebookUpload > span {
-  width: 20px;
-  height: 20px;
+  width: 40px;
+  height: 40px;
 }
 
 .fieldNotebookUpload > span img {
@@ -136,12 +136,12 @@
 
 .fieldNotebookUpload strong {
   color: var(--av-text-secondary);
-  font-size: 0.51rem;
+  font-size: 0.75rem;
 }
 
 .fieldNotebookUpload small {
   color: var(--av-text-muted);
-  font-size: 0.43rem;
+  font-size: 0.7rem;
 }
 
 .fieldNotebookUpload input {
@@ -229,8 +229,8 @@
 }
 
 .fieldDaySummaryRow > span {
-  width: 14px;
-  height: 14px;
+  width: 22px;
+  height: 22px;
 }
 
 .fieldDaySummaryRow img {
@@ -244,15 +244,16 @@
 
 .fieldDaySummaryRow strong {
   color: var(--av-text-secondary);
-  font-size: 0.49rem;
+  margin-left: 10px;
+  font-size: 0.7rem;
   font-weight: 500;
 }
 
 .fieldDaySummaryRow b {
-  min-width: 25px;
-  padding: 1px 5px;
-  color: var(--av-text-secondary);
-  font-size: 0.47rem;
+  min-width: 30px;
+  padding: 2px 5px;
+  color: var(--av-teal-600);
+  font-size: 0.67rem;
   text-align: center;
   border: 1px solid var(--av-border);
   border-radius: 999px;
@@ -291,26 +292,28 @@
 }
 
 .fieldNotebookShortcut > span {
-  width: 14px;
-  height: 14px;
+  width: 20px;
+  height: 20px;
 }
 
 .fieldNotebookShortcut img {
   display: block;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   object-fit: contain;
   filter: brightness(0) saturate(100%) invert(10%) sepia(25%) saturate(1087%)
     hue-rotate(117deg) brightness(94%) contrast(96%);
 }
 
 .fieldNotebookShortcut strong {
-  font-size: 0.49rem;
+  margin-left: 10px;
+  font-size: 0.7rem;
   font-weight: 500;
 }
 
 .fieldNotebookShortcut b {
   color: var(--av-text-muted);
+  font-size: 1.25rem;
 }
 
 /* =========================================

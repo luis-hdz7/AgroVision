@@ -527,17 +527,14 @@
   width:
     min(
       665px,
-      calc(100% - 248px)
+      calc(100% - 32px)
     );
 
   min-width: 0;
+  box-sizing: border-box;
 
-  display: grid;
-
-  grid-template-columns:
-    minmax(145px, 1fr)
-    minmax(135px, 0.9fr)
-    minmax(135px, 0.72fr);
+  display: flex;
+  flex-wrap: wrap;
 
   align-items: end;
 
@@ -584,6 +581,7 @@
 .visionFigma__controls
 > label:not(.visionUploadButton) {
   min-width: 0;
+  flex: 1 1 145px;
 
   display: grid;
 
@@ -683,6 +681,7 @@ select:focus {
 
   min-width: 0;
   min-height: 42px;
+  flex: 1 1 145px;
 
   display: flex;
   align-items: center;
@@ -804,168 +803,6 @@ select:focus {
       rgba(167, 217, 30, 0.08),
     0 7px 20px
       rgba(7, 29, 20, 0.16);
-}
-
-
-/* ===========================================================
-   14. ENGINE STATUS
-   =========================================================== */
-
-.visionEngineStatus {
-  position: absolute;
-
-  z-index: 20;
-
-  top: 16px;
-  right: 16px;
-
-  width: 210px;
-  min-width: 0;
-  min-height: 70px;
-
-  display: grid;
-
-  grid-template-columns:
-    37px
-    minmax(0, 1fr)
-    auto;
-
-  align-items: center;
-
-  gap: 8px;
-
-  padding:
-    9px
-    10px;
-
-  color: #173b30;
-
-  border:
-    1px solid
-    rgba(255, 255, 255, 0.64);
-
-  border-radius: 15px;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(225, 235, 211, 0.52),
-      rgba(242, 246, 235, 0.43)
-    );
-
-  -webkit-backdrop-filter:
-    blur(36px)
-    saturate(150%)
-    contrast(95%)
-    brightness(1.05);
-
-  backdrop-filter:
-    blur(36px)
-    saturate(150%)
-    contrast(95%)
-    brightness(1.05);
-
-  box-shadow:
-    0 15px 38px rgba(7, 29, 20, 0.14),
-    inset 0 1px 0 rgba(255, 255, 255, 0.67);
-}
-
-
-.visionEngineStatus__icon {
-  width: 36px;
-  height: 36px;
-
-  display: grid;
-  place-items: center;
-
-  color: var(--av-green-400);
-
-  border-radius: 11px;
-
-  background:
-    rgba(255, 255, 255, 0.47);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.7);
-}
-
-
-.visionEngineStatus__icon svg {
-  width: 21px;
-  height: 21px;
-}
-
-
-.visionEngineStatus > div {
-  min-width: 0;
-}
-
-
-.visionEngineStatus small {
-  display: block;
-
-  margin-bottom: 3px;
-
-  color: #6a7d73;
-
-  font-size: 0.58rem;
-  font-weight: 800;
-
-  letter-spacing: 0.07em;
-}
-
-
-.visionEngineStatus strong {
-  min-width: 0;
-
-  display: block;
-
-  overflow: hidden;
-
-  color: #173b30;
-
-  font-size: 0.70rem;
-  font-weight: 750;
-
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-
-.visionEngineStatus > b {
-  color: var(--av-green-500);
-
-  font-size: 0.72rem;
-  font-weight: 800;
-}
-
-
-/* Activo */
-
-.visionEngineStatus--analyzing {
-  border-color:
-    rgba(183, 225, 58, 0.58);
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(225, 237, 200, 0.62),
-      rgba(242, 246, 230, 0.47)
-    );
-
-  box-shadow:
-    0 0 0 3px
-      rgba(167, 217, 30, 0.08),
-    0 16px 42px
-      rgba(7, 29, 20, 0.18),
-    0 0 32px
-      rgba(167, 217, 30, 0.11);
-}
-
-
-.visionEngineStatus--error {
-  border-color:
-    rgba(227, 26, 22, 0.30);
 }
 
 
@@ -2412,6 +2249,13 @@ span {
   display: grid;
 }
 
+.visionMetricRows__note {
+  margin: 8px 0 2px;
+  color: #536d62;
+  font-size: 0.62rem;
+  line-height: 1.4;
+}
+
 
 .visionMetricRow {
   min-width: 0;
@@ -3607,13 +3451,8 @@ b {
     width:
       min(
         600px,
-        calc(100% - 220px)
+        calc(100% - 32px)
       );
-  }
-
-
-  .visionEngineStatus {
-    width: 190px;
   }
 
 
@@ -3725,25 +3564,6 @@ b {
       calc(
         100% - 32px
       );
-
-    grid-template-columns:
-      repeat(
-        2,
-        minmax(0, 1fr)
-      );
-  }
-
-
-  .visionUploadButton {
-    grid-column:
-      1 / -1;
-  }
-
-
-  .visionEngineStatus {
-    top: 136px;
-
-    width: 195px;
   }
 
 
@@ -3824,12 +3644,6 @@ b {
         100% - 20px
       );
 
-    grid-template-columns:
-      repeat(
-        2,
-        minmax(0, 1fr)
-      );
-
     gap: 7px;
 
     padding: 8px;
@@ -3848,37 +3662,6 @@ b {
 
   .visionUploadButton {
     min-height: 40px;
-
-    grid-column:
-      1 / -1;
-  }
-
-
-  /* ---------------------------------------
-     Engine
-     --------------------------------------- */
-
-  .visionEngineStatus {
-    top: 132px;
-    left: 10px;
-    right: 10px;
-
-    width: auto;
-
-    min-height: 58px;
-
-    grid-template-columns:
-      34px
-      minmax(0, 1fr)
-      auto;
-
-    border-radius: 13px;
-  }
-
-
-  .visionEngineStatus__icon {
-    width: 33px;
-    height: 33px;
   }
 
 
@@ -4067,11 +3850,6 @@ b {
   }
 
 
-  .visionEngineStatus {
-    top: 128px;
-  }
-
-
   .visionAnalysisLoader {
     width:
       calc(
@@ -4188,7 +3966,6 @@ and (min-width: 681px) {
 
   .visionGlass,
   .visionFigma__controls,
-  .visionEngineStatus,
   .visionAnalysisLoader,
   .visionImagePreview__mapControls,
   .visionCanvasStat,

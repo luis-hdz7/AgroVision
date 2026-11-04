@@ -1,8 +1,10 @@
-import { useState, type FormEvent } from 'react';
-import logo from '../../assets/logos/imagotipo-V-clara_oscura.svg';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
+import logo from '../../assets/logos/imagotipo-V-oscura.svg';
 import field from '../../assets/images/parcelasCampoConcept.png';
 import map from '../../assets/images/monitoreoMapp.png';
 import plant from '../../assets/images/maiz-image.jpg';
+import { submitDemoRequest } from './services/demoRequestService';
+import type { DemoRequestInput } from './types/demoRequest.types';
 import './landing.css';
 
 const features = [
@@ -14,27 +16,57 @@ const features = [
 export function LandingPage() {
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
+  const requestInFlight = useRef(false);
+  const activeRequest = useRef<AbortController | null>(null);
+  const mounted = useRef(true);
+
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      activeRequest.current?.abort();
+      activeRequest.current = null;
+      requestInFlight.current = false;
+    };
+  }, []);
 
   async function submitDemo(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (status === 'sending') return;
+    if (requestInFlight.current) return;
     const form = event.currentTarget;
     const data = new FormData(form);
+    if (data.get('consent') !== 'true') {
+      setStatus('error');
+      setMessage('Debes autorizar el contacto para enviar la solicitud.');
+      return;
+    }
+    const input: DemoRequestInput = {
+      name: String(data.get('name') ?? ''),
+      email: String(data.get('email') ?? ''),
+      organization: String(data.get('organization') ?? ''),
+      message: String(data.get('message') ?? ''),
+      consent: 'true',
+    };
+    const controller = new AbortController();
+    requestInFlight.current = true;
+    activeRequest.current = controller;
     setStatus('sending');
     setMessage('');
     try {
-      const response = await fetch('/api/demo-requests', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(Object.fromEntries(data)),
-      });
-      if (!response.ok) throw new Error('request_failed');
+      const confirmation = await submitDemoRequest(input, { signal: controller.signal });
+      if (!mounted.current || activeRequest.current !== controller) return;
       setStatus('success');
-      setMessage('Recibimos tu solicitud. El equipo podrá contactarte al correo indicado para coordinar la demo.');
+      setMessage(`Recibimos tu solicitud #${confirmation.id}. El equipo podrá contactarte al correo indicado.`);
       form.reset();
     } catch {
+      if (!mounted.current || activeRequest.current !== controller) return;
       setStatus('error');
-      setMessage('No pudimos guardar tu solicitud. Inténtalo nuevamente en unos minutos.');
+      setMessage('No pudimos confirmar el envío. Inténtalo nuevamente.');
+    } finally {
+      if (activeRequest.current === controller) {
+        activeRequest.current = null;
+        requestInFlight.current = false;
+      }
     }
   }
 
@@ -89,11 +121,11 @@ export function LandingPage() {
           <div className="landing-demo-copy"><img src={plant} alt="Detalle de un cultivo de maíz" loading="lazy" /><div><p className="landing-eyebrow">CONVERSEMOS SOBRE TU CAMPO</p><h2>La próxima decisión<br />empieza con <em>una mejor visión.</em></h2><p>Cuéntanos sobre tu equipo y solicita una demostración de AgroVision.</p></div></div>
           <form className="landing-form" onSubmit={submitDemo} aria-busy={status === 'sending'}>
             <h3>Solicita una demo</h3><p>Déjanos tus datos para coordinar una presentación.</p>
-            <label htmlFor="demo-name">Nombre completo<input id="demo-name" name="name" autoComplete="name" placeholder="Tu nombre" required minLength={2} maxLength={100} /></label>
-            <label htmlFor="demo-email">Correo electrónico<input id="demo-email" name="email" type="email" autoComplete="email" placeholder="nombre@organizacion.com" required maxLength={254} /></label>
-            <label htmlFor="demo-organization">Organización o finca <span>(opcional)</span><input id="demo-organization" name="organization" autoComplete="organization" placeholder="Nombre de tu organización" maxLength={150} /></label>
-            <label htmlFor="demo-message">¿Qué te gustaría conocer?<textarea id="demo-message" name="message" placeholder="Cuéntanos sobre tus cultivos o necesidades…" required minLength={10} maxLength={2000} rows={3} /></label>
-            <label className="landing-consent"><input type="checkbox" name="consent" value="true" required /><span>Autorizo al equipo de AgroVision a usar estos datos para contactarme sobre esta solicitud.</span></label>
+            <label htmlFor="demo-name">Nombre completo<input id="demo-name" name="name" autoComplete="name" placeholder="Tu nombre" required minLength={2} maxLength={100} disabled={status === 'sending'} /></label>
+            <label htmlFor="demo-email">Correo electrónico<input id="demo-email" name="email" type="email" autoComplete="email" placeholder="nombre@organizacion.com" required maxLength={254} disabled={status === 'sending'} /></label>
+            <label htmlFor="demo-organization">Organización o finca <span>(opcional)</span><input id="demo-organization" name="organization" autoComplete="organization" placeholder="Nombre de tu organización" maxLength={150} disabled={status === 'sending'} /></label>
+            <label htmlFor="demo-message">¿Qué te gustaría conocer?<textarea id="demo-message" name="message" placeholder="Cuéntanos sobre tus cultivos o necesidades…" required minLength={10} maxLength={2000} rows={3} disabled={status === 'sending'} /></label>
+            <label className="landing-consent"><input type="checkbox" name="consent" value="true" required disabled={status === 'sending'} /><span>Autorizo al equipo de AgroVision a usar estos datos para contactarme sobre esta solicitud.</span></label>
             <button className="landing-button" type="submit" disabled={status === 'sending'}>{status === 'sending' ? 'Enviando…' : 'Solicitar demostración'}<span aria-hidden="true">↗</span></button>
             <p className={`landing-form-status ${status}`} role="status" aria-live="polite">{message}</p>
           </form>

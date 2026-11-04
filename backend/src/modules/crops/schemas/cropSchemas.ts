@@ -1,26 +1,32 @@
 /** Validación HTTP de Crop, sin alterar las rutas legacy de CropProfile. */
 import { z } from "zod";
+import {
+  nonEmptyStringSchema,
+  postgresIdParamSchema,
+  postgresIdSchema,
+} from "../../../shared/validation/registrationSchemas";
 
-const positiveInteger = z.number().int().positive().max(2147483647);
-const idParameter = z.string().regex(/^[1-9]\d*$/).transform(Number).pipe(positiveInteger);
-const nonEmptyString = z.string().trim().min(1);
+const cropTypeSchema = z.enum([
+  "CORN", "RED_BEAN", "CASSAVA", "QUEQUISQUE",
+  "ORANGE", "SORGHUM", "PEANUT", "GENERAL",
+]);
 const cropStatusSchema = z.enum(["ACTIVE", "HARVESTED", "INACTIVE"]);
 
 export const createCropSchema = z.object({
-  fieldId: positiveInteger,
-  cropProfileId: positiveInteger,
-  cropType: nonEmptyString,
-  name: nonEmptyString,
-  growthStage: nonEmptyString,
+  fieldId: postgresIdSchema,
+  cropProfileId: postgresIdSchema,
+  cropType: cropTypeSchema,
+  name: nonEmptyStringSchema,
+  growthStage: nonEmptyStringSchema,
   plantedAt: z.string().datetime({ offset: true }),
   status: cropStatusSchema,
 }).strict();
 
 export const updateCropSchema = z.object({
-  cropProfileId: positiveInteger.optional(),
-  cropType: nonEmptyString.optional(),
-  name: nonEmptyString.optional(),
-  growthStage: nonEmptyString.optional(),
+  cropProfileId: postgresIdSchema.optional(),
+  cropType: cropTypeSchema.optional(),
+  name: nonEmptyStringSchema.optional(),
+  growthStage: nonEmptyStringSchema.optional(),
   plantedAt: z.string().datetime({ offset: true }).optional(),
   status: cropStatusSchema.optional(),
 }).strict().refine(
@@ -29,13 +35,13 @@ export const updateCropSchema = z.object({
 );
 
 export const cropIdParamSchema = z.object({
-  id: idParameter,
+  id: postgresIdParamSchema,
 }).strict();
 
 export const fieldIdParamSchema = z.object({
-  fieldId: idParameter,
+  fieldId: postgresIdParamSchema,
 }).strict();
 
 export const cropTypeParamSchema = z.object({
-  type: nonEmptyString,
+  type: nonEmptyStringSchema,
 }).strict();

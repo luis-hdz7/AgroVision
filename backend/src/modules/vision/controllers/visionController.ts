@@ -4,6 +4,7 @@ import type { Request, Response } from "express";
 
 import { fail, ok } from "../../../shared/responses/apiResponses";
 import { visionAnalyzeFieldsSchema } from "../schemas/visionSchemas";
+import { recordVisionAnalysis } from "../services/visionAnalysisRecordService";
 import { VisionService, VisionServiceError } from "../services/visionService";
 
 export class VisionController {
@@ -25,7 +26,7 @@ export class VisionController {
     }
 
     try {
-      const result = await VisionService.analyzeImage({
+      const request = {
         cropType: fields.data.cropType,
         fieldId: fields.data.fieldId,
         zoneId: fields.data.zoneId ?? null,
@@ -35,7 +36,17 @@ export class VisionController {
           mimeType: req.file.mimetype,
           sizeBytes: req.file.size,
         },
-      });
+      };
+      const result = await VisionService.analyzeImage(request);
+
+      try {
+        await recordVisionAnalysis(request, result);
+      } catch (error: unknown) {
+        console.error("[AgroVision] No se pudo registrar el análisis Vision AI:",
+          error instanceof Error ? error.name : "Error desconocido");
+        res.status(503).json(fail("El análisis terminó, pero no pudo registrarse en la base de datos. Inténtalo de nuevo."));
+        return;
+      }
 
       res.status(200).json(
         ok(result, "Visual analysis completed successfully"),

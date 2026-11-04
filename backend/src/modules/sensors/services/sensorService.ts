@@ -1,5 +1,6 @@
 ﻿import prisma from "../../../shared/database/prisma";
 import type { Sensor } from "../../../generated/prisma/client";
+import { RegistrationError } from "../../../shared/errors/registrationErrors";
 import type { SensorResponse, CreateSensorInput, UpdateSensorInput } from "../types/sensorTypes";
 
 function toResponse(sensor: Sensor): SensorResponse {
@@ -33,6 +34,9 @@ export class SensorService {
   }
 
   public async createSensor(input: CreateSensorInput): Promise<SensorResponse> {
+    const field = await prisma.field.findUnique({ where: { id: input.fieldId } });
+    if (!field) throw new RegistrationError(400, "La parcela indicada no existe.");
+
     const sensor = await prisma.sensor.create({
       data: {
         fieldId: input.fieldId,

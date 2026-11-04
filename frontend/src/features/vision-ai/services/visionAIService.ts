@@ -207,6 +207,8 @@ async function readApiErrorMessage(response: Response): Promise<string> {
     } catch {
         // Se usa el mensaje controlado de abajo.
     }
+    if (response.status === 502) return "No hay respuesta válida del backend o del AI Service. Comprueba Express (puerto 3000) y Vision AI (puerto 8000).";
     if (response.status === 503) return "El modelo seleccionado no está disponible en Vision AI.";
+    if (response.status === 504) return "Vision AI tardó demasiado en responder. Intenta de nuevo con los servicios activos.";
     return `No fue posible completar el análisis. Estado HTTP: ${response.status}.`;
 }

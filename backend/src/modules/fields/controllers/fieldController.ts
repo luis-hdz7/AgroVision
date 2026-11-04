@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { ZodError } from "zod";
 import { FieldService } from "../services/fieldService";
 import {
   createFieldSchema,
@@ -7,6 +8,21 @@ import {
   farmIdParamSchema,
 } from "../schemas/fieldSchemas";
 import { ok, fail } from "../../../shared/responses/apiResponses";
+import { classifyRegistrationError } from "../../../shared/errors/registrationErrors";
+
+function respondError(res: Response, error: unknown): void {
+  if (error instanceof ZodError) {
+    res.status(400).json(fail("Parámetros o datos de parcela inválidos."));
+    return;
+  }
+
+  const result = classifyRegistrationError(
+    error,
+    "Parcela no encontrada.",
+    "No fue posible procesar la solicitud de parcela.",
+  );
+  res.status(result.status).json(fail(result.message));
+}
 
 export class FieldController {
 
@@ -22,10 +38,8 @@ export class FieldController {
       res
         .status(200)
         .json(ok(fields, "Fields loaded successfully"));
-    } catch (error) {
-      res
-        .status(500)
-        .json(fail("Failed to load fields"));
+    } catch (error: unknown) {
+      respondError(res, error);
     }
   };
 
@@ -41,10 +55,8 @@ export class FieldController {
       res
         .status(200)
         .json(ok(field, "Field loaded successfully"));
-    } catch (error) {
-      res
-        .status(404)
-        .json(fail("Field not found"));
+    } catch (error: unknown) {
+      respondError(res, error);
     }
   };
 
@@ -61,10 +73,8 @@ export class FieldController {
       res
         .status(200)
         .json(ok(fields, "Fields loaded successfully"));
-    } catch (error) {
-      res
-        .status(400)
-        .json(fail("Failed to load fields"));
+    } catch (error: unknown) {
+      respondError(res, error);
     }
   };
 
@@ -80,10 +90,8 @@ export class FieldController {
       res
         .status(201)
         .json(ok(field, "Field created successfully"));
-    } catch (error) {
-      res
-        .status(400)
-        .json(fail("Invalid field data"));
+    } catch (error: unknown) {
+      respondError(res, error);
     }
   };
 
@@ -102,10 +110,8 @@ export class FieldController {
       res
         .status(200)
         .json(ok(field, "Field updated successfully"));
-    } catch (error) {
-      res
-        .status(400)
-        .json(fail("Failed to update field"));
+    } catch (error: unknown) {
+      respondError(res, error);
     }
   };
 }
