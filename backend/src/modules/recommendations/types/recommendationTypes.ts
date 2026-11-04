@@ -5,6 +5,12 @@ export type RecommendationPriority =
     | "HIGH"
     | "URGENT";
 
+export type RecommendationStatus =
+    | "PENDING"
+    | "IN_PROGRESS"
+    | "APPLIED"
+    | "DISMISSED";
+
 /*
     * Área donde se espera un beneficio.
 */
@@ -35,6 +41,7 @@ export interface Recommendation {
     fieldId: string;
     zoneId?: string | null;
     priority: RecommendationPriority;
+    status: RecommendationStatus;
     reason: string;
     suggestedAction: string;
     expectedImpact: ExpectedImpact;
