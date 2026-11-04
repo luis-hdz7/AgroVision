@@ -144,6 +144,7 @@ export function generateRecommendations(
         fieldId: insight.fieldId,
         zoneId: insight.zoneId,
         priority: mapPriority(insight.finalRiskLevel),
+        status: "PENDING",
         reason: buildReason(
             insight,
             alert
