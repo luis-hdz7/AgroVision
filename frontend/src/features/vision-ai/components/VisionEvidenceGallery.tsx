@@ -49,7 +49,7 @@ export function VisionEvidenceGallery({
   previewUrl,
 }: VisionEvidenceGalleryProps) {
   const evidence =
-    inspection.evidence.slice(0, 4);
+    inspection.evidence;
 
   if (evidence.length === 0) {
     return (

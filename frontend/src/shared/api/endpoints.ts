@@ -40,6 +40,8 @@ export const API_ENDPOINTS = {
   recommendations: '/api/recommendations',
   // analisis visual vía backend 
   visionAnalyze: '/api/vision/analyze',
+  // historial persistido de análisis visuales
+  visionAnalyses: '/api/vision/analyses',
   // reportes prescriptivos
   reportsPrescriptiveBase: '/api/reports/prescriptive',
   // cuaderno de campo 

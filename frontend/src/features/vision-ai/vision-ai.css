@@ -2878,6 +2878,11 @@ span {
       rgba(21, 42, 39, 0.08);
 }
 
+.visionEvidenceCard[aria-current="true"] {
+  border-color: var(--av-green-400);
+  box-shadow: 0 0 0 2px rgba(167, 217, 30, 0.15);
+}
+
 
 /* -----------------------------------------
    Evidence media
@@ -2914,6 +2919,30 @@ span {
   filter:
     saturate(1.12)
     contrast(1.05);
+}
+
+.visionEvidenceCard__mediaState {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.64rem;
+  text-align: center;
+}
+
+.visionEvidenceCard__mediaState button {
+  padding: 3px 8px;
+  color: #ffffff;
+  font: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
 }
 
 
@@ -3077,6 +3106,52 @@ footer b {
   color: var(--av-green-500);
 
   font-size: 0.64rem;
+}
+
+.visionEvidenceCard__body footer button {
+  font-size: 0.59rem;
+}
+
+.visionEvidenceSignals {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--av-border-soft);
+}
+
+.visionEvidenceSignals > strong {
+  color: var(--av-text);
+  font-size: 0.72rem;
+}
+
+.visionEvidenceSignals ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.visionEvidenceSignals li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3px 8px;
+  padding: 7px 8px;
+  border: 1px solid var(--av-border-soft);
+  border-radius: 8px;
+}
+
+.visionEvidenceSignals li span,
+.visionEvidenceSignals li b {
+  font-size: 0.62rem;
+}
+
+.visionEvidenceSignals li p {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--av-text-secondary);
+  font-size: 0.6rem;
+  line-height: 1.35;
 }
 
 

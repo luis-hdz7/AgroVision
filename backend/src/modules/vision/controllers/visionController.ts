@@ -4,7 +4,10 @@ import type { Request, Response } from "express";
 
 import { fail, ok } from "../../../shared/responses/apiResponses";
 import { visionAnalyzeFieldsSchema } from "../schemas/visionSchemas";
-import { recordVisionAnalysis } from "../services/visionAnalysisRecordService";
+import {
+  recordVisionAnalysis,
+  validateVisionImageSignature,
+} from "../services/visionAnalysisRecordService";
 import { VisionService, VisionServiceError } from "../services/visionService";
 
 export class VisionController {
@@ -21,6 +24,15 @@ export class VisionController {
     if (!req.file || req.file.size === 0) {
       res.status(400).json(
         fail("Debes adjuntar una imagen en el campo multipart 'image'."),
+      );
+      return;
+    }
+
+    try {
+      validateVisionImageSignature(req.file.buffer, req.file.mimetype);
+    } catch {
+      res.status(415).json(
+        fail("El contenido del archivo no coincide con un JPEG, PNG o WebP válido."),
       );
       return;
     }

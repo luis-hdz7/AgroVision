@@ -18,9 +18,8 @@
  *
  * IMPORTANTE:
  * - NO modifica POST /api/vision/analyze;
- * - NO modifica visionAIService;
- * - NO modifica VisionInspection;
- * - NO modifica los tipos del dominio;
+ * - conserva el POST y su contrato VisionInspection;
+ * - añade lectura validada del historial persistido;
  * - NO reemplaza resultados reales con datos inventados.
  *
  * La gráfica inferior representa únicamente progreso visual
@@ -30,7 +29,7 @@
  * =========================================
  */
 
-import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import {
   Area,
   AreaChart,
@@ -56,15 +55,18 @@ import { VisionResultCard } from "../components/VisionResultCard";
 
 import {
   analyzeVisionImage,
+  getVisionAnalysisImageUrl,
   VisionRequestError,
 } from "../services/visionAIService";
 
 import type {
   VisionAnalysisResult,
   VisionAnalysisStatus,
+  VisionHistoryItem,
   VisionInspection,
 } from "../types/visionAI.types";
 import { formatVisionFinding } from "../utils/visionLabels";
+import { useVisionHistory } from "../hooks/useVisionHistory";
 
 // Consumimos las parcelas y la selección que ya comparte la barra superior.
 import { useFields } from "../../fields/context/useFields";
@@ -88,6 +90,14 @@ const TRAINED_CROP_CONTEXT: Partial<Record<CropType, { fieldId: string; zones: r
   CORN: { fieldId: "field-002", zones: ["zone-04", "zone-05"] },
 };
 
+function getConfiguredCropType(fieldId: string | null): CropType | null {
+  if (!fieldId) return null;
+  const configured = Object.entries(TRAINED_CROP_CONTEXT).find(
+    ([, context]) => context?.fieldId === fieldId,
+  );
+  return configured ? configured[0] as CropType : null;
+}
+
 const MAX_IMAGE_BYTES =
   10 * 1024 * 1024;
 
@@ -97,6 +107,69 @@ const SUPPORTED_IMAGE_TYPES =
     "image/png",
     "image/webp",
   ]);
+
+
+function VisionArchivedPhoto({ item, ordinal }: {
+  readonly item: VisionHistoryItem;
+  readonly ordinal: number;
+}) {
+  const mediaRef = useRef<HTMLDivElement | null>(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+
+  useEffect(() => {
+    if (!item.hasImage || shouldLoad) return;
+    const target = mediaRef.current;
+    if (!target || typeof IntersectionObserver === "undefined") {
+      setShouldLoad(true);
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      setShouldLoad(true);
+      observer.disconnect();
+    }, { rootMargin: "160px" });
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [item.hasImage, shouldLoad]);
+
+  return (
+    <div ref={mediaRef} className="visionEvidenceCard__media">
+      {item.hasImage && shouldLoad && !failed && (
+        <img
+          key={attempt}
+          src={getVisionAnalysisImageUrl(item.inspectionId, item.fieldId)}
+          alt={`Fotografía archivada del análisis ${item.inspectionId}`}
+          className="visionEvidenceCard__image"
+          loading="lazy"
+          onError={() => setFailed(true)}
+        />
+      )}
+      {!item.hasImage && (
+        <span className="visionEvidenceCard__mediaState">Imagen no archivada</span>
+      )}
+      {item.hasImage && !shouldLoad && (
+        <span className="visionEvidenceCard__mediaState">Fotografía pendiente de carga</span>
+      )}
+      {failed && (
+        <span className="visionEvidenceCard__mediaState">
+          No se pudo descargar
+          <button
+            type="button"
+            onClick={() => {
+              setAttempt((current) => current + 1);
+              setFailed(false);
+            }}
+          >
+            Reintentar
+          </button>
+        </span>
+      )}
+      <b>{ordinal}</b>
+    </div>
+  );
+}
 
 
 /* ===========================================================
@@ -140,6 +213,7 @@ function VisionAiWorkspace() {
   const selectedFieldCode = selectedFieldId === null
     ? null
     : `field-${String(selectedFieldId).padStart(3, "0")}`;
+  const initialCropType = getConfiguredCropType(selectedFieldCode) ?? "ORANGE";
   // Descarta respuestas antiguas si cambia la imagen, el cultivo o la zona.
   const analysisRequestId = useRef(0);
   /* -----------------------------------------
@@ -153,13 +227,13 @@ function VisionAiWorkspace() {
     selectedCropType,
     setSelectedCropType,
   ] =
-    useState<CropType>("ORANGE");
+    useState<CropType>(initialCropType);
 
   const [
     selectedZoneId,
     setSelectedZoneId,
   ] =
-    useState(DEFAULT_ZONE_ID);
+    useState(TRAINED_CROP_CONTEXT[initialCropType]?.zones[0] ?? DEFAULT_ZONE_ID);
 
     // Este catálogo mantiene la configuración existente de los modelos de la demo.
   const selectedCropContext = TRAINED_CROP_CONTEXT[selectedCropType];
@@ -167,6 +241,15 @@ function VisionAiWorkspace() {
     // Ofrecemos las zonas de referencia únicamente para la parcela configurada.
     // Otras parcelas podrán analizarse sin asignarles una zona de la demo.
   const availableZoneIds = selectedCropContext && selectedCropContext.fieldId === selectedFieldCode ? selectedCropContext.zones : [];
+  const effectiveZoneId = availableZoneIds.includes(selectedZoneId) ? selectedZoneId : null;
+  const historyContext = useMemo(() => {
+    if (!selectedFieldCode || selectedCropContext?.fieldId !== selectedFieldCode) return null;
+    return {
+      fieldId: selectedFieldCode,
+      cropType: selectedCropType,
+      zoneId: effectiveZoneId,
+    };
+  }, [effectiveZoneId, selectedCropContext, selectedCropType, selectedFieldCode]);
 
   /* -----------------------------------------
      Imagen
@@ -239,6 +322,31 @@ function VisionAiWorkspace() {
         value: 0,
       },
     ]);
+
+  const handleHistoryDetailLoaded = useCallback((result: VisionAnalysisResult): void => {
+    // Un detalle recuperado invalida cualquier presentación anterior y no reutiliza su foto.
+    ++analysisRequestId.current;
+    setAnalysisResult(result);
+    setImagePreviewUrl(null);
+    setAnalysisStatus("RESULT");
+    setAnalysisProgress(100);
+    setAnalysisTimeline([{ sample: 0, value: 100 }]);
+    setFeedbackMessage(null);
+    setIsInspectorOpen(true);
+  }, []);
+
+  const handleHistoryDetailFailed = useCallback((message: string): void => {
+    setAnalysisResult(null);
+    setAnalysisStatus("ERROR");
+    setAnalysisProgress(0);
+    setFeedbackMessage(message);
+  }, []);
+
+  const visionHistory = useVisionHistory(
+    historyContext,
+    handleHistoryDetailLoaded,
+    handleHistoryDetailFailed,
+  );
 
 
   /* =========================================================
@@ -347,6 +455,8 @@ function VisionAiWorkspace() {
     async function runAnalysis(file: File, fileName: string): Promise<void> {
     // Cada ejecución recibe una identidad que permite descartar respuestas antiguas.
     const requestId = ++analysisRequestId.current;
+    // El POST nuevo tiene prioridad sobre cualquier detalle histórico pendiente.
+    visionHistory.beginPost();
 
     /**
      * Limpiamos el resultado anterior para que
@@ -409,6 +519,8 @@ function VisionAiWorkspace() {
       ].slice(-22));
 
       setAnalysisStatus("RESULT");
+      // El POST ya fue confirmado; un fallo posterior solo afecta la lectura del historial.
+      void visionHistory.refreshAfterPost(result.inspection);
     } catch (error: unknown) {
       // Una solicitud anterior tampoco debe sobrescribir el estado con un error tardío.
       if (requestId !== analysisRequestId.current) return;
@@ -558,6 +670,7 @@ function VisionAiWorkspace() {
   // Reiniciamos la presentación e invalidamos las respuestas de solicitudes anteriores.
   function resetAnalysis(): void {
     ++analysisRequestId.current;
+    visionHistory.invalidateDetail();
 
     setAnalysisResult(null);
     setImagePreviewUrl(null);
@@ -565,6 +678,16 @@ function VisionAiWorkspace() {
     setAnalysisProgress(0);
     setAnalysisTimeline([{ sample: 0, value: 0 }]);
     setFeedbackMessage(null);
+  }
+
+  function handleOpenHistoryItem(inspectionId: string): void {
+    ++analysisRequestId.current;
+    setAnalysisResult(null);
+    setImagePreviewUrl(null);
+    setAnalysisStatus("IDLE");
+    setAnalysisProgress(0);
+    setFeedbackMessage("Cargando análisis guardado...");
+    void visionHistory.openDetail(inspectionId);
   }
 
   // Invalidamos las respuestas pendientes cuando se desmonta este espacio de análisis.
@@ -912,7 +1035,7 @@ function VisionAiWorkspace() {
                   label="Zona analizada"
                   value={
                     formatZone(
-                      selectedZoneId,
+                      effectiveZoneId,
                     )
                   }
                   tone="GREEN"
@@ -955,107 +1078,60 @@ function VisionAiWorkspace() {
             className="visionEvidencePanel"
           >
 
-            {inspection ? (
-              <div className="visionEvidenceGallery">
+            {visionHistory.items.length > 0 ? (
+              <>
+                <div className="visionEvidenceGallery">
+                  {visionHistory.items.map((historyItem, index) => (
+                    <article
+                      key={historyItem.inspectionId}
+                      className="visionEvidenceCard"
+                      aria-current={historyItem.inspectionId === visionHistory.selectedInspectionId
+                        ? "true"
+                        : undefined}
+                    >
+                      <VisionArchivedPhoto item={historyItem} ordinal={index + 1} />
 
-                {inspection.evidence
-                  .slice(0, 4)
-                  .map(
-                    (
-                      evidence,
-                      index,
-                    ) => (
-                      <article
-                        key={`${evidence.metric}-${index}`}
-                        className="visionEvidenceCard"
-                      >
-
-                        <div className="visionEvidenceCard__media">
-
-                          {imagePreviewUrl ? (
-                            <img
-                              src={
-                                imagePreviewUrl
-                              }
-                              alt=""
-                              aria-hidden="true"
-                              className={`visionEvidenceCard__image visionEvidenceCard__image--${index + 1}`}
-                            />
-                          ) : (
-                            <span />
-                          )}
-
-                          <b>
-                            {index + 1}
-                          </b>
-
+                      <div className="visionEvidenceCard__body">
+                        <div className="visionEvidenceCard__top">
+                          <span>{formatDateTime(historyItem.createdAt)}</span>
+                          <StatusBadge tone={getPredictionTone(historyItem.prediction)}>
+                            {historyItem.prediction === "HEALTHY" ? "Normal" : "Advertencia"}
+                          </StatusBadge>
                         </div>
 
+                        <strong>{formatVisionFinding(historyItem)}</strong>
+                        <p>{formatCrop(historyItem.cropType)} · {formatZone(historyItem.zoneId)}</p>
 
-                        <div className="visionEvidenceCard__body">
+                        <footer>
+                          <span>Confianza {normalizeConfidence(historyItem.confidence)}%</span>
+                          <button
+                            type="button"
+                            className="avTextAction avActionButton"
+                            onClick={() => handleOpenHistoryItem(historyItem.inspectionId)}
+                          >
+                            Abrir análisis
+                          </button>
+                        </footer>
+                      </div>
+                    </article>
+                  ))}
+                </div>
 
-                          <div className="visionEvidenceCard__top">
-
-                            <span>
-                              EV-
-                              {String(
-                                index +
-                                  1,
-                              ).padStart(
-                                2,
-                                "0",
-                              )}
-                            </span>
-
-                            <StatusBadge
-                              tone={getEvidenceTone(
-                                evidence.status,
-                              )}
-                            >
-                              {formatEvidenceStatus(
-                                evidence.status,
-                              )}
-                            </StatusBadge>
-
-                          </div>
-
-
-                          <strong>
-                            {getEvidenceRegion(
-                              index,
-                            )}
-                          </strong>
-
-
-                          <p>
-                            {
-                              evidence.explanation
-                            }
-                          </p>
-
-
-                          <footer>
-
-                            <span>
-                              Confianza
-                            </span>
-
-                            <b>
-                              {index ===
-                              0
-                                ? `${confidencePercentage}%`
-                                : "Visual"}
-                            </b>
-
-                          </footer>
-
-                        </div>
-
-                      </article>
-                    ),
-                  )}
-
-              </div>
+                {inspection && inspection.evidence.length > 0 && (
+                  <div className="visionEvidenceSignals" aria-label="Señales del análisis seleccionado">
+                    <strong>Señales del análisis seleccionado</strong>
+                    <ul>
+                      {inspection.evidence.map((evidence, index) => (
+                        <li key={`${evidence.metric}-${index}`}>
+                          <span>{evidence.metric}</span>
+                          <b>{formatEvidenceStatus(evidence.status)}</b>
+                          <p>{evidence.explanation}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </>
             ) : (
               <div className="visionCompactEmpty">
 
@@ -1209,7 +1285,7 @@ function VisionAiWorkspace() {
         className="visionHistoryPanel"
       >
 
-        {inspection ? (
+        {visionHistory.items.length > 0 ? (
           <div className="avTableWrap">
 
             <table className="avTable visionHistoryTable">
@@ -1253,28 +1329,41 @@ function VisionAiWorkspace() {
 
               <tbody>
 
-                <tr>
+                {visionHistory.items.map((historyItem) => {
+                  const historyConfidence = normalizeConfidence(historyItem.confidence);
+                  const isSelected = historyItem.inspectionId === visionHistory.selectedInspectionId;
+                  return (
+                <tr key={historyItem.inspectionId} aria-selected={isSelected}>
 
                   <td>
                     {formatDateTime(
-                      inspection.createdAt,
+                      historyItem.createdAt,
                     )}
                   </td>
 
                   <td>
                     {formatCrop(
-                      inspection.cropType,
+                      historyItem.cropType,
                     )}
                   </td>
 
                   <td>
                     {formatZone(
-                      inspection.zoneId,
+                      historyItem.zoneId,
                     )}
                   </td>
 
                   <td className="visionHistoryPrediction">
-                    {formatVisionFinding(inspection)}
+                    <button
+                      type="button"
+                      className="avTextAction avActionButton"
+                      onClick={() => handleOpenHistoryItem(historyItem.inspectionId)}
+                      disabled={isSelected && visionHistory.detailStatus === "LOADING"}
+                      aria-label={`Abrir análisis ${historyItem.inspectionId}`}
+                    >
+                      {formatVisionFinding(historyItem)}
+                      {isSelected ? " · Seleccionado" : " · Abrir"}
+                    </button>
                   </td>
 
                   <td>
@@ -1283,7 +1372,7 @@ function VisionAiWorkspace() {
 
                       <span>
                         {
-                          confidencePercentage
+                          historyConfidence
                         }
                         %
                       </span>
@@ -1291,7 +1380,7 @@ function VisionAiWorkspace() {
                       <i>
                         <b
                           style={{
-                            width: `${confidencePercentage}%`,
+                            width: `${historyConfidence}%`,
                           }}
                         />
                       </i>
@@ -1301,24 +1390,16 @@ function VisionAiWorkspace() {
                   </td>
 
                   <td>
-                    <StatusBadge
-                      tone={getPredictionTone(
-                        inspection.prediction,
-                      )}
-                    >
-                      {getSeverityLabel(
-                        inspection.prediction,
-                      )}
-                    </StatusBadge>
+                    —
                   </td>
 
                   <td>
                     <StatusBadge
                       tone={getPredictionTone(
-                        inspection.prediction,
+                        historyItem.prediction,
                       )}
                     >
-                      {inspection.prediction ===
+                      {historyItem.prediction ===
                       "HEALTHY"
                         ? "Normal"
                         : "Advertencia"}
@@ -1330,6 +1411,8 @@ function VisionAiWorkspace() {
                   </td>
 
                 </tr>
+                  );
+                })}
 
               </tbody>
 
@@ -1347,23 +1430,48 @@ function VisionAiWorkspace() {
             </span>
 
             <strong>
-              Sin análisis registrados
+              {visionHistory.status === "INACTIVE"
+                ? "Selecciona una parcela y contexto configurados"
+                : visionHistory.status === "LOADING"
+                  ? "Cargando historial"
+                  : visionHistory.status === "ERROR"
+                    ? "No fue posible cargar el historial"
+                    : "Sin análisis registrados"}
             </strong>
 
             <p>
-              El análisis actual aparecerá aquí al completarse.
+              {visionHistory.error
+                ?? "Los análisis guardados aparecerán aquí sin ejecutar una inferencia nueva."}
             </p>
+
+            {visionHistory.status === "ERROR" && (
+              <button
+                type="button"
+                className="avTextAction avActionButton"
+                onClick={() => void visionHistory.retry()}
+              >
+                Reintentar
+              </button>
+            )}
 
           </div>
         )}
 
 
-        <button
-          type="button"
-          className="avTextAction visionCenteredAction avActionButton"
-        >
-          Ver todo el historial
-        </button>
+        {visionHistory.paginationError && (
+          <p role="alert">{visionHistory.paginationError}</p>
+        )}
+
+        {visionHistory.nextCursor && (
+          <button
+            type="button"
+            className="avTextAction visionCenteredAction avActionButton"
+            onClick={() => void visionHistory.loadMore()}
+            disabled={visionHistory.isLoadingMore}
+          >
+            {visionHistory.isLoadingMore ? "Cargando..." : "Cargar más"}
+          </button>
+        )}
 
       </Panel>
 
@@ -2412,26 +2520,6 @@ function formatZone(
 }
 
 
-function getEvidenceRegion(
-  index:
-    number,
-): string {
-  if (index === 0) {
-    return "Región prioritaria";
-  }
-
-  if (index === 1) {
-    return "Cobertura vegetal";
-  }
-
-  if (index === 2) {
-    return "Área de contraste";
-  }
-
-  return "Señal complementaria";
-}
-
-
 function formatEvidenceStatus(
   status:
     string,
@@ -2449,25 +2537,6 @@ function formatEvidenceStatus(
   }
 
   return "Advertencia";
-}
-
-
-function getEvidenceTone(
-  status:
-    string,
-):
-  | "SUCCESS"
-  | "WARNING"
-  | "DANGER" {
-  if (status === "NORMAL") {
-    return "SUCCESS";
-  }
-
-  if (status === "CRITICAL") {
-    return "DANGER";
-  }
-
-  return "WARNING";
 }
 
 
@@ -2491,26 +2560,6 @@ function getPredictionTone(
   }
 
   return "WARNING";
-}
-
-
-function getSeverityLabel(
-  prediction:
-    string,
-): string {
-  if (
-    prediction === "HEALTHY"
-  ) {
-    return "Baja";
-  }
-
-  if (
-    prediction === "UNKNOWN"
-  ) {
-    return "Media";
-  }
-
-  return "Alta";
 }
 
 
