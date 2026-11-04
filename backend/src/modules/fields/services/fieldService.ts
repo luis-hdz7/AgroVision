@@ -1,9 +1,24 @@
 import prisma from "../../../shared/database/prisma";
+import type { Field } from "../../../generated/prisma/client";
+import { RegistrationError } from "../../../shared/errors/registrationErrors";
 import {
   FieldResponse,
   CreateFieldInput,
   UpdateFieldInput,
 } from "../types/fieldTypes";
+
+function toResponse(field: Field): FieldResponse {
+  return {
+    id: field.id,
+    farmId: field.farmId,
+    name: field.name,
+    areaSquareMeters: Number(field.areaSquareMeters),
+    soilType: field.soilType,
+    irrigationType: field.irrigationType,
+    status: field.status,
+    createdAt: field.createdAt.toISOString(),
+  };
+}
 
 export class FieldService {
 
@@ -14,16 +29,7 @@ export class FieldService {
       },
     });
 
-    return fields.map((field) => ({
-      id: field.id,
-      farmId: field.farmId,
-      name: field.name,
-      areaSquareMeters: Number(field.areaSquareMeters),
-      soilType: field.soilType,
-      irrigationType: field.irrigationType,
-      status: field.status,
-      createdAt: field.createdAt.toISOString(),
-    }));
+    return fields.map(toResponse);
   }
 
   public async getFieldById(id: number): Promise<FieldResponse> {
@@ -33,20 +39,8 @@ export class FieldService {
       },
     });
 
-    if (!field) {
-      throw new Error("Field not found");
-    }
-
-    return {
-      id: field.id,
-      farmId: field.farmId,
-      name: field.name,
-      areaSquareMeters: Number(field.areaSquareMeters),
-      soilType: field.soilType,
-      irrigationType: field.irrigationType,
-      status: field.status,
-      createdAt: field.createdAt.toISOString(),
-    };
+    if (!field) throw new RegistrationError(404, "Parcela no encontrada.");
+    return toResponse(field);
   }
 
   public async getFieldsByFarmId(
@@ -61,32 +55,20 @@ export class FieldService {
       },
     });
 
-    return fields.map((field) => ({
-      id: field.id,
-      farmId: field.farmId,
-      name: field.name,
-      areaSquareMeters: Number(field.areaSquareMeters),
-      soilType: field.soilType,
-      irrigationType: field.irrigationType,
-      status: field.status,
-      createdAt: field.createdAt.toISOString(),
-    }));
+    return fields.map(toResponse);
   }
 
   public async createField(
     input: CreateFieldInput
   ): Promise<FieldResponse> {
 
-    // Verificar que la Farm exista
     const farm = await prisma.farm.findUnique({
       where: {
         id: input.farmId,
       },
     });
 
-    if (!farm) {
-      throw new Error("Farm not found");
-    }
+    if (!farm) throw new RegistrationError(400, "La finca indicada no existe.");
 
     const field = await prisma.field.create({
       data: {
@@ -99,16 +81,7 @@ export class FieldService {
       },
     });
 
-    return {
-      id: field.id,
-      farmId: field.farmId,
-      name: field.name,
-      areaSquareMeters: Number(field.areaSquareMeters),
-      soilType: field.soilType,
-      irrigationType: field.irrigationType,
-      status: field.status,
-      createdAt: field.createdAt.toISOString(),
-    };
+    return toResponse(field);
   }
 
   public async updateField(
@@ -139,15 +112,6 @@ export class FieldService {
       },
     });
 
-    return {
-      id: field.id,
-      farmId: field.farmId,
-      name: field.name,
-      areaSquareMeters: Number(field.areaSquareMeters),
-      soilType: field.soilType,
-      irrigationType: field.irrigationType,
-      status: field.status,
-      createdAt: field.createdAt.toISOString(),
-    };
+    return toResponse(field);
   }
 }

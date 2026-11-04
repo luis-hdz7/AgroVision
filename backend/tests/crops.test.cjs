@@ -14,6 +14,7 @@ test('Crops: rutas HTTP, consultas Prisma, validación y errores', async () => {
   const calls = [];
   let failure = null;
   const originals = {};
+  const originalTransaction = prisma.$transaction;
   for (const method of ['findMany', 'findUnique', 'create', 'update']) {
     originals[method] = prisma.crop[method];
     prisma.crop[method] = async args => {
@@ -25,8 +26,23 @@ test('Crops: rutas HTTP, consultas Prisma, validación y errores', async () => {
       return { ...row, ...args.data };
     };
   }
+  const originalFieldFindUnique = prisma.field.findUnique;
+  prisma.field.findUnique = async ({ where }) => {
+    if (failure) throw failure;
+    return where.id === 98 ? null : { id: where.id };
+  };
   const originalProfiles = prisma.cropProfile.findMany;
+  const originalProfileFindUnique = prisma.cropProfile.findUnique;
   prisma.cropProfile.findMany = async () => [];
+  prisma.cropProfile.findUnique = async ({ where }) => {
+    if (failure) throw failure;
+    if (where.id === 999) return null;
+    return { id: where.id, cropType: where.id === 4 ? 'CORN' : 'ORANGE' };
+  };
+  prisma.$transaction = async (operation, options) => {
+    assert.deepEqual(options, { isolationLevel: 'Serializable' });
+    return operation(prisma);
+  };
   const app = express();
   app.use(express.json());
   app.use('/api/crops', router);
@@ -51,9 +67,19 @@ test('Crops: rutas HTTP, consultas Prisma, validación y errores', async () => {
     result = await request('/cycles', 'POST', input); assert.equal(result.status, 201);
     assert.equal(calls.at(-1).method, 'create');
     assert.ok(calls.at(-1).args.data.plantedAt instanceof Date);
+    assert.equal((await request('/cycles', 'POST', { ...input, fieldId: 98 })).status, 400);
+    assert.equal((await request('/cycles', 'POST', { ...input, cropProfileId: 999 })).status, 400);
+    assert.equal((await request('/cycles', 'POST', { ...input, cropProfileId: 4 })).status, 422);
     result = await request('/cycles/1', 'PATCH', { name: 'Nuevo nombre' });
     assert.equal(result.status, 200); assert.equal(result.body.data.name, 'Nuevo nombre');
     assert.deepEqual(calls.at(-1), { method: 'update', args: { where: { id: 1 }, data: { name: 'Nuevo nombre' } } });
+    let updatesBefore = calls.filter(call => call.method === 'update').length;
+    assert.equal((await request('/cycles/1', 'PATCH', { cropType: 'CORN' })).status, 422);
+    assert.equal((await request('/cycles/1', 'PATCH', { cropProfileId: 4 })).status, 422);
+    assert.equal(calls.filter(call => call.method === 'update').length, updatesBefore);
+    result = await request('/cycles/1', 'PATCH', { cropType: 'CORN', cropProfileId: 4 });
+    assert.equal(result.status, 200);
+    assert.equal(result.body.data.cropType, 'CORN');
     await request('/cycles/1', 'PATCH', { plantedAt: input.plantedAt });
     assert.ok(calls.at(-1).args.data.plantedAt instanceof Date);
     assert.equal((await request('/cycles/99', 'PATCH', { status: 'INACTIVE' })).status, 404);
@@ -67,6 +93,8 @@ test('Crops: rutas HTTP, consultas Prisma, validación y errores', async () => {
     assert.equal((await request('/cycles/1', 'PATCH', { cropProfileId: 999 })).status, 400);
     failure = new Prisma.PrismaClientKnownRequestError('duplicate', { code: 'P2002', clientVersion: '7.10.0' });
     assert.equal((await request('/cycles', 'POST', input)).status, 409);
+    failure = new Prisma.PrismaClientKnownRequestError('write conflict', { code: 'P2034', clientVersion: '7.10.0' });
+    assert.equal((await request('/cycles/1', 'PATCH', { name: 'X' })).status, 409);
     failure = new Error('private connection details');
     for (const [path, method, body] of [['/cycles', 'GET'], ['/cycles/1', 'GET'], ['/field/2', 'GET'], ['/cycles', 'POST', input], ['/cycles/1', 'PATCH', { name: 'X' }]]) {
       result = await request(path, method, body);
@@ -78,7 +106,10 @@ test('Crops: rutas HTTP, consultas Prisma, validación y errores', async () => {
   } finally {
     await new Promise(resolve => server.close(resolve));
     for (const [method, original] of Object.entries(originals)) prisma.crop[method] = original;
+    prisma.field.findUnique = originalFieldFindUnique;
     prisma.cropProfile.findMany = originalProfiles;
+    prisma.cropProfile.findUnique = originalProfileFindUnique;
+    prisma.$transaction = originalTransaction;
     await prisma.$disconnect();
   }
 });

@@ -1,10 +1,23 @@
 import prisma from "../../../shared/database/prisma";
+import type { Farm } from "../../../generated/prisma/client";
+import { RegistrationError } from "../../../shared/errors/registrationErrors";
 import {
   FarmOverview,
   FarmResponse,
   CreateFarmInput,
   UpdateFarmInput,
 } from "../types/farmTypes";
+
+function toResponse(farm: Farm): FarmResponse {
+  return {
+    id: farm.id,
+    ownerId: farm.ownerId,
+    name: farm.name,
+    location: farm.location,
+    totalAreaSquareMeters: Number(farm.totalAreaSquareMeters),
+    createdAt: farm.createdAt.toISOString(),
+  };
+}
 
 export class FarmService {
 
@@ -15,14 +28,7 @@ export class FarmService {
       },
     });
 
-    return farms.map((farm) => ({
-      id: farm.id,
-      ownerId: farm.ownerId,
-      name: farm.name,
-      location: farm.location,
-      totalAreaSquareMeters: Number(farm.totalAreaSquareMeters),
-      createdAt: farm.createdAt.toISOString(),
-    }));
+    return farms.map(toResponse);
   }
 
   public async getFarmById(id: number): Promise<FarmResponse> {
@@ -32,21 +38,14 @@ export class FarmService {
       },
     });
 
-    if (!farm) {
-      throw new Error("Farm not found");
-    }
-
-    return {
-      id: farm.id,
-      ownerId: farm.ownerId,
-      name: farm.name,
-      location: farm.location,
-      totalAreaSquareMeters: Number(farm.totalAreaSquareMeters),
-      createdAt: farm.createdAt.toISOString(),
-    };
+    if (!farm) throw new RegistrationError(404, "Finca no encontrada.");
+    return toResponse(farm);
   }
 
   public async createFarm(input: CreateFarmInput): Promise<FarmResponse> {
+    const owner = await prisma.user.findUnique({ where: { id: input.ownerId } });
+    if (!owner) throw new RegistrationError(400, "El propietario indicado no existe.");
+
     const farm = await prisma.farm.create({
       data: {
         ownerId: input.ownerId,
@@ -56,14 +55,7 @@ export class FarmService {
       },
     });
 
-    return {
-      id: farm.id,
-      ownerId: farm.ownerId,
-      name: farm.name,
-      location: farm.location,
-      totalAreaSquareMeters: Number(farm.totalAreaSquareMeters),
-      createdAt: farm.createdAt.toISOString(),
-    };
+    return toResponse(farm);
   }
 
   public async updateFarm(
@@ -87,14 +79,7 @@ export class FarmService {
       },
     });
 
-    return {
-      id: farm.id,
-      ownerId: farm.ownerId,
-      name: farm.name,
-      location: farm.location,
-      totalAreaSquareMeters: Number(farm.totalAreaSquareMeters),
-      createdAt: farm.createdAt.toISOString(),
-    };
+    return toResponse(farm);
   }
 
   public async getFarmOverview(): Promise<FarmOverview> {

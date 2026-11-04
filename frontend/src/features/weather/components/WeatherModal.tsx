@@ -216,8 +216,7 @@ function getWindDirection(
  * Extraemos hourly desde la respuesta real si existe.
  *
  * Si todavía no viene desde weatherService,
- * generamos temporalmente un fallback visual usando
- * las condiciones actuales.
+ * generamos temporalmente un fallback visual usando las condiciones actuales.
  *
  * Posteriormente conectaremos hourly directamente
  * desde Open-Meteo.
@@ -496,7 +495,7 @@ function UvGauge({
     {
       name: 'uv',
       value: normalizedValue,
-      fill: '#d8c77a',
+      fill: '#f6782f',
     },
   ];
 
@@ -587,7 +586,7 @@ function SunGauge({
     {
       name: 'sun',
       value: normalizedValue,
-      fill: '#e3bf6f',
+      fill: '#f5ed94',
     },
   ];
 

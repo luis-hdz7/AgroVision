@@ -49,7 +49,13 @@ import {
 } from "../layers/satelliteLayer";
 
 // Consumimos las operaciones NDVI y su identificador para ordenar los raster.
-import { addNdviLayer, removeNdviLayer, setNdviVisibility, NDVI_LAYER_ID } from "../layers/ndviLayer";
+import { addNdviLayer, removeNdviLayer, setNdviVisibility, NDVI_LAYER_ID, buildNdviWmsUrl } from "../layers/ndviLayer";
+
+// Consuminos operaciones GNDVI 
+import { addGndviLayer, removeGndviLayer, setGndviVisibility, GNDVI_LAYER_ID, buildGndviWmsUrl, } from "../layers/gndviLayer";
+
+// Consumimos las operaciones NDWI.
+import { addNdwiLayer, removeNdwiLayer, setNdwiVisibility, NDWI_LAYER_ID, buildNdwiWmsUrl } from "../layers/ndwiLayer";
 
 // Consumimos las operaciones de instalación, actualización y limpieza del heatmap de riesgo.
 import {
@@ -147,7 +153,10 @@ export function getAvailableMappingLayers(data: Pick<MappingEngineData, "traject
   if (data.trajectory) ids.push("trajectory", "rover");
 
   // Una URL WMS configurada habilita las opciones satelitales.
-  if (buildSentinel2WmsUrl()) ids.push("satellite", "ndvi");
+  if (buildSentinel2WmsUrl()) ids.push("satellite");
+  if (buildNdviWmsUrl()) ids.push("ndvi");
+  if (buildGndviWmsUrl()) ids.push("gndvi");
+  if (buildNdwiWmsUrl()) ids.push("ndwi");
 
   // Entregamos un conjunto independiente para cada consulta de disponibilidad.
   return new Set(ids);
@@ -236,7 +245,9 @@ export function createMappingEngine(
     // Sentinel queda debajo de NDVI incluso si el usuario activa NDVI primero.
     if (visible.has("satellite")) {
       // Utilizamos NDVI como referencia cuando existe; de otro modo utilizamos los fields.
-      const beforeId = map.getLayer(NDVI_LAYER_ID) ? NDVI_LAYER_ID : FIELD_FILL_LAYER_ID;
+      const beforeId =
+        [NDVI_LAYER_ID, GNDVI_LAYER_ID, NDWI_LAYER_ID].find((layerId) => Boolean(map.getLayer(layerId)))
+        ?? FIELD_FILL_LAYER_ID;
 
       // Instalamos Sentinel respetando la referencia de inserción elegida.
       addSentinel2Layer(map, beforeId);
@@ -245,11 +256,19 @@ export function createMappingEngine(
     // Instalamos NDVI debajo de los polígonos agrícolas cuando se solicita.
     if (visible.has("ndvi")) addNdviLayer(map, FIELD_FILL_LAYER_ID);
 
+    if (visible.has("gndvi")) addGndviLayer(map, FIELD_FILL_LAYER_ID);
+
+    if (visible.has("ndwi")) addNdwiLayer(map, FIELD_FILL_LAYER_ID);
+
     // Aplicamos la visibilidad del raster satelital instalado.
     setSentinel2Visibility(map, visible.has("satellite"));
 
     // Aplicamos la visibilidad del índice de vegetación instalado.
     setNdviVisibility(map, visible.has("ndvi"));
+
+    setGndviVisibility(map, visible.has("gndvi"));
+
+    setNdwiVisibility(map, visible.has("ndwi"));
 
     // Ocultar el rover pausa el movimiento y conserva su posición.
     if (map.getLayer(ROVER_LAYER_ID)) {
@@ -368,7 +387,7 @@ export function createMappingEngine(
     appliedData = data;
   };
 
-  // Instalamos los recursos iniciales o reconstruimos la sesión sobre otro estilo.
+  // Instalamos los recursos iniciales o reconstruimos la sesión sobre otro estilo cartográfico.
   const install = (): void => {
     // Finalizamos la operación cuando la sesión ya fue cerrada.
     if (disposed) return;
@@ -503,6 +522,8 @@ export function createMappingEngine(
     removeFieldLayer(map);
 
     // Retiramos el raster NDVI instalado por la sesión.
+    removeNdwiLayer(map);
+    removeGndviLayer(map);
     removeNdviLayer(map);
 
     // Retiramos el raster Sentinel instalado por la sesión.

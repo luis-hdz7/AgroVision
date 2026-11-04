@@ -126,6 +126,18 @@ const LAYER_OPTIONS: readonly MapLayerOption[] = [
     description: "Índice de vigor vegetal",
     toggleable: true,
   },
+  {
+    id: "gndvi",
+    label: "GNDVI",
+    description: "Índice de vigor asociado a clorofila",
+    toggleable: true,
+  },
+  {
+    id: "ndwi",
+    label: "NDWI",
+    description: "Índice de humedad en vegetación",
+    toggleable: true,
+  },
 ];
 
 /**

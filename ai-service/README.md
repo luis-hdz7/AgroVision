@@ -8,6 +8,11 @@ Recibir una imagen multipart real, validar su tamaño, MIME y firma binaria, y p
 
 ```text
 python -m uvicorn main:app --host 127.0.0.1 --port 8000
+
+# Iniciamos FastAPI y mantenemos esta terminal abierta.
+python -m uvicorn main:app --host 127.0.0.1 --port 8000
+
+
 ```
 
 ## Endpoints
@@ -31,3 +36,8 @@ El servicio devuelve predicción, clase específica, top-3 softmax, versión y a
 `training/` contiene el motor reproducible de EfficientNet-B0, evaluación y exportación. El registro inicial incluye entradas `NOT_TRAINED`; los modelos entrenados se agregan localmente junto a sus checkpoints. El proceso de FastAPI necesita PyTorch/Torchvision instalados en su entorno, aunque permanezcan separados de `requirements.txt`.
 
 Instrucciones: `docs/ai/INFERENCE_INTEGRATION.md`, `docs/ai/TRAINING_GUIDE.md` y `docs/ai/MODEL_REGISTRY.md`.
+
+
+## Inicilizar servicio IA 
+# Iniciamos FastAPI y mantenemos esta terminal abierta.
+python -m uvicorn main:app --host 127.0.0.1 --port 8000

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
+import { Prisma } from "../../generated/prisma/client";
 import prisma from "../../shared/database/prisma";
 import { ok, fail } from "../../shared/responses/apiResponses";
 
@@ -9,7 +10,13 @@ const schema = z.object({
   organization: z.string().trim().max(150).optional(),
   message: z.string().trim().min(10).max(2000),
   consent: z.literal("true"),
-});
+}).strict();
+
+function isDatabaseUnavailable(error: unknown): boolean {
+  if (error instanceof Prisma.PrismaClientInitializationError) return true;
+  return error instanceof Prisma.PrismaClientKnownRequestError
+    && ["P1001", "P1002", "P1008", "P1017"].includes(error.code);
+}
 
 export const demoRequestRoutes = Router();
 
@@ -26,7 +33,11 @@ demoRequestRoutes.post("/", async (req, res) => {
       select: { id: true },
     });
     res.status(201).json(ok({ id: request.id }, "Solicitud recibida."));
-  } catch {
-    res.status(503).json(fail("No se pudo guardar la solicitud. Inténtalo más tarde."));
+  } catch (error: unknown) {
+    if (isDatabaseUnavailable(error)) {
+      res.status(503).json(fail("La base de datos no está disponible. Inténtalo más tarde."));
+      return;
+    }
+    res.status(500).json(fail("No fue posible procesar la solicitud."));
   }
 });

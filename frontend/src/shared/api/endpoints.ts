@@ -18,6 +18,7 @@
 
 // rutas base de la app
 export const API_ENDPOINTS = {
+  demoRequests: '/api/demo-requests',
   dashboardSummary: '/api/dashboard/summary',
   //vista  general de la finca
   farmOverview: '/api/farm/overview',

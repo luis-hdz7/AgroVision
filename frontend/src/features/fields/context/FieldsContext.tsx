@@ -23,6 +23,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -59,6 +60,9 @@ export function FieldsProvider({
 
   const [reloadKey, setReloadKey] = useState(0);
 
+  // Invalida resultados anteriores incluso antes del siguiente render.
+  const requestVersion = useRef(0);
+
   /**
    * Consulta las parcelas desde el backend.
    *
@@ -67,6 +71,7 @@ export function FieldsProvider({
    */
   useEffect(() => {
     const controller = new AbortController();
+    const currentVersion = ++requestVersion.current;
 
     async function loadFields(): Promise<void> {
       setIsLoading(true);
@@ -75,7 +80,10 @@ export function FieldsProvider({
       try {
         const data = await getFields(controller.signal);
 
-        if (controller.signal.aborted) return;
+        if (
+          controller.signal.aborted ||
+          currentVersion !== requestVersion.current
+        ) return;
 
         setFields(data);
 
@@ -92,7 +100,10 @@ export function FieldsProvider({
         });
 
       } catch (cause: unknown) {
-        if (controller.signal.aborted) return;
+        if (
+          controller.signal.aborted ||
+          currentVersion !== requestVersion.current
+        ) return;
 
         setError(
           cause instanceof Error
@@ -101,7 +112,10 @@ export function FieldsProvider({
         );
 
       } finally {
-        if (!controller.signal.aborted) {
+        if (
+          !controller.signal.aborted &&
+          currentVersion === requestVersion.current
+        ) {
           setIsLoading(false);
         }
       }
@@ -144,6 +158,7 @@ export function FieldsProvider({
    * Actualiza el listado desde PostgreSQL.
    */
   const reloadFields = useCallback((): void => {
+    requestVersion.current += 1;
     setReloadKey((current) => current + 1);
   }, []);
 

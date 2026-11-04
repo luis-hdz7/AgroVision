@@ -104,9 +104,13 @@ export const createSentinel2Layer = (): RasterLayerSpecification => {
         type: "raster",
         source: SENTINEL2_SOURCE_ID,
         paint: {
-            // Conservamos la opacidad original.
-            "raster-opacity": 0.82,
-            // Suavizado visual del raster.
+            // Mostramos el color natural sin mezclarlo con el mapa base.
+            "raster-opacity": 1,
+            // Elevamos ligeramente las sombras y el contraste sin alterar otros rasters (NDVI).
+            "raster-brightness-min": 0.09,
+            "raster-contrast": 0.08,
+            "raster-saturation": 0.06,
+            // La interpolación evita bordes pixelados; no añade resolución al satélite.
             "raster-resampling": "linear",
         },
         // La capa comienza visible cuando se agrega.

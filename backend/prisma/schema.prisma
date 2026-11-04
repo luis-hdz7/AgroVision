@@ -63,6 +63,13 @@ enum RecommendationPriority {
   CRITICAL
 }
 
+// Estado de ejecución de una recomendación, independiente de su prioridad.
+enum RecommendationStatus {
+  PENDING
+  IN_PROGRESS
+  APPLIED
+  DISMISSED
+}
 
 // USERS
 
@@ -131,20 +138,29 @@ model Field {
 
 
 // CROP PROFILES
-
 model CropProfile {
-  id               Int      @id @default(autoincrement())
-  cropType         String
-  displayName      String
-  mainRisks        String?
-  preferredMetrics String?
-  createdAt        DateTime @default(now())
+  id                      Int      @id @default(autoincrement())
 
+  // Cada código identifica un único perfil del catálogo persistido.
+  cropType                String   @unique
+  displayName             String
+  scientificName          String?
+
+  // Las listas y objetos conservan la estructura JSONB definida por la migración.
+  // Los servicios consumidores deben validar el contenido de estos documentos.
+  analysisFocus           Json     @default("[]") @db.JsonB
+  mainRisks               Json     @default("[]") @db.JsonB
+  riskRules               Json     @default("{}") @db.JsonB
+  preferredMetrics        Json     @default("[]") @db.JsonB
+  recommendationTemplates Json     @default("{}") @db.JsonB
+
+  createdAt               DateTime @default(now())
+
+  // Cultivos asociados con este perfil del catálogo.
   crops Crop[]
 
   @@map("crop_profiles")
 }
-
 
 // CROPS
 
@@ -214,17 +230,34 @@ model TelemetryReading {
 // VISION INSPECTIONS
 
 model VisionInspection {
-  id                       Int      @id @default(autoincrement())
-  fieldId                  Int
-  zoneId                   String
-  cropId                   Int
-  prediction               String
-  confidence               Decimal  @db.Decimal(5, 4)
-  greenCoveragePercentage  Decimal  @db.Decimal(5, 2)
-  dryAreaPercentage        Decimal  @db.Decimal(5, 2)
-  explanation              String?
-  createdAt                DateTime @default(now())
+  id                      Int      @id @default(autoincrement())
+  fieldId                 Int
+  zoneId                  String
+  cropId                  Int
 
+  // Código de cultivo registrado junto con el resultado de la inspección.
+  cropType                String   @default("GENERAL")
+
+  prediction              String
+  confidence              Decimal  @db.Decimal(5, 4)
+  greenCoveragePercentage Decimal  @db.Decimal(5, 2)
+  dryAreaPercentage       Decimal  @db.Decimal(5, 2)
+
+  // Indicadores visuales asociados con el resultado almacenado.
+  chlorosisSuspected      Boolean  @default(false)
+  leafSpotSuspected       Boolean  @default(false)
+  stressPatternDetected   Boolean  @default(false)
+
+  recommendedAction       String?
+
+  // Evidencia estructurada y nombre del archivo asociado con la inspección.
+  evidence                Json?    @db.JsonB
+  imageFileName           String?
+
+  explanation             String?
+  createdAt               DateTime @default(now())
+
+  // Relaciones con la parcela y el cultivo inspeccionado.
   field Field @relation(fields: [fieldId], references: [id])
   crop  Crop  @relation(fields: [cropId], references: [id])
 
@@ -232,6 +265,22 @@ model VisionInspection {
   @@index([cropId])
   @@index([zoneId])
   @@map("vision_inspections")
+}
+
+// Registro append-only del contrato completo de inferencia. No sustituye las inspecciones agronómicas existentes.
+model VisionAnalysisRecord {
+  inspectionId  String   @id
+  fieldId       String
+  zoneId        String?
+  cropType      String
+  imageFileName String
+  imageSha256   String
+  result        Json
+  createdAt     DateTime
+
+  @@index([createdAt])
+  @@index([cropType, createdAt])
+  @@map("vision_analysis_records")
 }
 
 
@@ -339,17 +388,32 @@ model Alert {
 // RECOMMENDATIONS
 
 model Recommendation {
-  id                       Int       @id @default(autoincrement())
-  fieldId                  Int
-  zoneId                   String
-  zoneInsightId            Int
-  priority                 RecommendationPriority
-  reason                   String?
-  suggestedAction          String
-  expectedImpactArea       Decimal?  @db.Decimal(12, 2)
-  expectedImpactDescription String?
-  createdAt                DateTime  @default(now())
+  id                        Int                    @id @default(autoincrement())
+  fieldId                   Int
+  zoneId                    String
+  zoneInsightId             Int
+  priority                  RecommendationPriority
 
+  // El seguimiento operativo conserva su estado y el tipo de acción propuesta.
+  status                    RecommendationStatus   @default(PENDING)
+  actionType                String                 @default("MONITORING")
+
+  reason                    String?
+  suggestedAction           String
+
+  // La dosificación y el plazo son opcionales según la acción registrada.
+  dosageValue               Decimal?               @db.Decimal(12, 2)
+  dosageUnit                String?
+  timeframe                 String?
+
+  // Descripción y alcance del impacto esperado.
+  expectedImpactType        String?
+  expectedImpactArea        Decimal?               @db.Decimal(12, 2)
+  expectedImpactDescription String?
+
+  createdAt                 DateTime               @default(now())
+
+  // Relaciones con la parcela y el análisis que origina la recomendación.
   field       Field       @relation(fields: [fieldId], references: [id])
   zoneInsight ZoneInsight @relation(fields: [zoneInsightId], references: [id])
 
@@ -359,7 +423,6 @@ model Recommendation {
   @@index([priority])
   @@map("recommendations")
 }
-
 
 // FIELD NOTEBOOK ENTRIES
 
@@ -373,8 +436,14 @@ model FieldNotebookEntry {
   problemObserved   String?
   actionTaken       String?
   responsibleUserId Int
+
+  // Fecha de seguimiento y evidencia estructurada de la actividad registrada.
+  followUpAt        DateTime?
+  evidence          Json?    @db.JsonB
+
   createdAt         DateTime @default(now())
 
+  // Relaciones con la parcela, el cultivo y la persona responsable.
   field           Field @relation(fields: [fieldId], references: [id])
   crop            Crop  @relation(fields: [cropId], references: [id])
   responsibleUser User  @relation(fields: [responsibleUserId], references: [id])

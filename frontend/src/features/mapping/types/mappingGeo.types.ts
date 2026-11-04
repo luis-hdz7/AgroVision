@@ -278,7 +278,7 @@ export type AgroVisionGISFeatureCollection = FeatureCollection< Point | LineStri
  */
 
 // Capas que el usuario podrá activar o desactivar progresivamente.
-export type MapLayerId = "base" | "fields" | "zones" | "riskHeatmap" | "trajectory" | "rover" | "satellite" | "ndvi";
+export type MapLayerId = "base" | "fields" | "zones" | "riskHeatmap" | "trajectory" | "rover" | "satellite" | "ndvi" | "gndvi" | "ndwi";
 
 /**
  * =========================================

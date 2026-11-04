@@ -1,33 +1,36 @@
 /** Validación HTTP del módulo Fields, alineada con el modelo Prisma Field. */
 import { z } from "zod";
-
-const positiveInteger = z.coerce.number().int().positive();
-const nonEmptyString = z.string().trim().min(1);
+import {
+  decimalAreaSchema,
+  nonEmptyStringSchema,
+  postgresIdParamSchema,
+  postgresIdSchema,
+} from "../../../shared/validation/registrationSchemas";
 
 export const createFieldSchema = z.object({
-  farmId: positiveInteger,
-  name: nonEmptyString,
-  areaSquareMeters: z.number().finite().positive(),
-  soilType: nonEmptyString,
-  irrigationType: nonEmptyString,
-  status: nonEmptyString,
+  farmId: postgresIdSchema,
+  name: nonEmptyStringSchema,
+  areaSquareMeters: decimalAreaSchema,
+  soilType: nonEmptyStringSchema,
+  irrigationType: nonEmptyStringSchema,
+  status: nonEmptyStringSchema,
 }).strict();
 
 export const updateFieldSchema = z.object({
-  name: nonEmptyString.optional(),
-  areaSquareMeters: z.number().finite().positive().optional(),
-  soilType: nonEmptyString.optional(),
-  irrigationType: nonEmptyString.optional(),
-  status: nonEmptyString.optional(),
+  name: nonEmptyStringSchema.optional(),
+  areaSquareMeters: decimalAreaSchema.optional(),
+  soilType: nonEmptyStringSchema.optional(),
+  irrigationType: nonEmptyStringSchema.optional(),
+  status: nonEmptyStringSchema.optional(),
 }).strict().refine(
   (input) => Object.keys(input).length > 0,
   { message: "At least one field value is required." },
 );
 
 export const fieldIdParamSchema = z.object({
-  id: positiveInteger,
+  id: postgresIdParamSchema,
 }).strict();
 
 export const farmIdParamSchema = z.object({
-  farmId: positiveInteger,
+  farmId: postgresIdParamSchema,
 }).strict();
