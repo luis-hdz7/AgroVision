@@ -123,6 +123,42 @@ export interface VisionAnalysisResult {
 }
 
 
+/** Resumen persistido utilizado por la tabla de historial. */
+export interface VisionHistoryItem {
+    readonly inspectionId: string;
+    readonly fieldId: string;
+    readonly zoneId: string | null;
+    readonly cropType: CropType;
+    readonly prediction: VisionPrediction;
+    readonly detectedClass: string;
+    readonly confidence: number;
+    readonly modelId: string;
+    readonly modelVersion: string;
+    readonly hasImage: boolean;
+    readonly createdAt: string;
+}
+
+export interface VisionHistoryPage {
+    readonly items: ReadonlyArray<VisionHistoryItem>;
+    readonly nextCursor: string | null;
+}
+
+export interface VisionHistoryFilters {
+    readonly fieldId: string;
+    readonly cropType?: CropType;
+    readonly zoneId?: string | null;
+    readonly limit?: number;
+    readonly cursor?: string;
+}
+
+export type VisionHistoryStatus =
+  | "INACTIVE"
+  | "LOADING"
+  | "READY"
+  | "EMPTY"
+  | "ERROR";
+
+
 export interface ApiResponse<T> {
     readonly success: boolean;
     readonly data: T | null;

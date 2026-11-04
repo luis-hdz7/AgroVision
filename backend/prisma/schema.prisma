@@ -278,9 +278,25 @@ model VisionAnalysisRecord {
   result        Json
   createdAt     DateTime
 
+  // La relaciÃ³n es opcional para conservar anÃ¡lisis anteriores sin fotografÃ­a archivada.
+  image VisionAnalysisImage?
+
   @@index([createdAt])
   @@index([cropType, createdAt])
   @@map("vision_analysis_records")
+}
+
+// Archivo binario original asociado uno a uno con un anÃ¡lisis Vision confirmado.
+model VisionAnalysisImage {
+  inspectionId String   @id
+  content      Bytes
+  mimeType     String
+  sizeBytes    Int
+  archivedAt   DateTime @default(now())
+
+  analysis VisionAnalysisRecord @relation(fields: [inspectionId], references: [inspectionId], onDelete: Cascade)
+
+  @@map("vision_analysis_images")
 }
 
 

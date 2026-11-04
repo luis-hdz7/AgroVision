@@ -18,10 +18,6 @@ import protectionIcon from "../../../assets/icons/protection-icon.svg";
 import infoIcon from "../../../assets/icons/info-icon2.svg";
 import arrowRightIcon from "../../../assets/icons/arrow-icon.png";
 import arrow2RightIcon from "../../../assets/icons/arrow2-icon.png";
-import img1 from "../../../assets/images/image-mock-plant1.jfif";
-import img2 from "../../../assets/images/image-mock-plant2.jpg";
-import img3 from "../../../assets/images/image-mock-plant3.png";
-import img4 from "../../../assets/images/image-mock-plant4.png";
 import aiRecomIcon from "../../../assets/icons/ai-recommendation-icon.svg";
 import newEvidenceIcon from "../../../assets/icons/new-evidence-icon.svg";
 import alertDiamIcon from "../../../assets/icons/alert-diamond-icon.svg";
@@ -37,8 +33,17 @@ import { MappingGIS } from "../../mapping/components/MappingGIS";
 import { GisIcon } from "../../mapping/components/GisIcon";
 // Tipamos la información recibida al seleccionar una zona.
 import type { SelectedZoneData } from "../../mapping/layers/interactionLayer";
+import { useFields } from "../../fields/context/useFields";
+import { DashboardVisionEvidence } from "../components/DashboardVisionEvidence";
+import { useDashboardVisionEvidence } from "../hooks/useDashboardVisionEvidence";
+import { formatVisionFinding } from "../../vision-ai/utils/visionLabels";
 
 export function DashboardPage() {
+  const { selectedFieldId } = useFields();
+  const selectedFieldCode = selectedFieldId === null
+    ? null
+    : `field-${String(selectedFieldId).padStart(3, "0")}`;
+  const visionEvidence = useDashboardVisionEvidence(selectedFieldCode);
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(
     null,
   );
@@ -367,38 +372,12 @@ const criticalAlerts = [
               </footer>
             </Panel> */}
             <Panel title="Evidencias" showCardTag>
-              <div className="avEvidenceGrid">
-                {/* 
-                  Creamos un arreglo estático con tus 4 referencias locales.
-                  Esto garantiza que el bucle itere exactamente 4 veces pase lo que pase con los datos externos.
-                */}
-                {[img1, img2, img3, img4].map((currentImage, index) => {
-                  // Extraemos datos de soporte del servidor si existen en esa posición
-                  const evidenceData = recommendation.evidence[index];
-
-                  return (
-                    <div
-                      key={
-                        evidenceData
-                          ? `${evidenceData.source}-${index}`
-                          : `fallback-pic-${index}`
-                      }
-                      className="avEvidenceItem"
-                      style={{
-                        // Forzamos el uso de tu imagen local importada. Si no existe, aplica el gradiente.
-                        backgroundImage: currentImage
-                          ? `url(${currentImage})`
-                          : "linear-gradient(135deg, #15803d 0%, #166534 100%)",
-                      }}
-                      title={
-                        evidenceData
-                          ? `${evidenceData.source}: ${evidenceData.metric}`
-                          : "Evidencia de campo"
-                      }
-                    />
-                  );
-                })}
-              </div>
+              <DashboardVisionEvidence
+                status={visionEvidence.status}
+                items={visionEvidence.items}
+                error={visionEvidence.error}
+                onRetry={visionEvidence.retry}
+              />
 
               <footer
                 className="dashboardPanelFooter justify-end"
@@ -407,6 +386,7 @@ const criticalAlerts = [
                 <button
                   className="dashboardActionButton avActionButton"
                   type="button"
+                  onClick={openVisionArchive}
                 >
                   <span>Ver todas</span>
                   <img
@@ -634,14 +614,16 @@ const criticalAlerts = [
                   />
                 ))}
 
-            <TimelineItem
-              time="Hoy"
-              text="Nueva evidencia registrada"
-              status="Sistema"
-              tone="LIME"
-              icon={newEvidenceIcon}
-              iconTone="INFO"
-            />
+            {visionEvidence.items[0] && (
+              <TimelineItem
+                time={formatDateTime(visionEvidence.items[0].createdAt)}
+                text={`Análisis visual guardado: ${formatVisionFinding(visionEvidence.items[0])}`}
+                status="Vision AI"
+                tone="INFO"
+                icon={newEvidenceIcon}
+                iconTone="INFO"
+              />
+            )}
 
             <TimelineItem
               time="Ayer"
@@ -1048,4 +1030,16 @@ function formatTime(value: string): string {
     hour: "2-digit",
     minute: "2-digit",
   }).format(new Date(value));
+}
+
+function formatDateTime(value: string): string {
+  return new Intl.DateTimeFormat("es-NI", {
+    dateStyle: "short",
+    timeStyle: "short",
+  }).format(new Date(value));
+}
+
+function openVisionArchive(): void {
+  window.history.pushState(null, "", "/vision-ai");
+  window.dispatchEvent(new Event("popstate"));
 }
